@@ -1,47 +1,29 @@
-# Welcome to Remix + Cloudflare!
+# Project Alpha
 
-- 📖 [Remix docs](https://remix.run/docs)
-- 📖 [Remix Cloudflare docs](https://remix.run/guides/vite#cloudflare)
+첫 번째 MVP
 
-## Development
+# 기술
 
-Run the dev server:
+- remix
+- prisma
+- typescript
+- cloudflare worker
+- pnpm
 
-```sh
-npm run dev
-```
+## 개발 환경 세팅
 
-To run Wrangler:
+node와 pnpm을 설치합니다.
 
-```sh
-npm run build
-npm run start
-```
-
-## Typegen
-
-Generate types for your Cloudflare bindings in `wrangler.toml`:
+node 패키지를 설치합니다.
 
 ```sh
-npm run typegen
+pnpm install
 ```
 
-You will need to rerun typegen whenever you make changes to `wrangler.toml`.
+env.example을 토대로 .env파일을 추가합니다.
 
-## Deployment
-
-First, build your app for production:
+개발 서버를 실행시킵니다.
 
 ```sh
-npm run build
+pnpm dev
 ```
-
-Then, deploy your app to Cloudflare Pages:
-
-```sh
-npm run deploy
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.
