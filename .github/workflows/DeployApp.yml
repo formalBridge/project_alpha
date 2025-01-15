@@ -1,0 +1,43 @@
+name: DeployApp
+
+on:
+  push:
+    branches: [main]
+
+run-name: "Deploy App: ${{ github.sha }}"
+
+jobs:
+  Deploy:
+    concurrency:
+      group: project-alpha-deploy
+      cancel-in-progress: true
+    environment: production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v4
+
+      - uses: pnpm/action-setup@v3
+
+      - name: Install dependencies
+        run: |
+          pnpm install
+
+      - name: D1 migrations apply
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          packageManager: pnpm
+          command: d1 migrations apply project-alpha-db --remote
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          packageManager: pnpm
+          preCommands: pnpm build
+          command: pages deploy
