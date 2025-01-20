@@ -1,8 +1,9 @@
-import { Form, useActionData, useLoaderData } from "@remix-run/react";
-import { updateAction } from "~/features/post/action";
+import { Form, useActionData, useLoaderData } from '@remix-run/react';
 
-import styles from "./edit.module.scss";
-import { updateLoader } from "~/features/post/loader";
+import { updateAction } from 'app/features/post/action';
+import { updateLoader } from 'app/features/post/loader';
+
+import styles from './edit.module.scss';
 
 export default function Edit() {
   const { post } = useLoaderData<typeof updateLoader>();
@@ -13,12 +14,7 @@ export default function Edit() {
       <h1>Post Update</h1>
       {actionData && <p>{actionData.error[0].message}</p>}
       <Form method="post" className={styles.formContainer}>
-        <input
-          type="text"
-          name="title"
-          placeholder="Title"
-          defaultValue={post?.title}
-        />
+        <input type="text" name="title" placeholder="Title" defaultValue={post?.title} />
         <textarea name="content" placeholder="Content">
           {post?.content}
         </textarea>

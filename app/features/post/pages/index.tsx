@@ -1,8 +1,10 @@
-import { Post } from "@prisma/client";
-import styles from "./index.module.scss";
-import { Await, Form, Link, useLoaderData } from "@remix-run/react";
-import { indexLoader } from "~/features/post/loader";
-import { Suspense } from "react";
+import { Post } from '@prisma/client';
+import { Await, Form, Link, useLoaderData } from '@remix-run/react';
+import { Suspense } from 'react';
+
+import { indexLoader } from 'app/features/post/loader';
+
+import styles from './index.module.scss';
 
 export default function Index() {
   const { postsPromise } = useLoaderData<typeof indexLoader>();
@@ -15,9 +17,7 @@ export default function Index() {
         <div className={styles.postList}>
           <Suspense fallback={<div>Loading...</div>}>
             <Await resolve={postsPromise}>
-              {(posts) =>
-                posts.map((post) => <PostItem key={post.id} post={post} />)
-              }
+              {(posts) => posts.map((post) => <PostItem key={post.id} post={post} />)}
             </Await>
           </Suspense>
         </div>
@@ -38,9 +38,7 @@ const PostItem = ({ post }: { post: Post }) => {
           action={`${post.id}/destroy`}
           method="post"
           onSubmit={(event) => {
-            const response = confirm(
-              "Please confirm you want to delete this record."
-            );
+            const response = confirm('Please confirm you want to delete this record.');
             if (!response) {
               event.preventDefault();
             }

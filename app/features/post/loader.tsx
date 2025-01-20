@@ -1,5 +1,5 @@
-import { fetchPost, fetchPosts } from "~/features/post/services";
-import createLoader from "~/utils/createLoader";
+import { fetchPost, fetchPosts } from 'app/features/post/services';
+import createLoader from 'app/utils/createLoader';
 
 export const indexLoader = createLoader(async ({ db }) => {
   const postsPromise = fetchPosts(db)();

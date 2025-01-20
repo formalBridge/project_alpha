@@ -1,6 +1,7 @@
-import { PrismaClient } from "@prisma/client";
-import { ActionFunctionArgs } from "@remix-run/cloudflare";
-import { getPrismaClient } from "~/utils/prisma";
+import { PrismaClient } from '@prisma/client';
+import { ActionFunctionArgs } from '@remix-run/cloudflare';
+
+import { getPrismaClient } from 'app/utils/prisma';
 
 export default function createAction<ActionReturnType>(
   loader: (args: ActionFunctionArgs & { db: PrismaClient }) => ActionReturnType

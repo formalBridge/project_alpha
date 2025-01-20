@@ -1,6 +1,8 @@
-import { Form, useActionData } from "@remix-run/react";
-import styles from "./create.module.scss";
-import { insertAction } from "~/features/post/action";
+import { Form, useActionData } from '@remix-run/react';
+
+import { insertAction } from 'app/features/post/action';
+
+import styles from './create.module.scss';
 
 export default function Create() {
   const actionData = useActionData<typeof insertAction>();
