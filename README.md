@@ -30,9 +30,9 @@
   $ pnpm install
   ```
 - 개발 서버를 실행시킵니다.
-	```sh
-	pnpm dev
-	```
+  ```sh
+  pnpm dev
+  ```
 
 ## DB 세팅
 
@@ -44,6 +44,7 @@ wrangler dev
 ```
 
 로컬db에 스키마 마이그레이션을 실행합니다.
+
 ```
 pnpm run-migration --local
 ```
