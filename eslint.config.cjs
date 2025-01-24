@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 
-const path = require("path");
+const path = require('path');
 
 const { includeIgnoreFile } = require('@eslint/compat');
 const importPlugin = require('eslint-plugin-import');
@@ -8,7 +8,7 @@ const jsxA11y = require('eslint-plugin-jsx-a11y');
 const react = require('eslint-plugin-react');
 const tseslint = require('typescript-eslint');
 
-const gitignorePath = path.resolve(__dirname, ".gitignore");
+const gitignorePath = path.resolve(__dirname, '.gitignore');
 
 /** @type {import('eslint').Linter.Config} */
 module.exports = tseslint.config([
@@ -73,5 +73,5 @@ module.exports = tseslint.config([
       ],
       'import/first': 'error',
     },
-  }
+  },
 ]);
