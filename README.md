@@ -16,6 +16,7 @@
   - (추천) [asdf](https://asdf-vm.com/)를 사용하는 경우, 프로젝트 내에서 아래 명령어들을 입력
     ```
     $ asdf install
+    $ corepack install
     $ corepack enable
     $ asdf reshim nodejs
     ```
@@ -40,7 +41,7 @@ cloudflare의 d1 데이터베이스를 사용합니다.
 다음을 입력하여 local development를 시작합니다.
 
 ```
-wrangler dev
+npx wrangler pages dev
 ```
 
 로컬db에 스키마 마이그레이션을 실행합니다.
