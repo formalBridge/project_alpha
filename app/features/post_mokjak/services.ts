@@ -1,13 +1,13 @@
-import { Post } from "@prisma/client";
+import { Post } from '@prisma/client';
 
-import createService from "app/utils/createService";
+import createService from 'app/utils/createService';
 
 export const fetchPosts = createService(async (db) => {
-    return await db.post.findMany();
+  return await db.post.findMany();
 });
 
-export const fetchPost = createService< {id: number}, Post | null> (async (db, { id }) => {
-    return await db.post.findUnique({
-        where: { id },
-    })
+export const fetchPost = createService<{ id: number }, Post | null>(async (db, { id }) => {
+  return await db.post.findUnique({
+    where: { id },
+  });
 });
