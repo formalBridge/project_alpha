@@ -1,7 +1,7 @@
 import { redirect } from "@remix-run/cloudflare";
 
-import { postSchema } from "./schema";
 import createAction from "app/utils/createAction";
+import { postSchema } from "app/features/post_mokjak/schema";
 
 
 export const insertAction = createAction(async ({db, request}) => {

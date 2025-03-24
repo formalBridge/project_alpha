@@ -1,4 +1,5 @@
 import { Post } from "@prisma/client";
+
 import createService from "app/utils/createService";
 
 export const fetchPosts = createService(async (db) => {
@@ -9,4 +10,4 @@ export const fetchPost = createService< {id: number}, Post | null> (async (db, {
     return await db.post.findUnique({
         where: { id },
     })
-})
+});
