@@ -1,6 +1,7 @@
 import { useLoaderData } from '@remix-run/react';
 
 import { showLoader } from '../loader';
+import styles from './show.module.scss';
 
 export default function Show() {
   const { user } = useLoaderData<typeof showLoader>();
@@ -9,7 +10,7 @@ export default function Show() {
 
   return (
     <div>
-      <div>
+      <div className={styles.profileBox}>
         <img></img>
         <div>
           <p>{currentUser.name}</p>
