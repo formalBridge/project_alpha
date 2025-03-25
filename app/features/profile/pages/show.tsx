@@ -5,15 +5,29 @@ import { showLoader } from '../loader';
 export default function Show() {
   const { user } = useLoaderData<typeof showLoader>();
 
-  if (!user) {
-    return <div>없는 유저입니다.</div>;
-  }
+  const currentUser = user ?? { id: 0, name: 'Guest' };
 
   return (
     <div>
-      <h1>Profile Show</h1>
-      <p>Welcome to the profile show page!</p>
-      <p>{user.name}</p>
+      <div>
+        <img></img>
+        <div>
+          <p>{currentUser.name}</p>
+          <p>@han_dle</p>
+        </div>
+      </div>
+      <div>
+        <div>
+          <p>오늘의 추천곡</p>
+          <div>
+            <img></img>
+            <div>
+              <p>노래 제목</p>
+              <p>가수 이름</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
