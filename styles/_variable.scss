@@ -19,25 +19,3 @@ $primary-500: hsl(200, 50%, 50%);
 
 $primary-font: $black-100;
 $secondary-font: $primary-300;
-
-// Export Variables
-@export {
-	$gray-100,
-	$gray-200,
-	$gray-300,
-	$gray-400,
-	$gray-500,
-	$gray-600,
-	$black-100,
-	$black-200,
-	$black-300,
-	$black-400,
-	$black-500,
-	$primary-100,
-	$primary-200,
-	$primary-300,
-	$primary-400,
-	$primary-500,
-	$primary-font,
-	$secondary-font
-}
