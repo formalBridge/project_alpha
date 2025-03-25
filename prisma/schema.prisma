@@ -24,9 +24,3 @@ model User {
   id   Int    @id @default(autoincrement())
   name String
 }
-
-model Post_mokjak {
-  id      Int     @id @default(autoincrement())
-  title   String
-  content String?
-}
