@@ -1,0 +1,43 @@
+// Color Variables
+$gray-100: hsl(200, 10%, 90%);
+$gray-200: hsl(200, 8%, 80%);
+$gray-300: hsl(200, 8%, 70%);
+$gray-400: hsl(200, 6%, 60%);
+$gray-500: hsl(200, 6%, 50%);
+
+$black-100: hsl(0, 0%, 10%);
+$black-200: hsl(0, 0%, 20%);
+$black-300: hsl(0, 0%, 30%);
+$black-400: hsl(0, 0%, 40%);
+$black-500: hsl(0, 0%, 50%);
+
+$primary-100: hsl(200, 90%, 90%);
+$primary-200: hsl(200, 80%, 80%);
+$primary-300: hsl(200, 70%, 70%);
+$primary-400: hsl(200, 60%, 60%);
+$primary-500: hsl(200, 50%, 50%);
+
+$primary-font: $black-100;
+$secondary-font: $primary-300;
+
+// Export Variables
+@export {
+	$gray-100,
+	$gray-200,
+	$gray-300,
+	$gray-400,
+	$gray-500,
+	$gray-600,
+	$black-100,
+	$black-200,
+	$black-300,
+	$black-400,
+	$black-500,
+	$primary-100,
+	$primary-200,
+	$primary-300,
+	$primary-400,
+	$primary-500,
+	$primary-font,
+	$secondary-font
+}
