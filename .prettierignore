@@ -10,3 +10,4 @@ node_modules
 *.md
 *.yaml
 *.yml
+pnpm-lock.yaml
