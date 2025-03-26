@@ -27,3 +27,51 @@
     }
   }
 }
+
+.content-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  .today-recommend-box {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    .title {
+      font-size: 14px;
+      font-weight: bold;
+      color: $black-300;
+    }
+  }
+}
+.song-box {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  gap: 12px;
+  background: $grey-100;
+  border-radius: 8px;
+  .song-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    .item-image {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+    }
+    .item-text-box {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      .item-title {
+        font-size: 14px;
+        color: $black-300;
+      }
+      .item-artist {
+        font-size: 12px;
+        color: $grey-500;
+      }
+    }
+  }
+}
