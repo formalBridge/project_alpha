@@ -11,10 +11,10 @@ export default function Show() {
   return (
     <div>
       <div className={styles.profileBox}>
-        <img></img>
-        <div>
-          <p>{currentUser.name}</p>
-          <p>@han_dle</p>
+        <img className={styles.profileAvatar} src="/images/features/profile/profile_test.png" />
+        <div className={styles.profileTextbox}>
+          <p className={styles.profileName}>{currentUser.name}</p>
+          <p className={styles.profileHandle}>@han_dle</p>
         </div>
       </div>
       <div>
