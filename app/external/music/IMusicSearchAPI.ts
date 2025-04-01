@@ -14,3 +14,18 @@ export interface MusicInfo {
 export interface IMusicSearchAPI {
   search(params: SearchParams): Promise<MusicInfo[]>;
 }
+
+export interface ArtistCredit {
+  name: string;
+}
+
+export interface Release {
+  title: string;
+}
+
+export interface Recording {
+  id: string;
+  title: string;
+  'artist-credit'?: ArtistCredit[];
+  releases?: Release[];
+}

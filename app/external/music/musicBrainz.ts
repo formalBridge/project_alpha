@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { IMusicSearchAPI, MusicInfo, SearchParams } from './IMusicSearchAPI';
+import { IMusicSearchAPI, MusicInfo, Recording, SearchParams } from './IMusicSearchAPI';
 
 export class MusicBrainzAPI implements IMusicSearchAPI {
   private BASE_URL = 'https://musicbrainz.org/ws/2';
@@ -23,7 +23,7 @@ export class MusicBrainzAPI implements IMusicSearchAPI {
       },
     });
 
-    return (response.data.recordings || []).map((item: any) => ({
+    return (response.data.recordings || []).map((item: Recording) => ({
       title: item.title,
       artist: item['artist-credit']?.[0]?.name || 'unknown',
       album: item.releases?.[0]?.title || 'unknown',
