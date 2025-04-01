@@ -33,14 +33,4 @@
   flex-direction: column;
   gap: 16px;
   padding: 20px;
-  .today-recommend-box {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    .title {
-      font-size: 14px;
-      font-weight: bold;
-      color: $black-300;
-    }
-  }
 }
