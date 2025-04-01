@@ -12,7 +12,7 @@ export default function Show() {
         <div className={styles.titleBox}>
           <p className={styles.title}>👍 오늘의 추천곡</p>
           {isCurrentUserProfile && (
-            <Link className={styles.goToEditLink} to="../editlist">
+            <Link className={styles.goToEditLink} to="../addTodaySong">
               수정하기
             </Link>
           )}

@@ -1,0 +1,10 @@
+@use 'styles/layout' as *;
+
+.add-today-song-container {
+  display: flex;
+  padding: 16px 16px;
+  flex-direction: column;
+  gap: 16px;
+  background: $grey-100;
+  border-radius: 8px;
+}
