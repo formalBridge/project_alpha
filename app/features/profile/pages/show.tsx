@@ -2,6 +2,7 @@ import { useLoaderData } from '@remix-run/react';
 
 import { showLoader } from '../loader';
 import styles from './show.module.scss';
+import SongItem from '../components/SongItem';
 
 export default function Show() {
   const { user } = useLoaderData<typeof showLoader>();
@@ -37,15 +38,3 @@ export default function Show() {
     </div>
   );
 }
-
-const SongItem = () => {
-  return (
-    <div className={styles.songItem}>
-      <img className={styles.itemImage} />
-      <div className={styles.itemTextBox}>
-        <p className={styles.itemTitle}>노래 제목</p>
-        <p className={styles.itemArtist}>가수 이름</p>
-      </div>
-    </div>
-  );
-};
