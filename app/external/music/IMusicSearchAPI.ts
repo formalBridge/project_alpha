@@ -11,10 +11,6 @@ export interface MusicInfo {
   mbid?: string;
 }
 
-export interface IMusicSearchAPI {
-  search(params: SearchParams): Promise<MusicInfo[]>;
-}
-
 export interface ArtistCredit {
   name: string;
 }

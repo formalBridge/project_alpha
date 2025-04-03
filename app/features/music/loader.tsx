@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs, json } from '@remix-run/node';
+import { LoaderFunctionArgs } from '@remix-run/node';
 
 import { MusicBrainzAPI } from 'app/external/music/musicBrainz';
 import { SearchMusic } from 'app/external/music/SearchMusic';
@@ -12,5 +12,5 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const searchMusic = new SearchMusic(new MusicBrainzAPI());
   const results = await searchMusic.searchSong({ title, artist, album });
 
-  return json(results);
+  return results;
 }

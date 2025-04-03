@@ -1,15 +1,21 @@
 import axios from 'axios';
 
-import { IMusicSearchAPI, MusicInfo, Recording, SearchParams } from './IMusicSearchAPI';
+import { MusicInfo, Recording, SearchParams } from './IMusicSearchAPI';
 
-export class MusicBrainzAPI implements IMusicSearchAPI {
+export class MusicBrainzAPI {
   private BASE_URL = 'https://musicbrainz.org/ws/2';
 
   async search(params: SearchParams): Promise<MusicInfo[]> {
     const queryParts = [];
-    if (params.title) queryParts.push(`recording:${params.title}`);
-    if (params.artist) queryParts.push(`artist:${params.artist}`);
-    if (params.album) queryParts.push(`release:${params.album}`);
+    if (params.title) {
+      queryParts.push(`recording:${params.title}`);
+    }
+    if (params.artist) {
+      queryParts.push(`artist:${params.artist}`);
+    }
+    if (params.album) {
+      queryParts.push(`release:${params.album}`);
+    }
 
     const query = queryParts.join(' AND ');
 

@@ -1,4 +1,3 @@
-// 비지니스 로직 (검색 핸들러)을
 import { useState } from 'react';
 
 import { MusicInfo } from 'app/external/music/IMusicSearchAPI';
