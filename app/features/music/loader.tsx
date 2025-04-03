@@ -8,8 +8,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const artist = url.searchParams.get('artist') ?? undefined;
   const album = url.searchParams.get('album') ?? undefined;
 
-  const searchMusic = new SearchMusic(new MusicBrainzAPI());
-  const results = await searchMusic.searchSong({ title, artist, album });
+  if (!title && !artist && !album) {
+    return [];
+  }
 
   const results = await searchMusic.searchSong({ title, artist, album });
   return results;

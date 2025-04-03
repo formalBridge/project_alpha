@@ -31,8 +31,8 @@ export class MusicBrainzAPI {
 
     return (response.data.recordings || []).map((item: Recording) => ({
       title: item.title,
-      artist: item['artist-credit']?.[0]?.name || 'unknown',
-      album: item.releases?.[0]?.title || 'unknown',
+      artist: item['artist-credit']?.[0]?.name || '',
+      album: item.releases?.[0]?.title || '',
       mbid: item.id,
     }));
   }
