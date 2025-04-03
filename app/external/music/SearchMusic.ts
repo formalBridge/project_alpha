@@ -9,3 +9,5 @@ export class SearchMusic {
     return this.musicAPI.search(params);
   }
 }
+
+export const searchMusic = new SearchMusic(new MusicBrainzAPI());
