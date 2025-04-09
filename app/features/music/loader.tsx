@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs } from '@remix-run/node';
+import { LoaderFunctionArgs } from '@remix-run/cloudflare';
 
 import { searchMusic } from 'app/external/music/SearchMusic';
 
