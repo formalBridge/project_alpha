@@ -15,7 +15,7 @@
     "preview": "pnpm run build && wrangler pages dev",
     "cf-typegen": "wrangler types",
     "create-migration": "npx wrangler d1 migrations create project-alpha-db",
-    "diff-migration": "npx prisma migrate diff --from-empty --to-schema-datamodel ./prisma/schema.prisma --script --output ",
+    "diff-migration": "npx prisma migrate diff --from-local-d1 --to-schema-datamodel ./prisma/schema.prisma --script --output ",
     "run-migration": "npx wrangler d1 migrations apply project-alpha-db"
   },
   "dependencies": {
