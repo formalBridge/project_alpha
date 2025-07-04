@@ -1,4 +1,3 @@
--- CreateTable
 CREATE TABLE "Song" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "title" TEXT NOT NULL,
@@ -9,7 +8,7 @@ CREATE TABLE "Song" (
 
 -- CreateTable
 CREATE TABLE "user_rankings" (
-    "id" INTEGER NOT NULL,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "userId" INTEGER NOT NULL,
     "songId" INTEGER NOT NULL,
     "song_rank" INTEGER NOT NULL DEFAULT 0,

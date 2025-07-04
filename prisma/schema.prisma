@@ -42,7 +42,7 @@ model Song {
 }
 
 model UserRanking {
-  id        Int
+  id        Int      @id @default(autoincrement())
   userId    Int
   songId    Int
   rank      Int      @default(0) @map("song_rank")
