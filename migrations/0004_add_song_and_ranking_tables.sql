@@ -1,0 +1,25 @@
+-- CreateTable
+CREATE TABLE "Song" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "title" TEXT NOT NULL,
+    "artist" TEXT NOT NULL,
+    "thumbnailUrl" TEXT,
+    "album" TEXT
+);
+
+-- CreateTable
+CREATE TABLE "user_rankings" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "userId" INTEGER NOT NULL,
+    "songId" INTEGER NOT NULL,
+    "song_rank" INTEGER NOT NULL DEFAULT 0,
+    "ranked_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "user_rankings_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "user_rankings_songId_fkey" FOREIGN KEY ("songId") REFERENCES "Song" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_rankings_userId_songId_key" ON "user_rankings"("userId", "songId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_rankings_userId_song_rank_key" ON "user_rankings"("userId", "song_rank");

@@ -23,10 +23,39 @@ model Post {
 model User {
   id   Int    @id @default(autoincrement())
   name String
+  rankings UserRanking[] // UserRanking 모델과의 1:N 관계 (역방향)
 }
 
 model Post_mokjak {
   id      Int     @id @default(autoincrement())
   title   String
   content String?
+}
+
+model Song {
+  id           Int       @id @default(autoincrement()) // 노래 고유 ID
+  title        String    // 노래 제목
+  artist       String    // 가수 이름
+  thumbnailUrl String?   // 썸네일 이미지 URL (선택 사항)
+  album        String?   // 앨범 이름 (선택 사항)
+  
+  // UserRanking과 1:N 관계 (이 노래가 포함된 모든 랭킹 항목들)
+  rankings     UserRanking[]
+}
+
+model UserRanking {
+  id        Int      @id @default(autoincrement())
+  userId    Int      // 랭킹을 매긴 사용자 ID (User 모델 참조)
+  songId    Int      // 랭킹이 매겨진 노래 ID (Song 모델 참조)
+  rank      Int      @default(0) @map("song_rank") // 사용자가 지정한 순위 (0부터 시작)
+  rankedAt  DateTime @default(now()) @map("ranked_at") // 랭킹 지정/수정 시각
+
+  // 관계 정의: 이 랭킹 항목은 어떤 User와 어떤 Song에 속하는지
+  user      User @relation(fields: [userId], references: [id]) // userId는 User.id를 참조
+  song      Song @relation(fields: [songId], references: [id]) // songId는 Song.id를 참조
+
+  @@unique([userId, songId])
+  @@unique([userId, rank])
+
+  @@map("user_rankings")
 }
