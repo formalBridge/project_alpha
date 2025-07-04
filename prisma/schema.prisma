@@ -23,10 +23,37 @@ model Post {
 model User {
   id   Int    @id @default(autoincrement())
   name String
+  rankings UserRanking[]
 }
 
 model Post_mokjak {
   id      Int     @id @default(autoincrement())
   title   String
   content String?
+}
+
+model Song {
+  id           Int       @id @default(autoincrement())
+  title        String
+  artist       String
+  thumbnailUrl String?
+  album        String?
+  rankings     UserRanking[]
+}
+
+model UserRanking {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  songId    Int
+  rank      Int      @default(0) @map("song_rank")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User @relation(fields: [userId], references: [id])
+  song      Song @relation(fields: [songId], references: [id])
+
+  @@unique([userId, songId])
+  @@unique([userId, rank])
+
+  @@map("user_rankings")
 }
