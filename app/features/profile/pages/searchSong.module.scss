@@ -1,0 +1,95 @@
+/* ───────────────────────────────────────────
+   “추천곡 / 노래 랭킹” 박스와 통일된 회색 래퍼
+─────────────────────────────────────────── */
+.searchWrapper {
+  background-color: #f2f4f5;      /* 연한 회색 */
+  padding: 24px;
+  border-radius: 8px;
+
+  /* 풀-와이드: 좌우 24px 여백만 두고 100% 사용 */
+  margin: 16px 24px;
+}
+
+/* ── 입력폼 ─────────────────────────────── */
+.formRow {
+  display: flex;
+  gap: 8px;
+}
+
+.input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #2563eb;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: .6;
+    cursor: default;
+  }
+}
+
+/* ── 리스트 ─────────────────────────────── */
+.songList {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.songItem {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 12px;
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f9fafb;
+  }
+}
+
+.cover {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 4px;
+  background-color: #f3f4f6;
+}
+
+.texts {
+  overflow: hidden;
+}
+
+.title {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.artist,
+.album {
+  font-size: 12px;
+  color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.empty {
+  color: #9ca3af;
+}
