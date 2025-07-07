@@ -40,14 +40,13 @@ export class MusicBrainzAPI {
         const releaseId = item.releases?.[0]?.id;
 
         let albumCover;
-        if(releaseId){
+        if (releaseId) {
           const coverRes = await axios.get(`http://coverartarchive.org/release/${releaseId}`);
           albumCover = coverRes.data.images?.[0]?.image;
         }
-        return { title, artist, album, mbid, albumCover }; 
-        
+        return { title, artist, album, mbid, albumCover };
       })
-    )
+    );
     return results;
   }
 }
