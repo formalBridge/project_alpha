@@ -9,6 +9,7 @@ export interface MusicInfo {
   artist: string;
   album: string;
   mbid?: string;
+  albumCover?: string;
 }
 
 export interface ArtistCredit {
@@ -17,6 +18,7 @@ export interface ArtistCredit {
 
 export interface Release {
   title: string;
+  id: string;
 }
 
 export interface Recording {

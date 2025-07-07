@@ -22,6 +22,13 @@ export default function SearchMusic() {
       <ul>
         {results.map((song, idx) => (
           <li key={idx}>
+            {song.albumCover && (
+              <img
+                src={song.albumCover}
+                alt={song.title}
+                style={{width: '100px', height: '100px', objectFit: 'cover'}}
+              />
+            )}
             {song.title} - {song.artist}
           </li>
         ))}
