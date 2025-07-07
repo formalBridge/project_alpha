@@ -58,7 +58,7 @@ export default function SearchSongPage() {
             <li
               key={song.mbid ?? `${song.title}-${song.artist}`}
               className={styles.songItem}
-              onClick={() => handleSelect(song, i)} // 인덱스 추가 전달
+              onClick={() => handleSelect(song, i)}
             >
               <img src={coverUrl} alt={song.album || 'Album placeholder'} className={styles.cover} />
               <div className={styles.texts}>
