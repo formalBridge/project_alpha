@@ -1,12 +1,12 @@
-import { useState } from "react";
-import type { MusicInfo } from "app/external/music/IMusicSearchAPI";
-import { searchMusic } from "app/external/music/SearchMusic";
-import styles from "app/features/profile/pages/searchSong.module.scss";
+import { useState } from 'react';
+import type { MusicInfo } from 'app/external/music/IMusicSearchAPI';
+import { searchMusic } from 'app/external/music/SearchMusic';
+import styles from 'app/features/profile/pages/searchSong.module.scss';
 
-const PLACEHOLDER = "/images/features/profile/album_default2.png";
+const PLACEHOLDER = '/images/features/profile/album_default2.png';
 
 export default function SearchSongPage() {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const [results, setResults] = useState<MusicInfo[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -46,7 +46,7 @@ export default function SearchSongPage() {
           onChange={(e) => setQuery(e.target.value)}
         />
         <button className={styles.button} type="submit" disabled={isLoading}>
-          {isLoading ? "검색 중..." : "검색"}
+          {isLoading ? '검색 중...' : '검색'}
         </button>
       </form>
 
@@ -66,13 +66,9 @@ export default function SearchSongPage() {
             <li
               key={song.mbid ?? `${song.title}-${song.artist}`}
               className={styles.songItem}
-              onClick={() => handleSelect(song, i)}   // 인덱스 추가 전달
+              onClick={() => handleSelect(song, i)} // 인덱스 추가 전달
             >
-              <img
-                src={coverUrl}
-                alt={song.album || "Album placeholder"}
-                className={styles.cover}
-              />
+              <img src={coverUrl} alt={song.album || 'Album placeholder'} className={styles.cover} />
               <div className={styles.texts}>
                 <div className={styles.title}>{song.title}</div>
                 <div className={styles.artist}>{song.artist}</div>
@@ -82,9 +78,7 @@ export default function SearchSongPage() {
           );
         })}
 
-        {results.length === 0 && !isLoading && (
-          <p className={styles.empty}>검색 결과가 없습니다.</p>
-        )}
+        {results.length === 0 && !isLoading && <p className={styles.empty}>검색 결과가 없습니다.</p>}
       </ul>
     </div>
   );
