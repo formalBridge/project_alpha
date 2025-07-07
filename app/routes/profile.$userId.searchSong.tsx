@@ -11,7 +11,6 @@ export default function SearchSongPage() {
   const [results, setResults] = useState<MusicInfo[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  /* ── 검색 ──────────────────────────────── */
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const trimmed = query.trim();
@@ -28,7 +27,6 @@ export default function SearchSongPage() {
     }
   };
 
-  /* ── 곡 선택 ───────────────────────────── */
   const handleSelect = (song: MusicInfo, index: number) => {
     // 화면 알림창으로 클릭 정보 표시
     alert(`선택 ${index + 1} : ${song.title}  –  ${song.artist}`);
@@ -37,7 +35,7 @@ export default function SearchSongPage() {
 
   return (
     <div className={styles.searchWrapper}>
-      {/* 입력폼 */}
+      {}
       <form onSubmit={handleSearch} className={styles.formRow}>
         <input
           className={styles.input}
@@ -51,17 +49,10 @@ export default function SearchSongPage() {
         </button>
       </form>
 
-      {/* 결과 리스트 */}
+      {}
       <ul className={styles.songList}>
         {results.map((song, i) => {
           const coverUrl = PLACEHOLDER;
-
-          /* 🔄 실제 커버아트를 다시 쓰려면 아래 3줄을 복원하고
-             위의 coverUrl 를 주석 처리하세요.
-          const coverUrl = song.mbid
-            ? `https://coverartarchive.org/release/${song.mbid}/front-250`
-            : PLACEHOLDER;
-          */
 
           return (
             <li

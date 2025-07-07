@@ -1,16 +1,11 @@
-/* ───────────────────────────────────────────
-   “추천곡 / 노래 랭킹” 박스와 통일된 회색 래퍼
-─────────────────────────────────────────── */
 .searchWrapper {
-  background-color: #f2f4f5; /* 연한 회색 */
+  background-color: #f2f4f5;
   padding: 24px;
   border-radius: 8px;
 
-  /* 풀-와이드: 좌우 24px 여백만 두고 100% 사용 */
   margin: 16px 24px;
 }
 
-/* ── 입력폼 ─────────────────────────────── */
 .formRow {
   display: flex;
   gap: 8px;
@@ -38,7 +33,6 @@
   }
 }
 
-/* ── 리스트 ─────────────────────────────── */
 .songList {
   margin-top: 16px;
   display: flex;
