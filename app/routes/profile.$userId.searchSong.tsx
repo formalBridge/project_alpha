@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import type { MusicInfo } from 'app/external/music/IMusicSearchAPI';
 import { searchMusic } from 'app/external/music/SearchMusic';
 import styles from 'app/features/profile/pages/searchSong.module.scss';
