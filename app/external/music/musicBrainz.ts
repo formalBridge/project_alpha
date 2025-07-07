@@ -29,11 +29,30 @@ export class MusicBrainzAPI {
       },
     });
 
-    return (response.data.recordings || []).map((item: Recording) => ({
-      title: item.title,
-      artist: item['artist-credit']?.[0]?.name || '',
-      album: item.releases?.[0]?.title || '',
-      mbid: item.id,
-    }));
+    const recordings = (response.data.recordings || []) as Recording[];
+
+    const results = await Promise.all(
+      recordings.map(async (item) => {
+        const title = item.title;
+        const artist = item['artist-credit']?.[0]?.name || '';
+        const album = item.releases?.[0]?.title || '';
+        const mbid = item.id;
+        const releaseId = item.releases?.[0]?.id;
+
+        let albumCover;
+        if(releaseId){
+          try{
+            const coverRes = await axios.get(`http://coverartarchive.org/release/${releaseId}`);
+            albumCover = coverRes.data.images?.[0]?.image;
+          } catch (e) {
+            albumCover = undefined;
+          }
+        }
+        return { title, artist, album, mbid, albumCover }; 
+        
+      })
+    )
+
+    return results;
   }
 }
