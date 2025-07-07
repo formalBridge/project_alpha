@@ -24,6 +24,7 @@ model User {
   id   Int    @id @default(autoincrement())
   name String
   rankings UserRanking[]
+  todayRecommendedSongId  Int?
 }
 
 model Post_mokjak {

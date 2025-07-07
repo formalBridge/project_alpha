@@ -1,15 +1,26 @@
 import styles from './SongItem.module.scss';
+import type { Song } from '@prisma/client';
 
-const SongItem = () => {
+interface SongItemProps {
+  song: Song;
+  rank?: number;
+}
+
+export default function SongItem({ song, rank }: SongItemProps) {
   return (
-    <div className={styles.songItem}>
-      <img className={styles.itemImage} />
-      <div className={styles.itemTextBox}>
-        <p className={styles.itemTitle}>노래 제목</p>
-        <p className={styles.itemArtist}>가수 이름</p>
+    <div className={styles['song-item']}>
+      {rank !== undefined && <p className={styles.rank}>{rank}위</p>}
+
+      <img
+        className={styles['item-image']}
+        src={song.thumbnailUrl || '../../../public/images/features/profile/album_default2.png'}
+        alt={song.title || 'No Title'}
+      />
+
+      <div className={styles['item-text-box']}>
+        <p className={styles['item-title']}>{song.title}</p>
+        <p className={styles['item-artist']}>{song.artist}</p>
       </div>
     </div>
   );
-};
-
-export default SongItem;
+}
