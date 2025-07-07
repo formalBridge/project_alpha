@@ -2,20 +2,26 @@ import axios from 'axios';
 
 import { MusicInfo, Recording, SearchParams } from './IMusicSearchAPI';
 
+async function getAlbumCover(releaseId: string): Promise<string> {
+  try {
+    const coverRes = await axios.get(`http://coverartarchive.org/release/${releaseId}`);
+    return coverRes.data.images?.[0]?.image ?? '';
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      return '';
+    }
+    throw error;
+  }
+}
+
 export class MusicBrainzAPI {
   private BASE_URL = 'https://musicbrainz.org/ws/2';
 
   async search(params: SearchParams): Promise<MusicInfo[]> {
     const queryParts = [];
-    if (params.title) {
-      queryParts.push(`recording:${params.title}`);
-    }
-    if (params.artist) {
-      queryParts.push(`artist:${params.artist}`);
-    }
-    if (params.album) {
-      queryParts.push(`release:${params.album}`);
-    }
+    if (params.title) queryParts.push(`recording:${params.title}`);
+    if (params.artist) queryParts.push(`artist:${params.artist}`);
+    if (params.album) queryParts.push(`release:${params.album}`);
 
     const query = queryParts.join(' AND ');
 
@@ -29,24 +35,16 @@ export class MusicBrainzAPI {
       },
     });
 
-    const recordings = (response.data.recordings || []) as Recording[];
-
-    const results = await Promise.all(
-      recordings.map(async (item) => {
-        const title = item.title;
-        const artist = item['artist-credit']?.[0]?.name || '';
-        const album = item.releases?.[0]?.title || '';
-        const mbid = item.id;
-        const releaseId = item.releases?.[0]?.id;
-
-        let albumCover;
-        if (releaseId) {
-          const coverRes = await axios.get(`http://coverartarchive.org/release/${releaseId}`);
-          albumCover = coverRes.data.images?.[0]?.image;
-        }
-        return { title, artist, album, mbid, albumCover };
+    return await Promise.all(
+      (response.data.recordings || []).map(async (item: Recording) => {
+        return {
+          title: item.title,
+          artist: item['artist-credit']?.[0]?.name || '',
+          album: item.releases?.[0]?.title || '',
+          mbid: item.id,
+          albumCover: item.releases?.[0]?.id ? await getAlbumCover(item.releases?.[0].id) : '',
+        };
       })
     );
-    return results;
   }
 }
