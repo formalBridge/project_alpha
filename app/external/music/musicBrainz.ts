@@ -41,18 +41,13 @@ export class MusicBrainzAPI {
 
         let albumCover;
         if(releaseId){
-          try{
-            const coverRes = await axios.get(`http://coverartarchive.org/release/${releaseId}`);
-            albumCover = coverRes.data.images?.[0]?.image;
-          } catch (e) {
-            albumCover = undefined;
-          }
+          const coverRes = await axios.get(`http://coverartarchive.org/release/${releaseId}`);
+          albumCover = coverRes.data.images?.[0]?.image;
         }
         return { title, artist, album, mbid, albumCover }; 
         
       })
     )
-
     return results;
   }
 }
