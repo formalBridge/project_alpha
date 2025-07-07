@@ -26,7 +26,7 @@ export default function SearchMusic() {
               <img
                 src={song.albumCover}
                 alt={song.title}
-                style={{width: '100px', height: '100px', objectFit: 'cover'}}
+                style={{ width: '100px', height: '100px', objectFit: 'cover' }}
               />
             )}
             {song.title} - {song.artist}
