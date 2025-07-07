@@ -1,6 +1,5 @@
 import createLoader from 'app/utils/createLoader';
 
-import { fetchUser } from './services';
 import { fetchUserIncludeRecomandSong } from './services';
 
 export const profileLoader = createLoader(async ({ db, params }) => {
