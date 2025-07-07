@@ -1,5 +1,6 @@
-import styles from './SongItem.module.scss';
 import type { Song } from '@prisma/client';
+
+import styles from './SongItem.module.scss';
 
 interface SongItemProps {
   song: Song;
