@@ -1,4 +1,4 @@
-import type { MetaFunction } from '@remix-run/cloudflare';
+import type { MetaFunction } from '@remix-run/node';
 
 import { loader as musicLoader } from 'app/features/music/loader';
 import SearchMusic from 'app/features/music/pages/search';

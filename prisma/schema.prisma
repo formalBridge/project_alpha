@@ -10,8 +10,10 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+  // Enable this if you're using connection pooling
+  // relationMode = "prisma"
 }
 
 model Post {

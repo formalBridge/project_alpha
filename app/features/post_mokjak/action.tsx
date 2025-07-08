@@ -1,4 +1,4 @@
-import { redirect } from '@remix-run/cloudflare';
+import { redirect } from '@remix-run/node';
 
 import { postSchema } from 'app/features/post_mokjak/schema';
 import createAction from 'app/utils/createAction';

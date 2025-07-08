@@ -1,0 +1,11 @@
+# nhn-storageclass.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nhn-block-storage
+provisioner: cinder.csi.openstack.org
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+parameters:
+  type: General SSD

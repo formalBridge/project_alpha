@@ -1,0 +1,30 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Copy package files
+COPY package.json pnpm-lock.yaml* ./
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy Prisma schema
+COPY prisma ./prisma/
+
+# Generate Prisma Client
+RUN npx prisma generate
+
+# Copy the rest of the application
+COPY . .
+
+# Expose ports
+EXPOSE 3000 5555
+
+# Set environment variables
+ENV DOCKER=true
+
+# Start development server
+CMD ["sh", "-c", "pnpm run dev & npx prisma studio --port 5555"]

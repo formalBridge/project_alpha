@@ -1,4 +1,4 @@
-import type { MetaFunction } from '@remix-run/cloudflare';
+import type { MetaFunction } from '@remix-run/node';
 
 import { profileLoader } from 'app/features/profile/loader';
 import Profile from 'app/features/profile/pages/profile';

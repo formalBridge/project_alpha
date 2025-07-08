@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prisma-studio-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prisma-studio
+  template:
+    metadata:
+      labels:
+        app: prisma-studio
+    spec:
+      imagePullSecrets:
+      - name: ghcr-secret 
+      containers:
+      - name: prisma-studio
+        # Remix 앱과 동일한 이미지를 사용합니다.
+        image: ghcr.io/formalbridge/project_alpha:latest
+        
+        command: ["pnpm", "prisma", "studio"]
+
+        ports:
+        - containerPort: 5555
+        
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-url-secret
+              key: URL
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prisma-studio-service
+spec:
+  type: ClusterIP
+  selector:
+    app: prisma-studio
+  ports:
+  - protocol: TCP
+    port: 5555
+    targetPort: 5555
