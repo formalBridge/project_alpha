@@ -1,0 +1,54 @@
+# ------------------- Service ------------------- #
+# 클러스터 내부에서 다른 앱(Pod)들이 PostgreSQL에 접속할 때 사용할
+# 고정적인 네트워크 주소(DNS)를 제공합니다.
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service # 앱에서는 이 이름으로 DB에 접속하게 됩니다.
+spec:
+  ports:
+    - port: 5432 # 서비스가 5432 포트로 요청을 받습니다.
+  selector:
+    app: postgres # 'app: postgres' 라벨이 붙은 파드를 찾아 연결합니다.
+  clusterIP: None # Headless Service로 설정하여 파드의 IP를 직접 노출합니다. StatefulSet과 함께 쓸 때 권장됩니다.
+
+---
+# ----------------- StatefulSet ----------------- #
+# 데이터베이스 파드를 안정적으로 관리하기 위한 StatefulSet 입니다.
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-statefulset
+spec:
+  serviceName: "postgres-service"
+  replicas: 1 # 우선 1개의 파드만 실행합니다.
+  selector:
+    matchLabels:
+      app: postgres # 이 라벨을 기준으로 파드를 관리합니다.
+  template: # 여기부터는 실제 생성될 파드(Pod)에 대한 명세입니다.
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15 # 특정 버전을 명시하는 것이 안정적입니다.
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: postgres-secret # 위에서 만든 Secret의 값들을 환경변수로 주입합니다.
+          volumeMounts:
+            - name: postgres-storage # 아래에서 정의할 볼륨의 이름
+              mountPath: /var/lib/postgresql/data # PostgreSQL 데이터가 저장되는 컨테이너 내부 경로
+
+  # --- 영속적 볼륨 요청(Persistent Volume Claim) 템플릿 --- #
+  # 각 파드마다 영속적인 저장 공간을 자동으로 생성하고 연결하기 위한 템플릿입니다.
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-storage
+      spec:
+        accessModes: ["ReadWriteOnce"] # 한 번에 하나의 노드에서만 볼륨을 읽고 쓸 수 있습니다.
+        resources:
+          requests:
+            storage: 2Gi # 10GB의 저장 공간을 요청합니다. (필요에 따라 조절)
