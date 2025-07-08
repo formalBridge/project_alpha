@@ -1,6 +1,6 @@
 import createLoader from 'app/utils/createLoader';
 
-import { fetchUserIncludeRecomandSong } from './services';
+import { fetchUserIncludeRecomandSong, fetchUserRankings } from './services';
 
 export const profileLoader = createLoader(async ({ db, params }) => {
   const userId = Number(params.userId);
@@ -10,17 +10,7 @@ export const profileLoader = createLoader(async ({ db, params }) => {
     throw new Response('User Not Found', { status: 404 });
   }
 
-  const userRankings = await db.userRanking.findMany({
-    where: {
-      userId: userId,
-    },
-    include: {
-      song: true,
-    },
-    orderBy: {
-      rank: 'asc',
-    },
-  });
+  const userRankings = await fetchUserRankings(db)(userId);
 
   return { user, userRankings };
 });
