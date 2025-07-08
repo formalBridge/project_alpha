@@ -1,4 +1,4 @@
-import type { MetaFunction } from '@remix-run/cloudflare';
+import type { MetaFunction } from '@remix-run/node';
 
 import { updateAction } from 'app/features/post/action';
 import { updateLoader } from 'app/features/post/loader';

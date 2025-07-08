@@ -1,4 +1,4 @@
-import type { MetaFunction } from '@remix-run/cloudflare';
+import type { MetaFunction } from '@remix-run/node';
 
 import { insertAction } from 'app/features/post/action';
 import Create from 'app/features/post/pages/create';

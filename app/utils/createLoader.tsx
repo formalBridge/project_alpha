@@ -1,13 +1,12 @@
 import { PrismaClient } from '@prisma/client';
-import { LoaderFunctionArgs } from '@remix-run/cloudflare';
+import { LoaderFunctionArgs } from '@remix-run/node';
 
-import { getPrismaClient } from 'app/utils/prisma';
+import { prisma } from 'app/utils/prisma';
 
 export default function createLoader<LoaderReturnType>(
   loader: (args: LoaderFunctionArgs & { db: PrismaClient }) => LoaderReturnType
 ) {
   return (args: LoaderFunctionArgs) => {
-    const prismaClient = getPrismaClient({ env: args.context.cloudflare.env });
-    return loader({ ...args, db: prismaClient });
+    return loader({ ...args, db: prisma });
   };
 }

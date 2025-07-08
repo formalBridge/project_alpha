@@ -1,4 +1,4 @@
-import type { MetaFunction } from '@remix-run/cloudflare';
+import type { MetaFunction } from '@remix-run/node';
 
 import AddTodaySong from 'app/features/profile/pages/addTodaySong';
 
