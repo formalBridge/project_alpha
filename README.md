@@ -71,7 +71,7 @@ pnpm run db:reset
 
 ```bash
 # Prisma Studio 실행 (별도 터미널에서)
-pnpm run prisma:studio
+pnpm run studio:dev
 ```
 
 ## 접속 정보
@@ -86,8 +86,8 @@ pnpm run prisma:studio
 - `pnpm docker:logs`: 로그 확인
 - `pnpm docker:down`: 개발 서버 중지 및 정리
 - `pnpm db:reset`: 데이터베이스 초기화
-- `pnpm prisma:studio`: 데이터베이스 관리 UI 실행
-
+- `pnpm studio:dev`: 데이터베이스 관리 UI 실행
+- `pnpm studio:prod`: Production 데이터베이스 관리 UI 실행
 ## 환경 변수 설정
 
 `.env.example` 파일을 참고하여 `.env` 파일을 생성하세요.

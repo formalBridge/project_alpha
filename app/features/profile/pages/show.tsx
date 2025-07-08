@@ -1,12 +1,12 @@
 import { Link, useLoaderData } from '@remix-run/react';
 
+import { profileLoader } from 'app/features/profile/loader';
+
 import styles from './show.module.scss';
 import SongItem from '../components/SongItem';
 
-import type { loader as profileLoaderType } from '../../../routes/profile.$userId.show.tsx';
-
 export default function Show() {
-  const { user, userRankings } = useLoaderData<typeof profileLoaderType>();
+  const { user, userRankings } = useLoaderData<typeof profileLoader>();
 
   const isCurrentUserProfile = true; // Replace with actual logic to determine if it's the current user's profile
 

@@ -21,11 +21,13 @@ export default defineConfig({
     host: isDocker ? '0.0.0.0' : 'localhost',
     port: 3000,
     strictPort: true,
-    hmr: isDocker ? {
-      host: 'localhost',
-      port: 24678,
-      clientPort: 24678,
-    } : true,
+    hmr: isDocker
+      ? {
+          host: 'localhost',
+          port: 24678,
+          clientPort: 24678,
+        }
+      : true,
     watch: {
       usePolling: isDocker,
     },

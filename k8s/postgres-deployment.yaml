@@ -38,8 +38,8 @@ spec:
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
+              subPath: postgres-data
   
-  # ↓ ↓ ↓ 이 블록이 spec 안으로 들어왔습니다. 들여쓰기를 확인하세요! ↓ ↓ ↓
   volumeClaimTemplates:
     - metadata:
         name: postgres-storage

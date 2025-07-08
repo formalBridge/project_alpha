@@ -12,9 +12,17 @@ spec:
       labels:
         app: project-alpha
     spec:
+      # Add image pull secret for GHCR
+      imagePullSecrets:
+        - name: ghcr-credentials
+  template:
+    metadata:
+      labels:
+        app: project-alpha
+    spec:
       containers:
       - name: project-alpha
-        image: your-dockerhub-id/project-alpha:latest # 1. 이미지 주소 수정
+        image: ghcr.io/formalbridge/project_alpha:latest
         ports:
         - containerPort: 3000
         env:
@@ -46,6 +54,8 @@ spec:
             port: 3000
           initialDelaySeconds: 5
           periodSeconds: 5
+      imagePullSecrets:
+      - name: ghcr-secret
 ---
 apiVersion: v1
 kind: Service
