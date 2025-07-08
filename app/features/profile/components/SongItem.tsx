@@ -9,18 +9,18 @@ interface SongItemProps {
 
 export default function SongItem({ song, rank }: SongItemProps) {
   return (
-    <div className={styles['song-item']}>
+    <div className={styles['songItem']}>
       {rank !== undefined && <p className={styles.rank}>{rank}위</p>}
 
       <img
-        className={styles['item-image']}
+        className={styles['itemImage']}
         src={song.thumbnailUrl || '../../../public/images/features/profile/album_default2.png'}
         alt={song.title || 'No Title'}
       />
 
-      <div className={styles['item-text-box']}>
-        <p className={styles['item-title']}>{song.title}</p>
-        <p className={styles['item-artist']}>{song.artist}</p>
+      <div className={styles['itemTextBox']}>
+        <p className={styles['itemTitle']}>{song.title}</p>
+        <p className={styles['itemArtist']}>{song.artist}</p>
       </div>
     </div>
   );
