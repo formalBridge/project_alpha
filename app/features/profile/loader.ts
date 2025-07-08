@@ -1,9 +1,16 @@
 import createLoader from 'app/utils/createLoader';
 
-import { fetchUser } from './services';
+import { fetchUserIncludeRecomandSong, fetchUserRankings } from './services';
 
 export const profileLoader = createLoader(async ({ db, params }) => {
-  const user = await fetchUser(db)({ id: Number(params.userId) });
+  const userId = Number(params.userId);
+  const user = await fetchUserIncludeRecomandSong(db)(userId);
 
-  return { user };
+  if (!user) {
+    throw new Response('User Not Found', { status: 404 });
+  }
+
+  const userRankings = await fetchUserRankings(db)(userId);
+
+  return { user, userRankings };
 });

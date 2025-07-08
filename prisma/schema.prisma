@@ -24,6 +24,8 @@ model User {
   id   Int    @id @default(autoincrement())
   name String
   rankings UserRanking[]
+  todayRecommendedSongId  Int?
+  todayRecommendedSong    Song?      @relation(fields: [todayRecommendedSongId], references: [id], onDelete: SetNull)
 }
 
 model Post_mokjak {
@@ -39,6 +41,7 @@ model Song {
   thumbnailUrl String?
   album        String?
   rankings     UserRanking[]
+  usersTodayRecommended User []
 }
 
 model UserRanking {
