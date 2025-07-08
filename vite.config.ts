@@ -2,6 +2,8 @@ import { vitePlugin as remix } from '@remix-run/dev';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
+const isDocker = process.env.DOCKER === 'true';
+
 export default defineConfig({
   plugins: [
     remix({
@@ -15,6 +17,19 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
+  server: {
+    host: isDocker ? '0.0.0.0' : 'localhost',
+    port: 3000,
+    strictPort: true,
+    hmr: isDocker ? {
+      host: 'localhost',
+      port: 24678,
+      clientPort: 24678,
+    } : true,
+    watch: {
+      usePolling: isDocker,
+    },
+  },
   css: {
     modules: {
       localsConvention: 'camelCase',

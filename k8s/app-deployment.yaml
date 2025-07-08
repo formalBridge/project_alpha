@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: project-alpha
-  labels:
-    app: project-alpha
 spec:
   replicas: 1
   selector:
@@ -16,7 +14,7 @@ spec:
     spec:
       containers:
       - name: project-alpha
-        image: project-alpha:latest
+        image: your-dockerhub-id/project-alpha:latest # 1. 이미지 주소 수정
         ports:
         - containerPort: 3000
         env:
@@ -24,8 +22,11 @@ spec:
           value: "production"
         - name: PORT
           value: "3000"
-        - name: DATABASE_URL
-          value: "postgresql://postgres:postgres@postgres-service:5432/project_alpha"
+        - name: DATABASE_URL # 2. Secret을 사용하도록 수정
+          valueFrom:
+            secretKeyRef:
+              name: db-url-secret
+              key: URL
         resources:
           requests:
             cpu: "100m"
@@ -54,7 +55,7 @@ spec:
   selector:
     app: project-alpha
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 3000
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
   type: LoadBalancer
