@@ -2,20 +2,20 @@ import axios from 'axios';
 
 import { MusicInfo, Recording, SearchParams } from './IMusicSearchAPI';
 
-async function getAlbumCover(releaseId: string): Promise<string> {
-  try {
-    const coverRes = await axios.get(`http://coverartarchive.org/release/${releaseId}`);
-    return coverRes.data.images?.[0]?.image ?? '';
-  } catch (error: unknown) {
-    if (axios.isAxiosError(error) && error.response?.status === 404) {
-      return '';
-    }
-    throw error;
-  }
-}
-
 export class MusicBrainzAPI {
   private BASE_URL = 'https://musicbrainz.org/ws/2';
+
+  private async getAlbumCover(releaseId: string): Promise<string> {
+    try {
+      const coverRes = await axios.get(`http://coverartarchive.org/release/${releaseId}`);
+      return coverRes.data.images?.[0]?.image ?? '';
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return '';
+      }
+      throw error;
+    }
+  }
 
   async search(params: SearchParams): Promise<MusicInfo[]> {
     const queryParts = [];
@@ -42,7 +42,7 @@ export class MusicBrainzAPI {
           artist: item['artist-credit']?.[0]?.name || '',
           album: item.releases?.[0]?.title || '',
           mbid: item.id,
-          albumCover: item.releases?.[0]?.id ? await getAlbumCover(item.releases?.[0].id) : '',
+          albumCover: item.releases?.[0]?.id ? await this.getAlbumCover(item.releases?.[0].id) : '',
         };
       })
     );
