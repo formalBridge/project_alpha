@@ -6,7 +6,11 @@ import styles from 'app/features/profile/pages/searchSong.module.scss';
 
 const PLACEHOLDER = '/images/features/profile/album_default2.png';
 
-export default function SearchSongPage() {
+interface Props {
+  onSelect?: (song: MusicInfo, index: number) => void;
+}
+
+export default function SearchSongPage({ onSelect }: Props) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<MusicInfo[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,15 +31,8 @@ export default function SearchSongPage() {
     }
   };
 
-  const handleSelect = (song: MusicInfo, index: number) => {
-    // 화면 알림창으로 클릭 정보 표시
-    alert(`선택 ${index + 1} : ${song.title}  –  ${song.artist}`);
-    // TODO: fetcher.submit(...) 등으로 addTodaySong 호출
-  };
-
   return (
-    <div className={styles.searchWrapper}>
-      {}
+    <div className={styles.wrapper}>
       <form onSubmit={handleSearch} className={styles.formRow}>
         <input
           className={styles.input}
@@ -49,26 +46,21 @@ export default function SearchSongPage() {
         </button>
       </form>
 
-      {}
       <ul className={styles.songList}>
-        {results.map((song, i) => {
-          const coverUrl = PLACEHOLDER;
-
-          return (
-            <li
-              key={song.mbid ?? `${song.title}-${song.artist}`}
-              className={styles.songItem}
-              onClick={() => handleSelect(song, i)}
-            >
-              <img src={coverUrl} alt={song.album || 'Album placeholder'} className={styles.cover} />
-              <div className={styles.texts}>
-                <div className={styles.title}>{song.title}</div>
-                <div className={styles.artist}>{song.artist}</div>
-                <div className={styles.album}>{song.album}</div>
-              </div>
-            </li>
-          );
-        })}
+        {results.map((song, i) => (
+          <li
+            key={song.mbid ?? `${song.title}-${song.artist}`}
+            className={styles.songItem}
+            onClick={() => onSelect?.(song, i)}
+          >
+            <img src={song.albumCover || PLACEHOLDER} alt={song.album || 'Album cover'} className={styles.cover} />
+            <div className={styles.texts}>
+              <div className={styles.title}>{song.title}</div>
+              <div className={styles.artist}>{song.artist}</div>
+              <div className={styles.album}>{song.album}</div>
+            </div>
+          </li>
+        ))}
 
         {results.length === 0 && !isLoading && <p className={styles.empty}>검색 결과가 없습니다.</p>}
       </ul>
