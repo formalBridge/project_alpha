@@ -1,4 +1,4 @@
-import { PrismaClient, User, Prisma } from '@prisma/client';
+import { User, Prisma } from '@prisma/client';
 
 import createService from 'app/utils/createService';
 
@@ -14,9 +14,8 @@ export type UserRankingWithSong = Prisma.UserRankingGetPayload<{
   include: { song: true };
 }>;
 
-export const fetchUserIncludeRecomandSong =
-  (db: PrismaClient) =>
-  async (userId: number): Promise<UserWithRecommendedSong | null> => {
+export const fetchUserIncludeRecomandSong = createService<{ userId: number }, UserWithRecommendedSong | null>(
+  async (db, { userId }) => {
     const user = await db.user.findUnique({
       where: { id: userId },
       include: {
@@ -28,22 +27,29 @@ export const fetchUserIncludeRecomandSong =
       return null;
     }
 
-    return user;
-  };
+    return user as UserWithRecommendedSong;
+  }
+);
 
-export const fetchUserRankings =
-  (db: PrismaClient) =>
-  async (userId: number): Promise<UserRankingWithSong[]> => {
-    const userRankings = await db.userRanking.findMany({
-      where: {
-        userId: userId,
-      },
-      include: {
-        song: true,
-      },
-      orderBy: {
-        rank: 'asc',
-      },
-    });
-    return userRankings;
-  };
+export const fetchUserRankings = createService<{ userId: number }, UserRankingWithSong[]>(async (db, { userId }) => {
+  const userRankings = await db.userRanking.findMany({
+    where: { id: userId },
+    include: {
+      song: true,
+    },
+    orderBy: {
+      rank: 'asc',
+    },
+  });
+  return userRankings as UserRankingWithSong[];
+});
+
+export const findUserByHandle = createService<{ handle: string }, User | null>(async (db, args) => {
+  console.log(args);
+  const user = await db.user.findUnique({
+    where: {
+      handle: args.handle,
+    },
+  });
+  return user;
+});
