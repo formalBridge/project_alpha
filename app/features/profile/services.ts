@@ -14,7 +14,7 @@ export type UserRankingWithSong = Prisma.UserRankingGetPayload<{
   include: { song: true };
 }>;
 
-export const fetchUserIncludeRecomandSong = createService<{ userId: number }, UserWithRecommendedSong | null>(
+export const fetchUserWithRecomandSong = createService<{ userId: number }, UserWithRecommendedSong | null>(
   async (db, { userId }) => {
     const user = await db.user.findUnique({
       where: { id: userId },
@@ -31,21 +31,22 @@ export const fetchUserIncludeRecomandSong = createService<{ userId: number }, Us
   }
 );
 
-export const fetchUserRankings = createService<{ userId: number }, UserRankingWithSong[]>(async (db, { userId }) => {
-  const userRankings = await db.userRanking.findMany({
-    where: { id: userId },
-    include: {
-      song: true,
-    },
-    orderBy: {
-      rank: 'asc',
-    },
-  });
-  return userRankings as UserRankingWithSong[];
-});
+export const fetchUserWithUserRankings = createService<{ userId: number }, UserRankingWithSong[]>(
+  async (db, { userId }) => {
+    const userRankings = await db.userRanking.findMany({
+      where: { id: userId },
+      include: {
+        song: true,
+      },
+      orderBy: {
+        rank: 'asc',
+      },
+    });
+    return userRankings as UserRankingWithSong[];
+  }
+);
 
 export const findUserByHandle = createService<{ handle: string }, User | null>(async (db, args) => {
-  console.log(args);
   const user = await db.user.findUnique({
     where: {
       handle: args.handle,
