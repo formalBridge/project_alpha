@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
@@ -12,8 +6,6 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  // Enable this if you're using connection pooling
-  // relationMode = "prisma"
 }
 
 model Post {
@@ -23,11 +15,12 @@ model Post {
 }
 
 model User {
-  id   Int    @id @default(autoincrement())
-  name String
-  rankings UserRanking[]
-  todayRecommendedSongId  Int?
-  todayRecommendedSong    Song?      @relation(fields: [todayRecommendedSongId], references: [id], onDelete: SetNull)
+  id                     Int           @id @default(autoincrement())
+  name                   String
+  todayRecommendedSongId Int?
+  handle                 String        @unique
+  todayRecommendedSong   Song?         @relation(fields: [todayRecommendedSongId], references: [id])
+  rankings               UserRanking[]
 }
 
 model Post_mokjak {
@@ -37,13 +30,13 @@ model Post_mokjak {
 }
 
 model Song {
-  id           Int       @id @default(autoincrement())
-  title        String
-  artist       String
-  thumbnailUrl String?
-  album        String?
-  rankings     UserRanking[]
-  usersTodayRecommended User []
+  id                    Int           @id @default(autoincrement())
+  title                 String
+  artist                String
+  thumbnailUrl          String?
+  album                 String?
+  usersTodayRecommended User[]
+  rankings              UserRanking[]
 }
 
 model UserRanking {
@@ -53,12 +46,10 @@ model UserRanking {
   rank      Int      @default(0) @map("song_rank")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  user      User @relation(fields: [userId], references: [id])
-  song      Song @relation(fields: [songId], references: [id])
+  song      Song     @relation(fields: [songId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, songId])
   @@unique([userId, rank])
-
   @@map("user_rankings")
 }
