@@ -30,13 +30,15 @@ model Post_mokjak {
 }
 
 model Song {
-  id                    Int           @id @default(autoincrement())
-  title                 String
-  artist                String
-  thumbnailUrl          String?
-  album                 String?
-  usersTodayRecommended User[]
-  rankings              UserRanking[]
+  id           Int       @id @default(autoincrement())
+  title        String
+  artist       String
+  thumbnailUrl String?
+  album        String?
+  rankings     UserRanking[]
+  usersTodayRecommended User []
+
+  @@unique([title, artist])
 }
 
 model UserRanking {
