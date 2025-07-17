@@ -1,28 +1,77 @@
+import type { Song } from '@prisma/client';
 import { debounce } from 'es-toolkit';
 import { useState } from 'react';
 
-const SearchSongButton = () => {
-  const [searchText, setSearchText] = useState('');
+import { searchMusic } from 'app/external/music/SearchMusic';
+import styles from 'app/features/profile/components/SongItem.module.scss';
 
-  const debouncedSetSearchText = debounce((text: string) => {
-    setSearchText(text);
+interface Props {
+  onSelectSong: (song: Partial<Song>) => void;
+}
+
+export default function SearchSongButton({ onSelectSong }: Props) {
+  const [query, setQuery] = useState('');
+  const [results, setRes] = useState<Partial<Song>[]>([]);
+  const [loading, setLoad] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const runSearch = debounce(async (q: string) => {
+    if (!q.trim()) return setRes([]);
+    setLoad(true);
+    try {
+      const musics = await searchMusic.searchSong({ title: q });
+      setRes(
+        musics.map((m) => ({
+          title: m.title,
+          artist: m.artist,
+          album: m.album,
+          thumbnailUrl: m.albumCover,
+        }))
+      );
+    } finally {
+      setLoad(false);
+    }
   }, 300);
 
   return (
-    <div>
-      <button>
-        <span>노래 검색</span>
+    <div className={styles.wrapper}>
+      <button onClick={() => setOpen((o) => !o)} className={styles.trigger}>
+        노래 검색
       </button>
-      <div>
-        <input
-          onChange={(e) => debouncedSetSearchText(e.target.value)}
-          type="text"
-          placeholder="노래 제목 또는 아티스트 검색"
-        />
-        {searchText}
-      </div>
+
+      {open && (
+        <div className={styles.dropdown}>
+          <input
+            className={styles.input}
+            placeholder="제목 / 아티스트"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              runSearch(e.target.value);
+            }}
+          />
+
+          {loading && <p className={styles.loading}>검색 중…</p>}
+
+          <ul className={styles.list}>
+            {results.map((s, i) => (
+              <li
+                key={`${s.title}-${s.artist}-${i}`}
+                className={styles.item}
+                onClick={() => {
+                  onSelectSong(s);
+                  setOpen(false);
+                  setQuery('');
+                  setRes([]);
+                }}
+              >
+                {s.title} – {s.artist}
+              </li>
+            ))}
+            {!loading && query && results.length === 0 && <li className={styles.noResult}>검색 결과 없음</li>}
+          </ul>
+        </div>
+      )}
     </div>
   );
-};
-
-export default SearchSongButton;
+}
