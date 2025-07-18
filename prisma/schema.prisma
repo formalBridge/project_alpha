@@ -35,8 +35,10 @@ model Song {
   artist                String
   thumbnailUrl          String?
   album                 String?
-  usersTodayRecommended User[]
   rankings              UserRanking[]
+  usersTodayRecommended User[]
+
+  @@unique([title, artist])
 }
 
 model UserRanking {
