@@ -1,4 +1,3 @@
-// app/routes/profile.$userId.addTodaySong.tsx
 import { PrismaClient } from '@prisma/client';
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
