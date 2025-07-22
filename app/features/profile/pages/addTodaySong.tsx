@@ -40,13 +40,13 @@ export default function AddTodaySongPage({ initialSong }: AddTodaySongProps) {
     <div className={styles.container}>
       <Link to="../show">돌아가기</Link>
 
-      {}
+      <h1>오늘의 추천곡 수정</h1>
+
       <section className={styles.searchSection}>
         <h2>노래 검색</h2>
         <SearchSongPage onSelect={handleSongPicked} />
       </section>
 
-      {}
       {previewSong && (
         <section className={styles.previewSection}>
           <h2>선택한 곡 미리보기</h2>
