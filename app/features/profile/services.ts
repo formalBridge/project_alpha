@@ -34,7 +34,9 @@ export const fetchUserWithRecomandSong = createService<{ userId: number }, UserW
 export const fetchUserWithUserRankings = createService<{ userId: number }, UserRankingWithSong[]>(
   async (db, { userId }) => {
     const userRankings = await db.userRanking.findMany({
-      where: { id: userId },
+      where: {
+        userId: userId,
+      },
       include: {
         song: true,
       },
