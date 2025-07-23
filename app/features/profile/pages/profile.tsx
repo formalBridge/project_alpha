@@ -14,7 +14,7 @@ export default function Profile() {
         <img className={styles.profileAvatar} src="/images/features/profile/profile_test.png" />
         <div className={styles.profileTextbox}>
           <p className={styles.profileName}>{currentUser.name}</p>
-          <p className={styles.profileHandle}>@han_dle</p>
+          <p className={styles.profileHandle}>@{currentUser.handle}</p>
         </div>
       </div>
       <div className={styles.contentBox}>
