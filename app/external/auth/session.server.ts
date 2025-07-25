@@ -22,7 +22,6 @@ export const { getSession, commitSession, destroySession } = sessionStorage;
 // 사용자 세션에서 accessToken 꺼내는 함수
 export async function getUserFromSession(request: Request) {
   const session = await getSession(request.headers.get('Cookie'));
-  // const accessToken = session.get('accessToken');
   const user = session.get('user');
 
   if (!user) return null;
