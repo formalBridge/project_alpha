@@ -1,2 +1,12 @@
-// [WIP] 구글 로그인 성공 후 리디렉션된 code를 받아 처리하는 loader
-// 백엔드에 code 전달 + 리디렉션 처리 예정
+import { authCallbackLoader } from 'app/features/auth/loader';
+
+export const loader = authCallbackLoader;
+
+export default function AuthCallbackPage() {
+  return (
+    <div style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.8', textAlign: 'center', padding: '50px' }}>
+      <h1>Google 인증 처리 중...</h1>
+      <p>잠시만 기다려 주세요.</p>
+    </div>
+  );
+}
