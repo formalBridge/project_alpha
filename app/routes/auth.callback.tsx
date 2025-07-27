@@ -1,9 +1,6 @@
-//Google에서 리다이렉트된 후 authenticator.authenticate() 호출하여 세션 저장 및 리다이렉트 처리
-import type { LoaderFunctionArgs } from '@remix-run/node';
-
 import { authCallbackLoader } from 'app/features/auth/loader';
 
-export const loader = (args: LoaderFunctionArgs) => authCallbackLoader(args);
+export const loader = authCallbackLoader;
 
 export default function AuthCallbackPage() {
   return (

@@ -11,6 +11,7 @@ export default function LoginPage() {
   googleAuthUrl.searchParams.set('response_type', 'code');
   googleAuthUrl.searchParams.set('scope', 'openid profile email');
 
+  // 이후 scss로 분리 필요
   return (
     <div
       style={{
@@ -25,8 +26,6 @@ export default function LoginPage() {
       }}
     >
       <h1 style={{ textAlign: 'center', color: '#333' }}>로그인</h1>
-
-      {/* Google 로그인 시작을 위한 폼 (POST 요청을 /auth/google로 보냄) */}
       <form method="post" action="/auth/google">
         <button
           type="submit"

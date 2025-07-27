@@ -1,4 +1,3 @@
-// createCookieSessionStorage로 Remix 세션 처리 담당 (getSession, commitSession, destroySession)
 import { createCookieSessionStorage } from '@remix-run/node';
 
 const sessionSecret = process.env.SESSION_SECRET;
@@ -19,7 +18,6 @@ export const sessionStorage = createCookieSessionStorage({
 
 export const { getSession, commitSession, destroySession } = sessionStorage;
 
-// 사용자 세션에서 accessToken 꺼내는 함수
 export async function getUserFromSession(request: Request) {
   const session = await getSession(request.headers.get('Cookie'));
   const user = session.get('user');

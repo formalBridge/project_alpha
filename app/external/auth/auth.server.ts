@@ -33,7 +33,7 @@ const googleStrategy = new GoogleStrategy<SessionUser>(
       const user = await findOrCreateUser(db)({
         email: profile.emails[0].value,
         googleId: profile.id,
-        name: profile.displayName, // ⭐ name 필드 전달
+        name: profile.displayName,
         handle,
       });
       return {
@@ -41,7 +41,7 @@ const googleStrategy = new GoogleStrategy<SessionUser>(
         accessToken,
       };
     } finally {
-      await db.$disconnect(); // PrismaClient 연결 해제
+      await db.$disconnect();
     }
   }
 );

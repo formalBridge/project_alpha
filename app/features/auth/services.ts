@@ -17,7 +17,6 @@ export const findOrCreateUser = createService<FindOrCreateUserInput, PrismaUser>
   });
 
   if (!user) {
-    // 사용자가 없으면 새로 생성
     user = await db.user.create({
       data: {
         email,
@@ -27,7 +26,6 @@ export const findOrCreateUser = createService<FindOrCreateUserInput, PrismaUser>
       },
     });
   } else {
-    // ⭐ 기존 사용자라면 정보 업데이트 (Google ID와 이름 최신화)
     user = await db.user.update({
       where: { id: user.id },
       data: {
@@ -40,7 +38,7 @@ export const findOrCreateUser = createService<FindOrCreateUserInput, PrismaUser>
   return user;
 });
 
-export const getUserById = createService<{ userId: string }, PrismaUser | null>( // User 대신 PrismaUser 권장
+export const getUserById = createService<{ userId: string }, PrismaUser | null>(
   async (db: PrismaClient, args: { userId: string }) => {
     const user = await db.user.findUnique({
       where: { id: parseInt(args.userId) },
