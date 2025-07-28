@@ -4,14 +4,6 @@
 body {
   font-family: 'Noto Sans KR', sans-serif;
   margin: 0;
-  @include desktop {
-    padding-left: 15dvw;
-    padding-right: 15dvw;
-  }
-  @include tablet {
-    padding-left: 10dvw;
-    padding-right: 10dvw;
-  }
 }
 
 p {
