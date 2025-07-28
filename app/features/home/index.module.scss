@@ -1,0 +1,47 @@
+@use 'styles/layout' as *;
+
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: white;
+  gap: 24px;
+
+  width: 100%;
+  height: 100dvh;
+  padding: 0 12px;
+
+  .main-text {
+    font-size: 75px;
+    @include tablet {
+      font-size: 50px;
+    }
+    @include mobile {
+      font-size: 40px;
+    }
+    font-weight: 700;
+    word-break: keep-all;
+
+    strong {
+      color: $primary-500;
+    }
+  }
+
+  .start-button {
+    font-size: 36px;
+    font-weight: 700;
+    border: 0;
+    @include tablet {
+      font-size: 26px;
+    }
+    @include mobile {
+      font-size: 20px;
+    }
+    background-color: $primary-500;
+    color: white;
+    border-radius: 32px;
+    padding: 4px 16px;
+    cursor: pointer;
+  }
+}

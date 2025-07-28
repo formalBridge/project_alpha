@@ -1,5 +1,6 @@
 import type { LinksFunction } from '@remix-run/node';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
+
 import 'styles/main.scss';
 
 export const links: LinksFunction = () => [
@@ -13,8 +14,16 @@ export const links: LinksFunction = () => [
     rel: 'stylesheet',
     href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap',
   },
+  {
+    rel: 'icon',
+    href: '/favicon.ico',
+  },
 ];
 
+export const meta = () => [
+  { title: '두둠 음악' },
+  { name: 'description', content: '스쳐 가는 멜로디, 머무는 감정들. 음악을 쉽게 기록해 보세요.' },
+];
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -25,7 +34,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <div>{children}</div>
         <ScrollRestoration />
         <Scripts />
       </body>
