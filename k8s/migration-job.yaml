@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: prisma-migrate-job
+  labels:
+    app: project-alpha
+    job: migration
+spec:
+  template:
+    metadata:
+      labels:
+        app: project-alpha
+        job: migration
+    spec:
+      containers:
+      - name: prisma-migrate
+        image: ghcr.io/formalbridge/project_alpha:latest
+        command: ["npx", "prisma", "migrate", "deploy"]
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-url-secret
+              key: URL
+        envFrom:
+        - secretRef:
+            name: env-secret
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+      imagePullSecrets:
+      - name: ghcr-secret
+      restartPolicy: Never
+  backoffLimit: 3
+  ttlSecondsAfterFinished: 300
