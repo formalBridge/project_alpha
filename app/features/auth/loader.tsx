@@ -35,6 +35,7 @@ export const authCallbackLoader = createLoader(async ({ request }) => {
   const session = await getSession(request.headers.get('Cookie'));
 
   session.set('user', {
+    id: user.id,
     accessToken: user.accessToken,
     name: user.name,
     email: user.email,
@@ -46,7 +47,7 @@ export const authCallbackLoader = createLoader(async ({ request }) => {
   return new Response(null, {
     status: 302,
     headers: {
-      Location: '/',
+      Location: `/profile/${user.id}/show`,
       'Set-Cookie': cookie,
     },
   });

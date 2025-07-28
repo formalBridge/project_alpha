@@ -13,7 +13,7 @@ export default function Home() {
           </p>
         </h1>
         <div>
-          <Link to="/profile">
+          <Link to="/profile/redirect">
             <button className={styles.startButton}>지금 시작하기</button>
           </Link>
         </div>
