@@ -1,73 +1,61 @@
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import { Link } from '@remix-run/react';
+import { Link, useLoaderData, useSubmit } from '@remix-run/react';
 import { useState } from 'react';
 
-import styles from './editList.module.scss';
-import SongItem from '../components/SongItem';
-import { SortableItem } from '../components/SortableItem'; // 새로 추가된 컴포넌트
+import type { MusicInfo } from 'app/external/music/IMusicSearchAPI';
+import { type SimpleSong } from 'app/features/profile/components/SongItem';
+import SongItem from 'app/features/profile/components/SongItem';
+import styles from 'app/features/profile/pages/addTodaySong.module.scss';
 
-export default function EditList() {
-  // 초기 리스트 데이터
-  const [songs, setSongs] = useState([
-    { id: '1', content: <SongItem /> },
-    { id: '2', content: <SongItem /> },
-    { id: '3', content: <SongItem /> },
-    { id: '4', content: <SongItem /> },
-    { id: '5', content: <SongItem /> },
-  ]);
+import SearchSongInput from '../components/SearchSongInput';
+import { addTodaySongLoader } from '../loader';
 
-  // DnD 센서 설정
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
-  // 드래그 완료 시 호출되는 함수
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    // 드래그가 리스트 밖으로 벗어나면 아무 작업도 하지 않음
-    if (!over) return;
-
-    if (active.id !== over.id) {
-      setSongs((prevSongs) => {
-        const oldIndex = prevSongs.findIndex((song) => song.id === active.id);
-        const newIndex = prevSongs.findIndex((song) => song.id === over.id);
-        return arrayMove(prevSongs, oldIndex, newIndex);
-      });
-    }
-  };
+export default function EditListPage() {
+  const { initialSong } = useLoaderData<typeof addTodaySongLoader>();
+  const [previewSong, setPreviewSong] = useState<SimpleSong | null>(initialSong);
+  const savePickedSong = useSavePickedSong(setPreviewSong);
 
   return (
-    <>
-      <Link to="../show">Go Back</Link>
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={songs.map((song) => song.id)} strategy={verticalListSortingStrategy}>
-          <div className={styles.editListContainer}>
-            {songs.map((song) => (
-              <SortableItem key={song.id} id={song.id}>
-                {song.content}
-              </SortableItem>
-            ))}
-          </div>
-        </SortableContext>
-      </DndContext>
-    </>
+    <div className={styles.container}>
+      <Link to="../show">돌아가기</Link>
+
+      <h1>노래 랭킹 수정</h1>
+
+      <section className={styles.searchSection}>
+        <h2>노래 검색</h2>
+        <SearchSongInput onSelect={savePickedSong} />
+      </section>
+
+      {previewSong && (
+        <section className={styles.previewSection}>
+          <h2>선택한 곡 미리보기</h2>
+          <SongItem song={previewSong} />
+        </section>
+      )}
+    </div>
   );
 }
+
+const useSavePickedSong = (setPreviewSong: (song: SimpleSong) => void) => {
+  const submit = useSubmit();
+
+  return async (song: MusicInfo) => {
+    const ok = window.confirm(`"${song.title}" – ${song.artist}\n노래 랭킹에 등록하시겠습니까?`);
+    if (!ok) return;
+
+    const simple: SimpleSong = {
+      id: 0,
+      title: song.title,
+      artist: song.artist,
+      album: song.album ?? null,
+      thumbnailUrl: song.albumCover ? await song.albumCover : null,
+    };
+    setPreviewSong(simple);
+
+    const fd = new FormData();
+    fd.append('title', simple.title);
+    fd.append('artist', simple.artist);
+    fd.append('album', simple.album ?? '');
+    fd.append('thumbnailUrl', simple.thumbnailUrl ?? '');
+    submit(fd, { method: 'post' });
+  };
+};

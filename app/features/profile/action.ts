@@ -64,3 +64,57 @@ export const editHandleAction = createAction(async ({ request, db }) => {
     return data({ error: (err as Error).message }, { status: 400 });
   }
 });
+
+export const addRankingSongAction = createAction(async ({ request, db, params }) => {
+  const formData = await request.formData();
+
+  const userId = Number(params.userId);
+  if (isNaN(userId)) {
+    return new Response(JSON.stringify('잘못된 사용자입니다.'), { status: 400 });
+  }
+
+  const title = (formData.get('title') as string | null)?.trim() ?? '';
+  const artist = (formData.get('artist') as string | null)?.trim() ?? '';
+  const album = (formData.get('album') as string | null)?.trim() || null;
+  const thumbnailUrl = (formData.get('thumbnailUrl') as string | null)?.trim() || null;
+
+  if (!title || !artist) {
+    return new Response('제목과 아티스트는 필수입니다.', { status: 400 });
+  }
+
+  const song = await db.song.upsert({
+    where: { title_artist: { title, artist } },
+    create: { title, artist, album, thumbnailUrl },
+    update: {},
+  });
+
+  const existing = await db.userRanking.findUnique({
+    where: {
+      userId_songId: {
+        userId,
+        songId: song.id,
+      },
+    },
+  });
+
+  if (existing) {
+    return new Response(JSON.stringify('이미 등록된 곡입니다.'), { status: 400 });
+  }
+
+  const maxRank = await db.userRanking.aggregate({
+    where: { userId },
+    _max: { rank: true },
+  });
+
+  const nextRank = (maxRank._max.rank ?? 0) + 1;
+
+  await db.userRanking.create({
+    data: {
+      userId,
+      songId: song.id,
+      rank: nextRank,
+    },
+  });
+
+  return redirect('../show');
+});
