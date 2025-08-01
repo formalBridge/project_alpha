@@ -23,7 +23,7 @@ export default defineConfig({
     strictPort: true,
     hmr: isDocker
       ? {
-          host: 'localhost',
+          host: '0.0.0.0',
           port: 24678,
           clientPort: 24678,
         }
