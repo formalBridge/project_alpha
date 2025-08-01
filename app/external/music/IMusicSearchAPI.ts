@@ -9,7 +9,7 @@ export interface MusicInfo {
   artist: string;
   album: string;
   mbid?: string;
-  albumCover?: string;
+  albumCover?: Promise<string>;
 }
 
 export interface ArtistCredit {
