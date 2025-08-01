@@ -1,8 +1,9 @@
 import { Outlet, useLoaderData } from '@remix-run/react';
 
+import { isMobile } from 'app/utils/responsive';
+
 import { profileLoader } from '../loader';
 import styles from './profile.module.scss';
-
 export default function Profile() {
   const { user } = useLoaderData<typeof profileLoader>();
 
@@ -10,6 +11,7 @@ export default function Profile() {
 
   return (
     <div>
+      {isMobile() ? <MobileLayout /> : <DesktopLayout />}
       <div className={styles.profileBox}>
         <img className={styles.profileAvatar} src="/images/features/profile/profile_test.png" />
         <div className={styles.profileTextbox}>
@@ -23,3 +25,11 @@ export default function Profile() {
     </div>
   );
 }
+
+export const DesktopLayout = () => {
+  return <div>DesktopLayout</div>;
+};
+
+export const MobileLayout = () => {
+  return <div>MobileLayout</div>;
+};
