@@ -17,14 +17,7 @@ export class MusicBrainzAPI {
     }
   }
 
-  async search(params: SearchParams): Promise<MusicInfo[]> {
-    const queryParts = [];
-    if (params.title) queryParts.push(`recording:${params.title}`);
-    if (params.artist) queryParts.push(`artist:${params.artist}`);
-    if (params.album) queryParts.push(`release:${params.album}`);
-
-    const query = queryParts.join(' OR ');
-
+  private async searchBase(query: string): Promise<MusicInfo[]> {
     const response = await axios.get(`${this.BASE_URL}/recording`, {
       params: {
         query,
@@ -46,5 +39,23 @@ export class MusicBrainzAPI {
         };
       })
     );
+  }
+
+  public async search(params: SearchParams): Promise<MusicInfo[]> {
+    const queryParts = [];
+    if (params.title) queryParts.push(`recording:${params.title}`);
+    if (params.artist) queryParts.push(`artist:${params.artist}`);
+    if (params.album) queryParts.push(`release:${params.album}`);
+
+    const query = queryParts.join(' OR ');
+
+    return await this.searchBase(query);
+  }
+
+  public async searchSongWithQuery(query: string): Promise<MusicInfo[]> {
+    const tokens = query.match(/"[^"]*"|\S+/g) || []; // EX: 'Hello World "Nice to meet you"' -> ['Hello', 'World', '"Nice to meet you"']
+    const searchTokens = tokens.length <= 3 ? tokens.map((token) => `${token}~`) : tokens;
+    const searchQuery = searchTokens.join(' AND ');
+    return await this.searchBase(searchQuery);
   }
 }

@@ -45,9 +45,7 @@ const useSearchSong = () => {
     if (!searchQuery) {
       return;
     }
-    startTransition(() =>
-      searchMusic.searchSong({ title: searchQuery, artist: searchQuery }).then((songs) => setResults(songs))
-    );
+    startTransition(() => searchMusic.searchSongWithQuery(searchQuery).then((songs) => setResults(songs)));
   };
 
   return { query, setQuery, searchSong, results, isSearching };
