@@ -38,26 +38,34 @@ export default function Show() {
   const isCurrentUserProfile = true;
 
   return (
-    <>
-      <TodaySongSection song={user.todayRecommendedSong} isCurrentUserProfile={isCurrentUserProfile} />
-
-      <div className={styles.todayRecommendBox} style={{ marginTop: '2rem' }}>
-        <div className={styles.titleBox}>
-          <p className={styles.title}>👑 노래 랭킹</p>
-          {isCurrentUserProfile && (
-            <Link className={styles.goToEditLink} to="../editlist">
-              수정하기
-            </Link>
-          )}
-        </div>
-        <div className={styles.songBox}>
-          {userRankings.length > 0 ? (
-            userRankings.map((ranking) => <SongItem key={ranking.song.id} song={ranking.song} rank={ranking.rank} />)
-          ) : (
-            <p className={styles.noContentText}>아직 랭킹에 등록된 노래가 없습니다.</p>
-          )}
+    <div>
+      <div className={styles.profileBox}>
+        <img className={styles.profileAvatar} src="/images/features/profile/profile_test.png" />
+        <div className={styles.profileTextbox}>
+          <p className={styles.profileName}>{user.name}</p>
+          <p className={styles.profileHandle}>@{user.handle}</p>
         </div>
       </div>
-    </>
+      <div className={styles.contentBox}>
+        <TodaySongSection song={user.todayRecommendedSong} isCurrentUserProfile={isCurrentUserProfile} />
+        <div className={styles.todayRecommendBox} style={{ marginTop: '2rem' }}>
+          <div className={styles.titleBox}>
+            <p className={styles.title}>👑 노래 랭킹</p>
+            {isCurrentUserProfile && (
+              <Link className={styles.goToEditLink} to="../editlist">
+                수정하기
+              </Link>
+            )}
+          </div>
+          <div className={styles.songBox}>
+            {userRankings.length > 0 ? (
+              userRankings.map((ranking) => <SongItem key={ranking.song.id} song={ranking.song} rank={ranking.rank} />)
+            ) : (
+              <p className={styles.noContentText}>아직 랭킹에 등록된 노래가 없습니다.</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
