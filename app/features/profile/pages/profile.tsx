@@ -21,7 +21,7 @@ export const MobileLayout = () => {
             <Link to="/">Home</Link>
           </li>
           <li>
-            <Link to="/search">Search</Link>
+            <Link to="/profile/search">Search</Link>
           </li>
           <li>
             <Link to="/profile/redirect">Profile</Link>
@@ -42,7 +42,7 @@ export const DesktopLayout = () => {
         </Link>
         <ul className={styles.list}>
           <li>
-            <Link to="/search">Search</Link>
+            <Link to="/profile/search">Search</Link>
           </li>
           <li>
             <Link to="/profile/redirect">Profile</Link>
