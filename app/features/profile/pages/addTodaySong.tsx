@@ -14,9 +14,33 @@ interface AddTodaySongProps {
 
 export default function AddTodaySongPage({ initialSong }: AddTodaySongProps) {
   const [previewSong, setPreviewSong] = useState<SimpleSong | null>(initialSong);
+  const savePickedSong = useSavePickedSong(setPreviewSong);
+
+  return (
+    <div className={styles.container}>
+      <Link to="../show">돌아가기</Link>
+
+      <h1>오늘의 추천곡 수정</h1>
+
+      <section className={styles.searchSection}>
+        <h2>노래 검색</h2>
+        <SearchSongInput onSelect={savePickedSong} />
+      </section>
+
+      {previewSong && (
+        <section className={styles.previewSection}>
+          <h2>선택한 곡 미리보기</h2>
+          <SongItem song={previewSong} />
+        </section>
+      )}
+    </div>
+  );
+}
+
+const useSavePickedSong = (setPreviewSong: (song: SimpleSong) => void) => {
   const submit = useSubmit();
 
-  const handleSongPicked = (song: MusicInfo) => {
+  return (song: MusicInfo) => {
     const ok = window.confirm(`"${song.title}" – ${song.artist}\n오늘의 추천곡으로 등록하시겠습니까?`);
     if (!ok) return;
 
@@ -36,24 +60,4 @@ export default function AddTodaySongPage({ initialSong }: AddTodaySongProps) {
     fd.append('thumbnailUrl', simple.thumbnailUrl ?? '');
     submit(fd, { method: 'post' });
   };
-
-  return (
-    <div className={styles.container}>
-      <Link to="../show">돌아가기</Link>
-
-      <h1>오늘의 추천곡 수정</h1>
-
-      <section className={styles.searchSection}>
-        <h2>노래 검색</h2>
-        <SearchSongInput onSelect={handleSongPicked} />
-      </section>
-
-      {previewSong && (
-        <section className={styles.previewSection}>
-          <h2>선택한 곡 미리보기</h2>
-          <SongItem song={previewSong} />
-        </section>
-      )}
-    </div>
-  );
-}
+};
