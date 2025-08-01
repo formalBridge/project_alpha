@@ -36,10 +36,10 @@ export const DesktopLayout = () => {
   return (
     <div className={styles.desktop}>
       <nav className={styles.navigation}>
-        <div className={styles.logo}>
+        <Link to="/" className={styles.logo}>
           <Logo className={styles.logoIcon} />
           <span>두둠 음악</span>
-        </div>
+        </Link>
         <ul className={styles.list}>
           <li>
             <Link to="/search">Search</Link>
