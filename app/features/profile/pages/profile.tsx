@@ -1,12 +1,20 @@
 import { Link, Outlet } from '@remix-run/react';
+import { useEffect, useState } from 'react';
 
 import Logo from 'app/icon/logo';
-import { isMobile } from 'app/utils/responsive';
+import { useIsMobile } from 'app/utils/responsive';
 
 import styles from './profile.module.scss';
 
 export default function Profile() {
-  return isMobile() ? <MobileLayout /> : <DesktopLayout />;
+  const [isMounted, setIsMounted] = useState(false);
+  const isMobile = useIsMobile();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  return isMounted ? isMobile ? <MobileLayout /> : <DesktopLayout /> : null;
 }
 
 export const MobileLayout = () => {

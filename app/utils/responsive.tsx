@@ -1,20 +1,18 @@
 import { ReactNode } from 'react';
-import { useMediaQuery } from 'react-responsive';
+import MediaQuery, { useMediaQuery } from 'react-responsive';
 
-export const isDesktop = () => useMediaQuery({ minWidth: 1024 });
+export const useIsDesktop = () => useMediaQuery({ minWidth: 1024 });
 
-export const isTablet = () => useMediaQuery({ minWidth: 768, maxWidth: 1023 });
+export const useIsTablet = () => useMediaQuery({ minWidth: 768, maxWidth: 1023 });
 
-export const isMobile = () => useMediaQuery({ maxWidth: 767 });
+export const useIsMobile = () => useMediaQuery({ maxWidth: 767 });
 
-export const Desktop = ({ children }: { children: ReactNode }) => {
-  return isDesktop() ? children : null;
-};
+export const Desktop = ({ children }: { children: ReactNode }) => <MediaQuery minWidth={1024}>{children}</MediaQuery>;
 
-export const Tablet = ({ children }: { children: ReactNode }) => {
-  return isTablet() ? children : null;
-};
+export const Tablet = ({ children }: { children: ReactNode }) => (
+  <MediaQuery minWidth={768} maxWidth={1023}>
+    {children}
+  </MediaQuery>
+);
 
-export const Mobile = ({ children }: { children: ReactNode }) => {
-  return isMobile() ? children : null;
-};
+export const Mobile = ({ children }: { children: ReactNode }) => <MediaQuery maxWidth={767}>{children}</MediaQuery>;
