@@ -54,3 +54,15 @@ export const findUserByHandle = createService<{ handle: string }, User | null>(a
   });
   return user;
 });
+
+export const findUserByHandleSim = createService<{ handle: string }, User[]>(async (db, args) => {
+  const user = await db.user.findMany({
+    where: {
+      handle: {
+        contains: args.handle,
+        mode: 'insensitive',
+      },
+    },
+  });
+  return user;
+});
