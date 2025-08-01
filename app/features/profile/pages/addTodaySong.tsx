@@ -5,7 +5,8 @@ import type { MusicInfo } from 'app/external/music/IMusicSearchAPI';
 import { type SimpleSong } from 'app/features/profile/components/SongItem';
 import SongItem from 'app/features/profile/components/SongItem';
 import styles from 'app/features/profile/pages/addTodaySong.module.scss';
-import SearchSongPage from 'app/routes/profile.$userId.searchSong';
+
+import SearchSongInput from '../components/SearchSongInput';
 
 interface AddTodaySongProps {
   initialSong: SimpleSong | null;
@@ -44,7 +45,7 @@ export default function AddTodaySongPage({ initialSong }: AddTodaySongProps) {
 
       <section className={styles.searchSection}>
         <h2>노래 검색</h2>
-        <SearchSongPage onSelect={handleSongPicked} />
+        <SearchSongInput onSelect={handleSongPicked} />
       </section>
 
       {previewSong && (

@@ -10,7 +10,7 @@ interface Props {
   onSelect?: (song: MusicInfo, index: number) => void;
 }
 
-export default function SearchSongPage({ onSelect }: Props) {
+export default function SearchSongInput({ onSelect }: Props) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<MusicInfo[]>([]);
   const [isLoading, setIsLoading] = useState(false);
