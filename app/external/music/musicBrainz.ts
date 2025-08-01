@@ -23,7 +23,7 @@ export class MusicBrainzAPI {
     if (params.artist) queryParts.push(`artist:${params.artist}`);
     if (params.album) queryParts.push(`release:${params.album}`);
 
-    const query = queryParts.join(' AND ');
+    const query = queryParts.join(' OR ');
 
     const response = await axios.get(`${this.BASE_URL}/recording`, {
       params: {
@@ -42,7 +42,7 @@ export class MusicBrainzAPI {
           artist: item['artist-credit']?.[0]?.name || '',
           album: item.releases?.[0]?.title || '',
           mbid: item.id,
-          albumCover: item.releases?.[0]?.id ? await this.getAlbumCover(item.releases?.[0].id) : '',
+          albumCover: item.releases?.[0]?.id ? this.getAlbumCover(item.releases?.[0].id) : '',
         };
       })
     );

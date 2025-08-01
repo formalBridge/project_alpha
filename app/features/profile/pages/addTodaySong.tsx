@@ -40,7 +40,7 @@ export default function AddTodaySongPage({ initialSong }: AddTodaySongProps) {
 const useSavePickedSong = (setPreviewSong: (song: SimpleSong) => void) => {
   const submit = useSubmit();
 
-  return (song: MusicInfo) => {
+  return async (song: MusicInfo) => {
     const ok = window.confirm(`"${song.title}" – ${song.artist}\n오늘의 추천곡으로 등록하시겠습니까?`);
     if (!ok) return;
 
@@ -49,7 +49,7 @@ const useSavePickedSong = (setPreviewSong: (song: SimpleSong) => void) => {
       title: song.title,
       artist: song.artist,
       album: song.album ?? null,
-      thumbnailUrl: song.albumCover ?? null,
+      thumbnailUrl: song.albumCover ? await song.albumCover : null,
     };
     setPreviewSong(simple);
 

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { Await } from '@remix-run/react';
+import { Suspense, useState, useTransition } from 'react';
 
 import type { MusicInfo } from 'app/external/music/IMusicSearchAPI';
 import { searchMusic } from 'app/external/music/SearchMusic';
@@ -11,29 +12,11 @@ interface Props {
 }
 
 export default function SearchSongInput({ onSelect }: Props) {
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState<MusicInfo[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const trimmed = query.trim();
-    if (!trimmed) return;
-
-    setIsLoading(true);
-    try {
-      const songs = await searchMusic.searchSong({ title: trimmed });
-      setResults(songs);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { query, setQuery, searchSong, results, isSearching } = useSearchSong();
 
   return (
     <div className={styles.wrapper}>
-      <form onSubmit={handleSearch} className={styles.formRow}>
+      <form onSubmit={searchSong} className={styles.formRow}>
         <input
           className={styles.input}
           type="text"
@@ -41,29 +24,66 @@ export default function SearchSongInput({ onSelect }: Props) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <button className={styles.button} type="submit" disabled={isLoading}>
-          {isLoading ? '검색 중...' : '검색'}
+        <button type="submit" className={styles.button} disabled={isSearching}>
+          {isSearching ? '검색 중...' : '검색'}
         </button>
       </form>
 
-      <ul className={styles.songList}>
-        {results.map((song, i) => (
-          <li
-            key={song.mbid ?? `${song.title}-${song.artist}`}
-            className={styles.songItem}
-            onClick={() => onSelect(song, i)}
-          >
-            <img src={song.albumCover || PLACEHOLDER} alt={song.album || 'Album cover'} className={styles.cover} />
-            <div className={styles.texts}>
-              <div className={styles.title}>{song.title}</div>
-              <div className={styles.artist}>{song.artist}</div>
-              <div className={styles.album}>{song.album}</div>
-            </div>
-          </li>
-        ))}
-
-        {results.length === 0 && !isLoading && <p className={styles.empty}>검색 결과가 없습니다.</p>}
-      </ul>
+      <SearchedSongList songs={results} onSelect={onSelect} isSearching={isSearching} />
     </div>
   );
 }
+
+const useSearchSong = () => {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<MusicInfo[]>([]);
+  const [isSearching, startTransition] = useTransition();
+
+  const searchSong = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const searchQuery = query.trim();
+    if (!searchQuery) {
+      return;
+    }
+    startTransition(() =>
+      searchMusic.searchSong({ title: searchQuery, artist: searchQuery }).then((songs) => setResults(songs))
+    );
+  };
+
+  return { query, setQuery, searchSong, results, isSearching };
+};
+
+const SearchedSongList = ({
+  songs,
+  onSelect,
+  isSearching,
+}: {
+  songs: MusicInfo[];
+  onSelect: (song: MusicInfo, index: number) => void;
+  isSearching: boolean;
+}) => {
+  return (
+    <ul className={styles.songList}>
+      {songs.map((song, i) => (
+        <li
+          key={song.mbid ?? `${song.title}-${song.artist}`}
+          className={styles.songItem}
+          onClick={() => onSelect(song, i)}
+        >
+          <Suspense fallback={<img src={PLACEHOLDER} alt="Album cover" className={styles.cover} />}>
+            <Await resolve={song.albumCover}>
+              {(albumCover) => <img src={albumCover || PLACEHOLDER} alt={song.album} className={styles.cover} />}
+            </Await>
+          </Suspense>
+          <div className={styles.texts}>
+            <div className={styles.title}>{song.title}</div>
+            <div className={styles.artist}>{song.artist}</div>
+            <div className={styles.album}>{song.album}</div>
+          </div>
+        </li>
+      ))}
+
+      {songs.length === 0 && !isSearching && <p className={styles.empty}>검색 결과가 없습니다.</p>}
+    </ul>
+  );
+};
