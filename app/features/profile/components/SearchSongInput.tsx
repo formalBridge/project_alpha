@@ -7,7 +7,7 @@ import styles from 'app/features/profile/pages/searchSong.module.scss';
 const PLACEHOLDER = '/images/features/profile/album_default2.png';
 
 interface Props {
-  onSelect?: (song: MusicInfo, index: number) => void;
+  onSelect: (song: MusicInfo, index: number) => void;
 }
 
 export default function SearchSongInput({ onSelect }: Props) {
@@ -51,7 +51,7 @@ export default function SearchSongInput({ onSelect }: Props) {
           <li
             key={song.mbid ?? `${song.title}-${song.artist}`}
             className={styles.songItem}
-            onClick={() => onSelect?.(song, i)}
+            onClick={() => onSelect(song, i)}
           >
             <img src={song.albumCover || PLACEHOLDER} alt={song.album || 'Album cover'} className={styles.cover} />
             <div className={styles.texts}>

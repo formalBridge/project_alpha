@@ -29,6 +29,35 @@ export const profileRedirectLoader = createLoader(async ({ request }) => {
   return redirect(`/profile/${user.id}/show`);
 });
 
+export const addTodaySongLoader = createLoader(async ({ db, params }) => {
+  // TODO: 본인 계정만 수정할 수 있도록 변경해야 함
+  const userId = Number(params.userId);
+  if (isNaN(userId)) {
+    throw new Response('잘못된 사용자입니다.', { status: 400 });
+  }
+
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    select: {
+      todayRecommendedSong: {
+        select: {
+          id: true,
+          title: true,
+          artist: true,
+          album: true,
+          thumbnailUrl: true,
+        },
+      },
+    },
+  });
+
+  if (!user) {
+    throw new Response('유저가 존재하지 않습니다.', { status: 404 });
+  }
+
+  return { initialSong: user.todayRecommendedSong };
+});
+
 export const searchLoader = createLoader(async ({ db, request }) => {
   const url = new URL(request.url);
   const search = new URLSearchParams(url.search);
