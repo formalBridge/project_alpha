@@ -1,5 +1,6 @@
 import { Link, Outlet } from '@remix-run/react';
 
+import Logo from 'app/icon/logo';
 import { isMobile } from 'app/utils/responsive';
 
 import styles from './profile.module.scss';
@@ -7,14 +8,6 @@ import styles from './profile.module.scss';
 export default function Profile() {
   return isMobile() ? <MobileLayout /> : <DesktopLayout />;
 }
-
-export const DesktopLayout = () => {
-  return (
-    <div>
-      <Outlet />
-    </div>
-  );
-};
 
 export const MobileLayout = () => {
   return (
@@ -35,6 +28,32 @@ export const MobileLayout = () => {
           </li>
         </ul>
       </nav>
+    </div>
+  );
+};
+
+export const DesktopLayout = () => {
+  return (
+    <div className={styles.desktop}>
+      <nav className={styles.navigation}>
+        <div className={styles.logo}>
+          <Logo className={styles.logoIcon} />
+          <span>두둠 음악</span>
+        </div>
+        <ul className={styles.list}>
+          <li>
+            <Link to="/search">Search</Link>
+          </li>
+          <li>
+            <Link to="/profile/redirect">Profile</Link>
+          </li>
+        </ul>
+      </nav>
+      <div className={styles.outletWrapper}>
+        <div className={styles.outlet}>
+          <Outlet />
+        </div>
+      </div>
     </div>
   );
 };

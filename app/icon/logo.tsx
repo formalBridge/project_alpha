@@ -1,8 +1,15 @@
 import { IconType } from './icon';
 
-const Logo: IconType = ({ height, width }) => {
+const Logo: IconType = ({ height = 40, width = 40, className }) => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width={width} height={height} role="img">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 100 100"
+      width={width}
+      height={height}
+      role="img"
+      className={className}
+    >
       <rect width="90" height="90" x="5" y="5" rx="22" ry="22" fill="#F97316" />
       <g fill="white" transform="rotate(10 50 50)">
         <rect x="42" y="18" width="15" height="52" />
