@@ -1,4 +1,4 @@
-import { Link, useSubmit } from '@remix-run/react';
+import { Link, useLoaderData, useSubmit } from '@remix-run/react';
 import { useState } from 'react';
 
 import type { MusicInfo } from 'app/external/music/IMusicSearchAPI';
@@ -7,12 +7,10 @@ import SongItem from 'app/features/profile/components/SongItem';
 import styles from 'app/features/profile/pages/addTodaySong.module.scss';
 
 import SearchSongInput from '../components/SearchSongInput';
+import { addTodaySongLoader } from '../loader';
 
-interface AddTodaySongProps {
-  initialSong: SimpleSong | null;
-}
-
-export default function AddTodaySongPage({ initialSong }: AddTodaySongProps) {
+export default function AddTodaySongPage() {
+  const { initialSong } = useLoaderData<typeof addTodaySongLoader>();
   const [previewSong, setPreviewSong] = useState<SimpleSong | null>(initialSong);
   const savePickedSong = useSavePickedSong(setPreviewSong);
 
