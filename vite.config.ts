@@ -4,6 +4,12 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 const isDocker = process.env.DOCKER === 'true';
 
+declare module '@remix-run/server-runtime' {
+  interface Future {
+    v3_singleFetch: true;
+  }
+}
+
 export default defineConfig({
   plugins: [
     remix({
