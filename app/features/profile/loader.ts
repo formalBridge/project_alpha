@@ -4,6 +4,7 @@ import { authenticator } from 'app/external/auth/auth.server';
 import { getUserFromSession } from 'app/external/auth/session.server';
 import createLoader from 'app/utils/createLoader';
 
+import { searchSongInputLoader } from './components/SearchSongInput';
 import { fetchUserWithRecomandSong, fetchUserWithUserRankings, findUserByHandleSim } from './services';
 
 export const profileLoader = createLoader(async ({ db, params }) => {
@@ -29,7 +30,7 @@ export const profileRedirectLoader = createLoader(async ({ request }) => {
   return redirect(`/profile/${user.id}/show`);
 });
 
-export const addTodaySongLoader = createLoader(async ({ db, params }) => {
+export const addTodaySongLoader = createLoader(async ({ db, params, request }) => {
   // TODO: 본인 계정만 수정할 수 있도록 변경해야 함
   const userId = Number(params.userId);
   if (isNaN(userId)) {
@@ -55,7 +56,9 @@ export const addTodaySongLoader = createLoader(async ({ db, params }) => {
     throw new Response('유저가 존재하지 않습니다.', { status: 404 });
   }
 
-  return { initialSong: user.todayRecommendedSong };
+  const songs = searchSongInputLoader({ request });
+
+  return { initialSong: user.todayRecommendedSong, songs };
 });
 
 export const searchLoader = createLoader(async ({ db, request }) => {

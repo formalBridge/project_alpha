@@ -10,7 +10,7 @@ import SearchSongInput from '../components/SearchSongInput';
 import { addTodaySongLoader } from '../loader';
 
 export default function AddTodaySongPage() {
-  const { initialSong } = useLoaderData<typeof addTodaySongLoader>();
+  const { initialSong, songs } = useLoaderData<typeof addTodaySongLoader>();
   const [previewSong, setPreviewSong] = useState<SimpleSong | null>(initialSong);
   const savePickedSong = useSavePickedSong(setPreviewSong);
 
@@ -22,7 +22,7 @@ export default function AddTodaySongPage() {
 
       <section className={styles.searchSection}>
         <h2>노래 검색</h2>
-        <SearchSongInput onSelect={savePickedSong} />
+        <SearchSongInput onSelect={savePickedSong} songs={songs} />
       </section>
 
       {previewSong && (

@@ -7,11 +7,21 @@ export class MusicBrainzAPI {
 
   private async getAlbumCover(releaseId: string): Promise<string> {
     try {
-      const coverRes = await axios.get(`http://coverartarchive.org/release/${releaseId}`);
+      const coverRes = await axios.get(`https://coverartarchive.org/release/${releaseId}`, {
+        timeout: 5000, // 5 seconds timeout
+      });
       return coverRes.data.images?.[0]?.image ?? '';
     } catch (error: unknown) {
-      if (axios.isAxiosError(error) && error.response?.status === 404) {
+      if (!axios.isAxiosError(error)) {
+        throw error;
+      }
+
+      if (error.response?.status === 404) {
         return '';
+      }
+
+       if (!error.response) {
+        return ''; // 빈 문자열 반환
       }
       throw error;
     }
