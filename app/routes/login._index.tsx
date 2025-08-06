@@ -1,12 +1,13 @@
-import type { MetaFunction } from '@remix-run/node';
+import { MetaFunction } from '@remix-run/node';
 
 import { loginLoader } from 'app/features/auth/loader';
-import LoginPage from 'app/features/auth/pages';
+import { LoginPage } from 'app/features/auth/pages';
 
-export const meta: MetaFunction = () => {
-  return [{ title: 'Login' }, { name: 'description', content: 'Google 계정으로 로그인' }];
-};
+export const loader = loginLoader;
 
-export { loginLoader as loader };
+export const meta: MetaFunction = () => [
+  { title: '로그인 | MyApp' },
+  { name: 'description', content: '구글 로그인 페이지입니다.' },
+];
 
 export default LoginPage;
