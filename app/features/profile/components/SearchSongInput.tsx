@@ -49,7 +49,9 @@ const SearchedSongList = ({
                 >
                   <Suspense fallback={<img src={PLACEHOLDER} alt="Album cover" className={styles.cover} />}>
                     <Await resolve={song.albumCover}>
-                      {(albumCover) => <img src={albumCover || PLACEHOLDER} alt={song.album} className={styles.cover} />}
+                      {(albumCover) => (
+                        <img src={albumCover || PLACEHOLDER} alt={song.album} className={styles.cover} />
+                      )}
                     </Await>
                   </Suspense>
                   <div className={styles.texts}>

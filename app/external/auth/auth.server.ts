@@ -1,4 +1,4 @@
-import { PrismaClient, User as PrismaUser } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 import { Authenticator } from 'remix-auth';
 import { GoogleStrategy, GoogleProfile } from 'remix-auth-google';
 
@@ -6,8 +6,7 @@ import { findOrCreateUser } from 'app/features/auth/services';
 
 import { sessionStorage } from './session.server';
 
-type SessionUser = { accessToken: string } & PrismaUser;
-export const authenticator = new Authenticator<SessionUser>(sessionStorage);
+export const authenticator = new Authenticator<User>(sessionStorage);
 
 const googleClientId = process.env.GOOGLE_CLIENT_ID;
 const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
@@ -17,15 +16,13 @@ if (!googleClientId || !googleClientSecret || !googleRedirectUri) {
   throw new Error('Missing Google OAuth environment variables.');
 }
 
-const googleStrategy = new GoogleStrategy<SessionUser>(
+const googleStrategy = new GoogleStrategy<User>(
   {
     clientID: googleClientId,
     clientSecret: googleClientSecret,
     callbackURL: googleRedirectUri,
   },
-  async ({ accessToken, profile }: { accessToken: string; profile: GoogleProfile }) => {
-    console.log('🔑 accessToken', accessToken);
-    console.log('👤 profile', profile);
+  async ({ accessToken: _accessToken, profile }: { accessToken: string; profile: GoogleProfile }) => {
     const db = new PrismaClient();
 
     try {
@@ -36,10 +33,7 @@ const googleStrategy = new GoogleStrategy<SessionUser>(
         name: profile.displayName,
         handle,
       });
-      return {
-        ...user,
-        accessToken,
-      };
+      return user;
     } finally {
       await db.$disconnect();
     }
