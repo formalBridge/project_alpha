@@ -20,7 +20,7 @@ export class MusicBrainzAPI {
         return '';
       }
 
-       if (!error.response) {
+      if (!error.response) {
         return ''; // 빈 문자열 반환
       }
       throw error;
