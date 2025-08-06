@@ -17,12 +17,3 @@ export const sessionStorage = createCookieSessionStorage({
 });
 
 export const { getSession, commitSession, destroySession } = sessionStorage;
-
-export async function getUserFromSession(request: Request) {
-  const session = await getSession(request.headers.get('Cookie'));
-  const user = session.get('user');
-
-  if (!user) return null;
-
-  return user;
-}

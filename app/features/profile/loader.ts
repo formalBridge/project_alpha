@@ -1,7 +1,7 @@
 import { redirect } from '@remix-run/react';
 
 import { authenticator } from 'app/external/auth/auth.server';
-import { getUserFromSession } from 'app/external/auth/session.server';
+import { getCurrentUser } from 'app/external/auth/jwt.server';
 import createLoader from 'app/utils/createLoader';
 
 import { searchSongInputLoader } from './components/SearchSongInput';
@@ -21,7 +21,7 @@ export const profileLoader = createLoader(async ({ db, params }) => {
 });
 
 export const profileRedirectLoader = createLoader(async ({ request }) => {
-  const user = await getUserFromSession(request);
+  const user = await getCurrentUser(request);
 
   if (!user) {
     return authenticator.authenticate('google', request);
