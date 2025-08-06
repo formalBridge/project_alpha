@@ -1,3 +1,4 @@
+import { data, redirect } from '@remix-run/node';
 import { serialize } from 'cookie';
 
 import { authenticator } from 'app/external/auth/auth.server';
@@ -8,7 +9,7 @@ export const authCallbackLoader = createLoader(async ({ request }) => {
   const user = await authenticator.authenticate('google', request);
 
   if (!user) {
-    return new Response(null, { status: 302, headers: { Location: '/login' } });
+    return data({ error: 'auth_failed' }, { status: 401, headers: { Location: '/login?error=auth_failed' } });
   }
 
   const jwt = await createJwt({
@@ -24,10 +25,8 @@ export const authCallbackLoader = createLoader(async ({ request }) => {
     secure: process.env.NODE_ENV === 'production',
   });
 
-  return new Response(null, {
-    status: 302,
+  return redirect(`/profile/${user.id}/show`, {
     headers: {
-      Location: `/profile/${user.id}/show`,
       'Set-Cookie': jwtCookie,
     },
   });
