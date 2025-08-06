@@ -1,12 +1,12 @@
 import { useLoaderData, Link } from '@remix-run/react';
 
-import styles from './index.module.scss';
+import styles from './loginError.module.scss';
 
 interface LoaderData {
   error?: string | null;
 }
 
-export function LoginPage() {
+export function LoginErrorPage() {
   const { error } = useLoaderData<LoaderData>();
 
   return (

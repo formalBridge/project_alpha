@@ -9,7 +9,7 @@ export const authCallbackLoader = createLoader(async ({ request }) => {
   const user = await authenticator.authenticate('google', request);
 
   if (!user) {
-    return redirect('/login?error=auth_failed', { status: 401 });
+    return redirect('/login/error', { status: 401 });
   }
 
   const jwt = await createJwt({
