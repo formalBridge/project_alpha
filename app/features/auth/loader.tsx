@@ -6,14 +6,14 @@ import createLoader from 'app/utils/createLoader';
 
 export const authCallbackLoader = createLoader(async ({ request }) => {
   const user = await authenticator.authenticate('google', request);
-  
-  if(!user) {
-    return new Response(null, { status: 302, headers: { Location: '/login'}});
+
+  if (!user) {
+    return new Response(null, { status: 302, headers: { Location: '/login' } });
   }
 
   const jwt = await createJwt({
     id: user.id,
-    name: user.name
+    name: user.name,
   });
 
   const jwtCookie = serialize('jwt', jwt, {
