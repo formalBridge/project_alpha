@@ -66,3 +66,19 @@ export const findUserByHandleSim = createService<{ handle: string }, User[]>(asy
   });
   return user;
 });
+
+export const updateUserHandle = createService<{ userId: string; handle: string }, User>(
+  async (db, { userId, handle }) => {
+    const existingUser = await db.user.findUnique({
+      where: { handle },
+    });
+
+    if (existingUser && existingUser.id !== parseInt(userId)) {
+      throw new Error('이미 사용 중인 handle입니다.');
+    }
+    return db.user.update({
+      where: { id: parseInt(userId) },
+      data: { handle },
+    });
+  }
+);
