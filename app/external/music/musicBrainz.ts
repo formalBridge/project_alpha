@@ -9,6 +9,7 @@ export class MusicBrainzAPI {
     const response = await axios.get(`${this.BASE_URL}/recording`, {
       params: {
         query,
+        inc: 'artist-credits+releases',
         fmt: 'json',
       },
       headers: {
@@ -27,7 +28,7 @@ export class MusicBrainzAPI {
     });
   }
 
-  public async search(params: SearchParams): Promise<MusicInfo[]> {
+  public search(params: SearchParams): Promise<MusicInfo[]> {
     const queryParts = [];
     if (params.title) queryParts.push(`recording:${params.title}`);
     if (params.artist) queryParts.push(`artist:${params.artist}`);
@@ -35,13 +36,13 @@ export class MusicBrainzAPI {
 
     const query = queryParts.join(' OR ');
 
-    return await this.searchBase(query);
+    return this.searchBase(query);
   }
 
-  public async searchSongWithQuery(query: string): Promise<MusicInfo[]> {
+  public searchSongWithQuery(query: string): Promise<MusicInfo[]> {
     const tokens = query.match(/"[^"]*"|\S+/g) || []; // EX: 'Hello World "Nice to meet you"' -> ['Hello', 'World', '"Nice to meet you"']
     const searchTokens = tokens.length <= 3 ? tokens.map((token) => `${token}~`) : tokens;
     const searchQuery = searchTokens.join(' AND ');
-    return await this.searchBase(searchQuery);
+    return this.searchBase(searchQuery);
   }
 }
