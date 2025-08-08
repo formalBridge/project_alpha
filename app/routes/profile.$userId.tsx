@@ -7,6 +7,67 @@ import { useIsMobile } from 'app/utils/responsive';
 
 export { profileLoader as loader } from 'app/features/profile/loader';
 
+interface UserLike {
+  id?: number | string | null;
+  name?: string | null;
+  nickname?: string | null;
+  handle?: string | null;
+  email?: string | null;
+  avatarUrl?: string | null;
+}
+
+interface ItemProps {
+  href: string;
+  label: string;
+  iconSrc: string;
+  activeIconSrc?: string;
+  iconAlt?: string;
+}
+
+function useCurrentPath() {
+  const [path, setPath] = useState<string>('');
+  useEffect(() => {
+    const update = () => setPath(window.location.pathname);
+    update();
+    window.addEventListener('popstate', update);
+    return () => window.removeEventListener('popstate', update);
+  }, []);
+  return path;
+}
+
+function UserNavCard({ user }: { user: UserLike | null }) {
+  const path = useCurrentPath();
+  const isActive = /\/settings($|\/)/.test(path);
+
+  const displayName = user?.name ?? user?.nickname ?? '게스트';
+  const sub = (user?.handle ? `@${user.handle}` : user?.email) ?? '계정 설정';
+  const avatar = user?.avatarUrl || '/images/features/profile/profile_test.png';
+
+  return (
+    <a href="settings" className={`${styles.userCard} ${isActive ? styles.active : ''}`}>
+      <img src={avatar} alt="" className={styles.userAvatar} />
+      <div className={styles.userMeta}>
+        <div className={styles.userName}>{displayName}</div>
+        <div className={styles.userEmail}>{sub}</div>
+      </div>
+    </a>
+  );
+}
+
+function NavItem({ href, label, iconSrc, activeIconSrc, iconAlt = '' }: ItemProps) {
+  const path = useCurrentPath();
+  const seg = href.replace(/^\/+/, '');
+  const isActive = new RegExp(`/${seg}($|/)`).test(path);
+  const currentIcon = isActive && activeIconSrc ? activeIconSrc : iconSrc;
+
+  return (
+    <a href={href} className={`${styles.item} ${isActive ? styles.active : ''}`}>
+      <img src={currentIcon} alt={iconAlt} className={styles.icon} />
+      <span>{label}</span>
+    </a>
+  );
+}
+
 export const MobileLayout = ({ user: _user }: { user: UserLike | null }) => (
   <div className={styles.mobile}>
     <div className={styles.outlet}>
@@ -76,67 +137,6 @@ export const DesktopLayout = ({ user }: { user: UserLike | null }) => (
     </div>
   </div>
 );
-
-function useCurrentPath() {
-  const [path, setPath] = useState<string>('');
-  useEffect(() => {
-    const update = () => setPath(window.location.pathname);
-    update();
-    window.addEventListener('popstate', update);
-    return () => window.removeEventListener('popstate', update);
-  }, []);
-  return path;
-}
-
-type UserLike = {
-  id?: number | string | null;
-  name?: string | null;
-  nickname?: string | null;
-  handle?: string | null;
-  email?: string | null;
-  avatarUrl?: string | null;
-};
-
-function UserNavCard({ user }: { user: UserLike | null }) {
-  const path = useCurrentPath();
-  const isActive = /\/settings($|\/)/.test(path);
-
-  const displayName = user?.name ?? user?.nickname ?? '게스트';
-  const sub = (user?.handle ? `@${user.handle}` : user?.email) ?? '계정 설정';
-  const avatar = user?.avatarUrl || '/images/features/profile/profile_test.png';
-
-  return (
-    <a href="settings" className={`${styles.userCard} ${isActive ? styles.active : ''}`}>
-      <img src={avatar} alt="" className={styles.userAvatar} />
-      <div className={styles.userMeta}>
-        <div className={styles.userName}>{displayName}</div>
-        <div className={styles.userEmail}>{sub}</div>
-      </div>
-    </a>
-  );
-}
-
-type ItemProps = {
-  href: string;
-  label: string;
-  iconSrc: string;
-  activeIconSrc?: string;
-  iconAlt?: string;
-};
-
-function NavItem({ href, label, iconSrc, activeIconSrc, iconAlt = '' }: ItemProps) {
-  const path = useCurrentPath();
-  const seg = href.replace(/^\/+/, '');
-  const isActive = new RegExp(`/${seg}($|/)`).test(path);
-  const currentIcon = isActive && activeIconSrc ? activeIconSrc : iconSrc;
-
-  return (
-    <a href={href} className={`${styles.item} ${isActive ? styles.active : ''}`}>
-      <img src={currentIcon} alt={iconAlt} className={styles.icon} />
-      <span>{label}</span>
-    </a>
-  );
-}
 
 export default function ProfileLayout() {
   const data = useLoaderData<any>() || {};
