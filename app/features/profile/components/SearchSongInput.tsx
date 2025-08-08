@@ -50,7 +50,14 @@ const SearchedSongList = ({
                   <Suspense fallback={<img src={PLACEHOLDER} alt="Album cover" className={styles.cover} />}>
                     <Await resolve={song.albumCover}>
                       {(albumCover) => (
-                        <img src={albumCover || PLACEHOLDER} alt={song.album} className={styles.cover} />
+                        <img
+                          src={albumCover || PLACEHOLDER}
+                          alt={song.album}
+                          className={styles.cover}
+                          onError={(e) => {
+                            e.currentTarget.src = PLACEHOLDER;
+                          }}
+                        />
                       )}
                     </Await>
                   </Suspense>
