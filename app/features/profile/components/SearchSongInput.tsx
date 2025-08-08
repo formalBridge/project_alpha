@@ -17,9 +17,6 @@ export default function SearchSongInput({ onSelect, songs }: Props) {
     <div className={styles.wrapper}>
       <form className={styles.formRow}>
         <input className={styles.input} type="text" name="query" placeholder="노래 제목 / 아티스트..." />
-        <button type="submit" className={styles.button}>
-          검색
-        </button>
       </form>
 
       <SearchedSongList songs={songs} onSelect={onSelect} />

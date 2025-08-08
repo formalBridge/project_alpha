@@ -1,9 +1,7 @@
 import { Link, useLoaderData, useSubmit } from '@remix-run/react';
-import { useState } from 'react';
 
 import type { MusicInfo } from 'app/external/music/IMusicSearchAPI';
-import { type SimpleSong } from 'app/features/profile/components/SongItem';
-import SongItem from 'app/features/profile/components/SongItem';
+import SongItem, { type SimpleSong } from 'app/features/profile/components/SongItem';
 import styles from 'app/features/profile/pages/addTodaySong.module.scss';
 
 import SearchSongInput from '../components/SearchSongInput';
@@ -11,31 +9,32 @@ import { addTodaySongLoader } from '../loader';
 
 export default function AddTodaySongPage() {
   const { initialSong, songs } = useLoaderData<typeof addTodaySongLoader>();
-  const [previewSong, setPreviewSong] = useState<SimpleSong | null>(initialSong);
-  const savePickedSong = useSavePickedSong(setPreviewSong);
+  const savePickedSong = useSavePickedSong();
 
   return (
-    <div className={styles.container}>
-      <Link to="../show">돌아가기</Link>
-
-      <h1>오늘의 추천곡 수정</h1>
+    <div className={styles.addTodaySongContainer}>
+      <div className={styles.titleBox}>
+        <Link className={styles.backButton} to="../show">
+          {'<'}
+        </Link>
+        <h1 className={styles.title}>오늘의 추천곡 수정</h1>
+      </div>
 
       <section className={styles.searchSection}>
-        <h2>노래 검색</h2>
         <SearchSongInput onSelect={savePickedSong} songs={songs} />
       </section>
 
-      {previewSong && (
-        <section className={styles.previewSection}>
-          <h2>선택한 곡 미리보기</h2>
-          <SongItem song={previewSong} />
-        </section>
+      {initialSong && (
+        <div className={styles.initialSongContainer}>
+          <h3>현재 추천곡</h3>
+          <SongItem song={initialSong} />
+        </div>
       )}
     </div>
   );
 }
 
-const useSavePickedSong = (setPreviewSong: (song: SimpleSong) => void) => {
+const useSavePickedSong = () => {
   const submit = useSubmit();
 
   return async (song: MusicInfo) => {
@@ -49,7 +48,6 @@ const useSavePickedSong = (setPreviewSong: (song: SimpleSong) => void) => {
       album: song.album ?? null,
       thumbnailUrl: song.albumCover ? await song.albumCover : null,
     };
-    setPreviewSong(simple);
 
     const fd = new FormData();
     fd.append('title', simple.title);
