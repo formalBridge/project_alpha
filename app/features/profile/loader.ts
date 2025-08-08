@@ -89,7 +89,7 @@ export const editHandleLoader = createLoader(async ({ request }) => {
   return { userId: user.id };
 });
 
-export const editListLoader = createLoader(async ({ db, params }) => {
+export const editListLoader = createLoader(async ({ db, params, request }) => {
   const userId = Number(params.userId);
   if (isNaN(userId)) {
     throw new Response('잘못된 사용자입니다.', { status: 400 });
@@ -111,5 +111,7 @@ export const editListLoader = createLoader(async ({ db, params }) => {
     },
   });
 
-  return { userRankings };
+  const songs = searchSongInputLoader({ request });
+
+  return { userRankings, songs };
 });

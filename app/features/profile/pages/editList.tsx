@@ -7,11 +7,11 @@ import SongItem from 'app/features/profile/components/SongItem';
 import styles from 'app/features/profile/pages/addTodaySong.module.scss';
 
 import SearchSongInput from '../components/SearchSongInput';
-import { addTodaySongLoader } from '../loader';
+import { editListLoader } from '../loader';
 
 export default function EditListPage() {
-  const { initialSong } = useLoaderData<typeof addTodaySongLoader>();
-  const [previewSong, setPreviewSong] = useState<SimpleSong | null>(initialSong);
+  const { songs, userRankings } = useLoaderData<typeof editListLoader>();
+  const [previewSong, setPreviewSong] = useState<SimpleSong | null>(null);
   const savePickedSong = useSavePickedSong(setPreviewSong);
 
   return (
@@ -22,7 +22,7 @@ export default function EditListPage() {
 
       <section className={styles.searchSection}>
         <h2>노래 검색</h2>
-        <SearchSongInput onSelect={savePickedSong} />
+        <SearchSongInput onSelect={savePickedSong} songs={songs} />
       </section>
 
       {previewSong && (
@@ -31,6 +31,28 @@ export default function EditListPage() {
           <SongItem song={previewSong} />
         </section>
       )}
+      <section style={{ marginTop: 24 }}>
+        <h2>내 랭킹 리스트</h2>
+        {userRankings.length === 0 ? (
+          <p>아직 등록된 곡이 없습니다.</p>
+        ) : (
+          <ol>
+            {userRankings.map((r) => (
+              <li key={r.id} style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 }}>
+                <span>#{r.rank}</span>
+                <img
+                  src={r.song.thumbnailUrl ?? '/images/features/profile/album_default2.png'}
+                  alt={r.song.album ?? 'album'}
+                  style={{ width: 40, height: 40, objectFit: 'cover' }}
+                />
+                <span>
+                  {r.song.title} – {r.song.artist}
+                </span>
+              </li>
+            ))}
+          </ol>
+        )}
+      </section>
     </div>
   );
 }
