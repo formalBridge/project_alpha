@@ -16,6 +16,11 @@ export class MusicBrainzAPI {
         throw error;
       }
 
+      if (error.code === 'ECONNABORTED') {
+        console.warn('Cover art request timed out');
+        return '';
+      }
+
       if (error.response?.status === 404) {
         return '';
       }
