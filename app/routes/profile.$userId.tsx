@@ -7,7 +7,7 @@ import { useIsMobile } from 'app/utils/responsive';
 
 export { profileLoader as loader } from 'app/features/profile/loader';
 
-export const MobileLayout = ({ user }: { user: UserLike | null }) => (
+export const MobileLayout = ({ user: _user }: { user: UserLike | null }) => (
   <div className={styles.mobile}>
     <div className={styles.outlet}>
       <Outlet />
