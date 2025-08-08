@@ -1,4 +1,4 @@
-import { Await, Form, useNavigation } from '@remix-run/react';
+import { Await, Form } from '@remix-run/react';
 import { Suspense } from 'react';
 
 import type { MusicInfo } from 'app/external/music/IMusicSearchAPI';
@@ -31,11 +31,6 @@ const SearchedSongList = ({
   songs: Promise<MusicInfo[]> | undefined;
   onSelect: (song: MusicInfo, index: number) => void;
 }) => {
-  const navigation = useNavigation();
-  if (navigation.state === 'loading') {
-    return <p className={styles.loading}>검색 중...</p>;
-  }
-
   return (
     <ul className={styles.songList}>
       <Suspense fallback={<p className={styles.loading}>검색 중...</p>}>
