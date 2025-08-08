@@ -88,3 +88,30 @@ export const editHandleLoader = createLoader(async ({ request }) => {
 
   return { userId: user.id };
 });
+
+export const editListLoader = createLoader(async ({ db, params, request }) => {
+  const userId = Number(params.userId);
+  if (isNaN(userId)) {
+    throw new Response('잘못된 사용자입니다.', { status: 400 });
+  }
+
+  const userRankings = await db.userRanking.findMany({
+    where: { userId },
+    orderBy: { rank: 'asc' },
+    include: {
+      song: {
+        select: {
+          id: true,
+          title: true,
+          artist: true,
+          album: true,
+          thumbnailUrl: true,
+        },
+      },
+    },
+  });
+
+  const songs = searchSongInputLoader({ request });
+
+  return { userRankings, songs };
+});
