@@ -16,19 +16,7 @@ export class MusicBrainzAPI {
         throw error;
       }
 
-      if (error.code === 'ECONNABORTED') {
-        console.warn('Cover art request timed out');
-        return '';
-      }
-
-      if (error.response?.status === 404) {
-        return '';
-      }
-
-      if (!error.response) {
-        return ''; // 빈 문자열 반환
-      }
-      throw error;
+      return '';
     }
   }
 
