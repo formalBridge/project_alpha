@@ -1,0 +1,116 @@
+.card {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: block;
+  border: 1px solid #f1f3f5;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profileInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.userInfo {
+  .handle {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #212529;
+  }
+  .name {
+    font-size: 0.8rem;
+    color: #868e96;
+  }
+}
+
+.chevron {
+  color: #ced4da;
+  transition: transform 0.2s;
+
+  .card:hover & {
+    transform: translateX(3px);
+  }
+}
+
+.todaysPick {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.songThumbnail {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.songText {
+  min-width: 0;
+  .song {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #495057;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .artist {
+    font-size: 0.75rem;
+    color: #adb5bd;
+  }
+}
+
+.noSongPlaceholder {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 52px;
+  svg {
+    width: 18px;
+    height: 18px;
+    color: #ced4da;
+  }
+  p {
+    font-size: 0.8rem;
+    color: #adb5bd;
+  }
+}
