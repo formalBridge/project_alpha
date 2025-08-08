@@ -73,3 +73,12 @@ export const searchLoader = createLoader(async ({ db, request }) => {
 
   return { users };
 });
+
+export const editHandleLoader = createLoader(async ({ request }) => {
+  const user = await getCurrentUser(request);
+  if (!user) {
+    throw redirect('/login/error', { status: 401 });
+  }
+
+  return { userId: user.id };
+});

@@ -25,13 +25,13 @@ export const authCallbackLoader = createLoader(async ({ request }) => {
     secure: process.env.NODE_ENV === 'production',
   });
 
-  return redirect(`/profile/${user.id}/show`, {
+  const redirectTarget = user.handle.startsWith('google-')
+    ? `/profile/${user.id}/editHandle`
+    : `/profile/${user.id}/show`;
+
+  return redirect(redirectTarget, {
     headers: {
       'Set-Cookie': jwtCookie,
     },
   });
-});
-
-export const googleAuthLoader = createLoader(async ({ request }) => {
-  return authenticator.authenticate('google', request);
 });
