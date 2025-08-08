@@ -14,7 +14,7 @@ export function TodaySongSection({ song, isCurrentUserProfile }: TodaySongSectio
   return (
     <div className={styles.todayRecommendBox}>
       <div className={styles.titleBox}>
-        <p className={styles.title}>👍 오늘의 추천곡</p>
+        <p className={styles.title}>오늘의 추천곡</p>
         {isCurrentUserProfile && (
           <Link className={styles.goToEditLink} to="../addTodaySong">
             수정하기
@@ -50,7 +50,7 @@ export default function Show() {
         <TodaySongSection song={user.todayRecommendedSong} isCurrentUserProfile={isCurrentUserProfile} />
         <div className={styles.todayRecommendBox} style={{ marginTop: '2rem' }}>
           <div className={styles.titleBox}>
-            <p className={styles.title}>👑 노래 랭킹</p>
+            <p className={styles.title}>노래 랭킹</p>
             {isCurrentUserProfile && (
               <Link className={styles.goToEditLink} to="../editlist">
                 수정하기
