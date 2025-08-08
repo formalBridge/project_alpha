@@ -16,6 +16,7 @@ export class MusicBrainzAPI {
         headers: {
           'User-Agent': 'FormalBridge/1.0.0',
         },
+        timeout: 5000,
       })
       .then((response) => {
         if (!response.data || !response.data.recordings) {
