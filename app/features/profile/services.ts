@@ -55,17 +55,32 @@ export const findUserByHandle = createService<{ handle: string }, User | null>(a
   return user;
 });
 
-export const findUserByHandleSim = createService<{ handle: string }, User[]>(async (db, args) => {
-  const user = await db.user.findMany({
+export const findUserByHandleSim = createService<{ handle: string }, UserWithRecommendedSong[]>(async (db, args) => {
+  const users = await db.user.findMany({
     where: {
       handle: {
         contains: args.handle,
         mode: 'insensitive',
       },
     },
+    include: { todayRecommendedSong: true },
   });
-  return user;
+  return users;
 });
+
+export const getRecommendedUsers = createService<Record<string, never>, UserWithRecommendedSong[]>(
+  async (db, _args) => {
+    const users = await db.user.findMany({
+      take: 6,
+      include: { todayRecommendedSong: true },
+    });
+    // TODO: avatarUrl 추가 필요(현재는 랜덤)
+    return users.map((user) => ({
+      ...user,
+      avatarUrl: `https://i.pravatar.cc/150?u=${user.handle}`,
+    }));
+  }
+);
 
 export const updateUserHandle = createService<{ userId: string; handle: string }, User>(
   async (db, { userId, handle }) => {
