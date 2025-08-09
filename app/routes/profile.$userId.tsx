@@ -34,33 +34,18 @@ export const MobileLayout = ({ user: _user }: { user: Partial<User> | null }) =>
       <ul className={styles.list}>
         <li>
           <a href="/" className={styles.item}>
-            <img src="/images/features/profile/home_outline.png" alt="" className={styles.icon} />
-            <span>Home</span>
+            <img src="/images/features/profile/home.png" alt="" className={styles.icon} />
+            <span>마이페이지</span>
           </a>
         </li>
         <li>
-          <NavItem
-            href="show"
-            label="프로필"
-            iconSrc="/images/features/profile/user_outline.png"
-            activeIconSrc="/images/features/profile/user_filled.png"
-          />
+          <NavItem href="show" label="기록하기" iconSrc="/images/features/profile/editing.png" />
         </li>
         <li>
-          <NavItem
-            href="search"
-            label="검색"
-            iconSrc="/images/features/profile/search_outline.png"
-            activeIconSrc="/images/features/profile/search_filled.png"
-          />
+          <NavItem href="search" label="검색" iconSrc="/images/features/profile/search_icon.png" />
         </li>
         <li>
-          <NavItem
-            href="settings"
-            label="설정"
-            iconSrc="/images/features/profile/settings_outline.png"
-            activeIconSrc="/images/features/profile/settings_filled.png"
-          />
+          <NavItem href="settings" label="설정" iconSrc="/images/features/profile/settings.png" />
         </li>
       </ul>
     </nav>
