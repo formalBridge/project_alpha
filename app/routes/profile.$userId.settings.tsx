@@ -1,26 +1,15 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { Form, useActionData, useLoaderData, useNavigation } from '@remix-run/react';
 
+import { action } from 'app/features/profile/action';
+import { loader as baseLoader } from 'app/features/profile/loader';
 import styles from 'app/features/profile/pages/setting.module.scss';
+import createLoader from 'app/utils/createLoader';
 
-export async function loader(_args: LoaderFunctionArgs) {
-  return json({
-    user: {
-      nickname: '',
-      avatarUrl: '/images/features/profile/profile_test.png',
-    },
-  });
-}
-
-export async function action({ request }: ActionFunctionArgs) {
-  const fd = await request.formData();
-  const nickname = String(fd.get('nickname') ?? '').trim();
-  return json({ ok: true, nickname });
-}
+export const loader = createLoader(baseLoader);
+export { action };
 
 export default function SettingsPage() {
-  const { user } = useLoaderData<typeof loader>();
+  const { user } = useLoaderData<typeof baseLoader>();
   const actionData = useActionData<typeof action>();
   const nav = useNavigation();
   const isSubmitting = nav.state === 'submitting';

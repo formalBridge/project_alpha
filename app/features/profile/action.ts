@@ -1,4 +1,5 @@
-import { data, redirect } from '@remix-run/node';
+import type { ActionFunctionArgs } from '@remix-run/node';
+import { data, redirect, json } from '@remix-run/node';
 
 import { findUserByHandle, updateUserHandle } from 'app/features/profile/services';
 import createAction from 'app/utils/createAction';
@@ -64,3 +65,9 @@ export const editHandleAction = createAction(async ({ request, db }) => {
     return data({ error: (err as Error).message }, { status: 400 });
   }
 });
+
+export async function action({ request }: ActionFunctionArgs) {
+  const fd = await request.formData();
+  const nickname = String(fd.get('nickname') ?? '').trim();
+  return json({ ok: true, nickname });
+}
