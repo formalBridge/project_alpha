@@ -66,3 +66,19 @@ export function ProgressBar() {
 export default function App() {
   return <Outlet />;
 }
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  console.error(error);
+  return (
+    <html>
+      <head>
+        <title>Error</title>
+      </head>
+      <body>
+        <h1>Oops! Something went wrong.</h1>
+        <p>{error.message}</p>
+        <Scripts />
+      </body>
+    </html>
+  );
+}

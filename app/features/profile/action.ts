@@ -4,6 +4,8 @@ import { data, redirect, json } from '@remix-run/node';
 import { findUserByHandle, updateUserHandle } from 'app/features/profile/services';
 import createAction from 'app/utils/createAction';
 
+import { HandleSchema } from './schema';
+
 export const addTodaySongAction = createAction(async ({ request, db, params }) => {
   const formData = await request.formData();
 
@@ -47,20 +49,21 @@ export const addTodaySongAction = createAction(async ({ request, db, params }) =
 
 export const editHandleAction = createAction(async ({ request, db }) => {
   const formData = await request.formData();
-  const handle = formData.get('handle')?.toString();
-  const userId = formData.get('userId')?.toString();
 
-  if (!userId) {
-    return redirect('/login?error=사용자 정보를 불러올 수 없습니다.');
-  }
+  const formPayload = {
+    userId: formData.get('userId'),
+    handle: formData.get('handle'),
+  };
 
-  if (typeof handle !== 'string' || handle.trim().length === 0) {
-    return data({ error: '핸들을 입력해주세요.' }, { status: 400 });
+  const result = HandleSchema.safeParse(formPayload);
+
+  if (!result.success) {
+    return data({ error: result.error.issues[0].message }, { status: 400 });
   }
 
   try {
-    await updateUserHandle(db)({ userId, handle });
-    return redirect(`/profile/${userId}/show`);
+    await updateUserHandle(db)({ userId: result.data.userId, handle: result.data.handle });
+    return redirect(`/profile/${result.data.userId}/show`);
   } catch (err) {
     return data({ error: (err as Error).message }, { status: 400 });
   }

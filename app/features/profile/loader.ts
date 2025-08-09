@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
+import { json, data } from '@remix-run/node';
 import { redirect } from '@remix-run/react';
 
 import { authenticator } from 'app/external/auth/auth.server';
@@ -7,7 +7,12 @@ import { getCurrentUser } from 'app/external/auth/jwt.server';
 import createLoader from 'app/utils/createLoader';
 
 import { searchSongInputLoader } from './components/SearchSongInput';
-import { fetchUserWithRecomandSong, fetchUserWithUserRankings, findUserByHandleSim } from './services';
+import {
+  fetchUserWithRecomandSong,
+  fetchUserWithUserRankings,
+  findUserByHandleSim,
+  getRecommendedUsers,
+} from './services';
 
 export const profileLoader = createLoader(async ({ db, params }) => {
   const userId = Number(params.userId);
@@ -65,15 +70,15 @@ export const addTodaySongLoader = createLoader(async ({ db, params, request }) =
 
 export const searchLoader = createLoader(async ({ db, request }) => {
   const url = new URL(request.url);
-  const search = new URLSearchParams(url.search);
-  const handle = search.get('handle');
-
-  if (!handle) {
-    return { users: [] };
-  }
-  const users = await findUserByHandleSim(db)({ handle });
-
-  return { users };
+  const handle = url.searchParams.get('handle');
+  const recommendedUsersPromise = getRecommendedUsers(db)();
+  const searchResultsPromise = handle ? findUserByHandleSim(db)({ handle }) : Promise.resolve(null);
+  const [recommendedUsers, searchResults] = await Promise.all([recommendedUsersPromise, searchResultsPromise]);
+  return data({
+    recommendedUsers,
+    searchResults,
+    query: handle,
+  });
 });
 
 export const editHandleLoader = createLoader(async ({ request }) => {

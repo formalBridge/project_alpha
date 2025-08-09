@@ -1,4 +1,4 @@
-import { Await } from '@remix-run/react';
+import { Await, Form } from '@remix-run/react';
 import { Suspense } from 'react';
 
 import type { MusicInfo } from 'app/external/music/IMusicSearchAPI';
@@ -15,12 +15,9 @@ interface Props {
 export default function SearchSongInput({ onSelect, songs }: Props) {
   return (
     <div className={styles.wrapper}>
-      <form className={styles.formRow}>
+      <Form className={styles.formRow}>
         <input className={styles.input} type="text" name="query" placeholder="노래 제목 / 아티스트..." />
-        <button type="submit" className={styles.button}>
-          검색
-        </button>
-      </form>
+      </Form>
 
       <SearchedSongList songs={songs} onSelect={onSelect} />
     </div>
@@ -50,7 +47,14 @@ const SearchedSongList = ({
                   <Suspense fallback={<img src={PLACEHOLDER} alt="Album cover" className={styles.cover} />}>
                     <Await resolve={song.albumCover}>
                       {(albumCover) => (
-                        <img src={albumCover || PLACEHOLDER} alt={song.album} className={styles.cover} />
+                        <img
+                          src={albumCover || PLACEHOLDER}
+                          alt={song.album}
+                          className={styles.cover}
+                          onError={(e) => {
+                            e.currentTarget.src = PLACEHOLDER;
+                          }}
+                        />
                       )}
                     </Await>
                   </Suspense>
