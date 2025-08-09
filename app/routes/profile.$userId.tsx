@@ -35,7 +35,7 @@ export const MobileLayout = ({ user: _user }: { user: Partial<User> | null }) =>
         <li>
           <a href="/" className={styles.item}>
             <img src="/images/features/profile/home.png" alt="" className={styles.icon} />
-            <span>마이페이지</span>
+            <span>홈</span>
           </a>
         </li>
         <li>
