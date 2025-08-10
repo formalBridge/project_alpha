@@ -94,3 +94,24 @@
   font-weight: 400;
   color: $black-500;
 }
+
+.memo-editor-title-box {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 8px;
+  h2 {
+    margin: 0;
+    padding: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  button {
+    border-radius: 50px;
+    padding: 4px 12px;
+    background: $primary-400;
+    border: 0;
+    font-weight: 600;
+    cursor: pointer;
+  }
+}

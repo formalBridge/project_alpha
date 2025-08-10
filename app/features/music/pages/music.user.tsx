@@ -1,5 +1,9 @@
 import { useFetcher, useLoaderData } from '@remix-run/react';
 
+import Editor from 'app/components/Editor';
+import { MarkdownRenderer } from 'app/components/MarkdownRenderer';
+import { ClientOnly } from 'remix-utils/client-only';
+
 import { musicUserLoader } from '../loader';
 import styles from './music.user.module.scss';
 
@@ -44,7 +48,9 @@ export default function MusicSongUserPage() {
         </div>
 
         {memo ? (
-          <article className={styles.content}>{memo.content}</article>
+          <>
+            <MarkdownRenderer content={memo.content} />
+          </>
         ) : isCurrentUserProfile ? (
           <MemoEditor songId={song.id} userId={user.id} />
         ) : (
@@ -60,13 +66,15 @@ const MemoEditor = ({ songId, userId }: { songId: number; userId: number }) => {
 
   return (
     <fetcher.Form method="post" className={styles.memoEditor}>
-      <h3>메모 작성</h3>
+      <div className={styles.memoEditorTitleBox}>
+        <h2>메모 작성하기</h2>
+        <button type="submit" className={styles.submitButton}>
+          저장
+        </button>
+      </div>
+      <ClientOnly>{() => <Editor name="content" />}</ClientOnly>
       <input hidden name="songId" value={songId} readOnly />
       <input hidden name="userId" value={userId} readOnly />
-      <textarea className={styles.memoInput} name="content" placeholder="메모를 작성하세요..."></textarea>
-      <button type="submit" className={styles.submitButton}>
-        메모 저장
-      </button>
     </fetcher.Form>
   );
 };
