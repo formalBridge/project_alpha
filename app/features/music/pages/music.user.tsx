@@ -4,7 +4,7 @@ import { musicUserLoader } from '../loader';
 import styles from './music.user.module.scss';
 
 export default function MusicSongUserPage() {
-  const { song, user } = useLoaderData<typeof musicUserLoader>();
+  const { song, user, UserMusicMemo } = useLoaderData<typeof musicUserLoader>();
 
   if (!song || !user) {
     return <p>노래나 사용자를 찾을 수 없습니다.</p>;
@@ -27,21 +27,14 @@ export default function MusicSongUserPage() {
 
         <div className={styles.authorInfo}>
           <p className={styles.userName}>{user.name}</p>
-          <time dateTime="2023-03-15">2023년 3월 15일</time>
+          {UserMusicMemo && <time dateTime="2023-03-15">{UserMusicMemo.updatedAt.toDateString()}</time>}
         </div>
 
-        <article className={styles.content}>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sit amet faucibus dolor. In id velit quis
-            turpis dapibus rhoncus. Quisque quam est, commodo id tortor sed, porttitor ultricies leo. Vestibulum
-            dignissim, sapien id imperdiet imperdiet, erat nulla efficitur nisl, non suscipit ipsum velit ut orci.
-          </p>
-          <p>
-            Sed gravida justo tempus, fermentum dui eu, auctor erat. Quisque vitae turpis tortor. Ut rhoncus mauris
-            lacus. Nulla euismod mollis condimentum. Integer sodales dignissim lacus, eu gravida enim cursus a. Duis
-            congue porta arcu, sed pretium ipsum placerat non.
-          </p>
-        </article>
+        {UserMusicMemo ? (
+          <article className={styles.content}>{UserMusicMemo.content}</article>
+        ) : (
+          <p className={styles.noMemoText}>메모가 없습니다.</p>
+        )}
       </div>
     </div>
   );
