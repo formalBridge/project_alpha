@@ -1,4 +1,5 @@
 import { Link, Outlet, useLoaderData } from '@remix-run/react';
+import dayjs from 'dayjs';
 
 import { musicUserLoader } from '../loader';
 import styles from './music.user.module.scss';
@@ -13,6 +14,11 @@ export default function MusicSongUserPage() {
   return (
     <div className={styles.pageWrapper}>
       <div className={styles.pageContainer}>
+        <div className={styles.toProfileLinkBox}>
+          <Link className={styles.toProfileLink} to={`/profile/${user.id}/show`}>
+            ＜ 프로필로 이동
+          </Link>
+        </div>
         <header className={styles.songHeader}>
           <img
             className={styles.albumCover}
@@ -28,7 +34,9 @@ export default function MusicSongUserPage() {
         <div className={styles.authorInfo}>
           <p className={styles.userName}>{user.name}</p>
           {UserMusicMemo && UserMusicMemo.updatedAt && (
-            <time dateTime="2023-03-15">{UserMusicMemo.updatedAt.toISOString()}</time>
+            <time dateTime={UserMusicMemo.updatedAt.toISOString()}>
+              {dayjs(UserMusicMemo.updatedAt).format('YYYY-MM-DD')}
+            </time>
           )}
           {isCurrentUserProfile && (
             <Link className={styles.goToEditLink} to="edit">
