@@ -10,14 +10,11 @@ export interface SimpleSong {
 
 interface Props {
   song: SimpleSong;
-  rank?: number;
 }
 
-export default function SongItem({ song, rank }: Props) {
+export default function SongItem({ song }: Props) {
   return (
     <div className={styles.songItem}>
-      {rank !== undefined && <p className={styles.rank}>{rank}위</p>}
-
       <img
         className={styles.itemImage}
         src={song.thumbnailUrl || '/images/features/profile/album_default2.png'}

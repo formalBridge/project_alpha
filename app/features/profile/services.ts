@@ -10,10 +10,6 @@ export type UserWithRecommendedSong = Prisma.UserGetPayload<{
   include: { todayRecommendedSong: true };
 }>;
 
-export type UserRankingWithSong = Prisma.UserRankingGetPayload<{
-  include: { song: true };
-}>;
-
 export const fetchUserWithRecomandSong = createService<{ userId: number }, UserWithRecommendedSong | null>(
   async (db, { userId }) => {
     const user = await db.user.findUnique({
@@ -31,20 +27,18 @@ export const fetchUserWithRecomandSong = createService<{ userId: number }, UserW
   }
 );
 
-export const fetchUserWithUserRankings = createService<{ userId: number }, UserRankingWithSong[]>(
-  async (db, { userId }) => {
-    const userRankings = await db.userRanking.findMany({
-      where: { id: userId },
-      include: {
-        song: true,
-      },
-      orderBy: {
-        rank: 'asc',
-      },
-    });
-    return userRankings as UserRankingWithSong[];
-  }
-);
+export const fetchUserMusicMemo = createService<
+  { userId: number },
+  Prisma.UserMusicMemoGetPayload<{ include: { song: true } }>[]
+>(async (db, { userId }) => {
+  const musicMemos = await db.userMusicMemo.findMany({
+    where: { userId },
+    include: {
+      song: true,
+    },
+  });
+  return musicMemos;
+});
 
 export const findUserByHandle = createService<{ handle: string }, User | null>(async (db, args) => {
   const user = await db.user.findUnique({
