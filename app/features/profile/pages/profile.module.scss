@@ -131,7 +131,6 @@
 .outlet {
   width: 100%;
   max-width: var(--content-max-width);
-  padding: 0 var(--page-gutter-desktop);
 }
 
 .mobile {
@@ -151,6 +150,7 @@
   flex-direction: row;
   justify-content: space-around;
   width: 100%;
+  margin: 0;
 }
 
 .mobile .item {
@@ -159,8 +159,4 @@
   flex: 1;
   gap: 4px;
   font-size: 13px;
-}
-
-.mobile .outlet {
-  padding: 0 var(--page-gutter-mobile);
 }
