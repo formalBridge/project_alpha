@@ -1,67 +1,128 @@
-import { Link, Outlet } from '@remix-run/react';
+import { User } from '@prisma/client';
+import { Outlet, useLoaderData } from '@remix-run/react';
 import { useEffect, useState } from 'react';
 
 import Logo from 'app/icon/logo';
 import { useIsMobile } from 'app/utils/responsive';
 
 import styles from './profile.module.scss';
+import { profileLoader } from '../loader';
 
-export default function Profile() {
-  const [isMounted, setIsMounted] = useState(false);
+export default function ProfilePage() {
+  const data = useLoaderData<typeof profileLoader>() || {};
+  const user: Partial<User> | null = data.user ?? null;
+
   const isMobile = useIsMobile();
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  return isMounted ? isMobile ? <MobileLayout /> : <DesktopLayout /> : null;
+  return isMobile ? <MobileLayout /> : <DesktopLayout user={user} />;
 }
 
-export const MobileLayout = () => {
-  return (
-    <div className={styles.mobile}>
+export const MobileLayout = () => (
+  <div className={styles.mobile}>
+    <div className={styles.outlet}>
+      <Outlet />
+    </div>
+    <nav className={styles.navigation}>
+      <ul className={styles.list}>
+        <li>
+          <a href="/" className={styles.item}>
+            <img src="/images/features/profile/home.png" alt="" className={styles.icon} />
+            <span>홈</span>
+          </a>
+        </li>
+        <li>
+          <NavItem href="show" label="기록하기" iconSrc="/images/features/profile/editing.png" />
+        </li>
+        <li>
+          <NavItem href="search" label="검색" iconSrc="/images/features/profile/search_icon.png" />
+        </li>
+        <li>
+          <NavItem href="settings" label="설정" iconSrc="/images/features/profile/settings.png" />
+        </li>
+      </ul>
+    </nav>
+  </div>
+);
+
+export const DesktopLayout = ({ user }: { user: Partial<User> | null }) => (
+  <div className={styles.desktop}>
+    <nav className={styles.navigation}>
+      <a href="/" className={styles.logo}>
+        <Logo className={styles.logoIcon} />
+        <span>두둠 음악</span>
+      </a>
+
+      <UserNavCard user={user} />
+
+      <ul className={styles.list}>
+        <li>
+          <NavItem href="search" label="검색" iconSrc="/images/features/profile/search_icon.png" />
+        </li>
+        <li>
+          <NavItem href="show" label="기록하기" iconSrc="/images/features/profile/editing.png" />
+        </li>
+      </ul>
+    </nav>
+
+    <div className={styles.outletWrapper}>
       <div className={styles.outlet}>
         <Outlet />
       </div>
-      <nav className={styles.navigation}>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/profile/search">Search</Link>
-          </li>
-          <li>
-            <Link to="/profile/redirect">Profile</Link>
-          </li>
-        </ul>
-      </nav>
     </div>
-  );
-};
+  </div>
+);
 
-export const DesktopLayout = () => {
+function useCurrentPath() {
+  const [path, setPath] = useState<string>('');
+  useEffect(() => {
+    const update = () => setPath(window.location.pathname);
+    update();
+    window.addEventListener('popstate', update);
+    return () => window.removeEventListener('popstate', update);
+  }, []);
+  return path;
+}
+
+function UserNavCard({ user }: { user: Partial<User> | null }) {
+  const path = useCurrentPath();
+  const isActive = /\/settings($|\/)/.test(path);
+
+  const displayName = user?.name ?? '게스트';
+  const sub = (user?.handle ? `@${user.handle}` : user?.email) ?? '계정 설정';
+  const avatar = '/images/features/profile/profile_test.png'; // TODO: 사용자 아바타 이미지로 변경해야 함
+
   return (
-    <div className={styles.desktop}>
-      <nav className={styles.navigation}>
-        <Link to="/" className={styles.logo}>
-          <Logo className={styles.logoIcon} />
-          <span>두둠 음악</span>
-        </Link>
-        <ul className={styles.list}>
-          <li>
-            <Link to="/profile/search">Search</Link>
-          </li>
-          <li>
-            <Link to="/profile/redirect">Profile</Link>
-          </li>
-        </ul>
-      </nav>
-      <div className={styles.outletWrapper}>
-        <div className={styles.outlet}>
-          <Outlet />
-        </div>
+    <a href="settings" className={`${styles.userCard} ${isActive ? styles.active : ''}`}>
+      <img src={avatar} alt="" className={styles.userAvatar} />
+      <div className={styles.userMeta}>
+        <div className={styles.userName}>{displayName}</div>
+        <div className={styles.userEmail}>{sub}</div>
       </div>
-    </div>
+    </a>
   );
-};
+}
+
+function NavItem({
+  href,
+  label,
+  iconSrc,
+  activeIconSrc,
+  iconAlt = '',
+}: {
+  href: string;
+  label: string;
+  iconSrc: string;
+  activeIconSrc?: string;
+  iconAlt?: string;
+}) {
+  const path = useCurrentPath();
+  const seg = href.replace(/^\/+/, '');
+  const isActive = new RegExp(`/${seg}($|/)`).test(path);
+  const currentIcon = isActive && activeIconSrc ? activeIconSrc : iconSrc;
+
+  return (
+    <a href={href} className={`${styles.item} ${isActive ? styles.active : ''}`}>
+      <img src={currentIcon} alt={iconAlt} className={styles.icon} />
+      <span>{label}</span>
+    </a>
+  );
+}
