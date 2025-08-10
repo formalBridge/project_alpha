@@ -5,9 +5,14 @@
  */
 
 import { RemixBrowser } from '@remix-run/react';
+import dayjs from 'dayjs';
 import { startTransition, StrictMode } from 'react';
 
 import { hydrateRoot } from 'react-dom/client';
+
+import 'dayjs/locale/ko';
+
+dayjs.locale('ko');
 
 startTransition(() => {
   hydrateRoot(
