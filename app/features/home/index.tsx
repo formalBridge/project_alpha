@@ -7,7 +7,7 @@ export default function Home() {
     <div>
       <div className={styles.mainContainer}>
         <h1 className={styles.mainText}>
-          <p>스쳐가는 음악들, 머무는 감정들.</p>
+          <p>스쳐가는 생각들, 머무는 감정들.</p>
           <p>
             내가 <strong>좋아하는 음악</strong>을 쉽게 기록해보세요.
           </p>
