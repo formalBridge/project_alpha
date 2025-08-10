@@ -7,12 +7,7 @@ import { getCurrentDBUser, getCurrentUser } from 'app/external/auth/jwt.server';
 import createLoader from 'app/utils/createLoader';
 
 import { searchSongInputLoader } from './components/SearchSongInputloader';
-import {
-  fetchUserWithRecomandSong,
-  fetchUserWithUserRankings,
-  findUserByHandleSim,
-  getRecommendedUsers,
-} from './services';
+import { fetchUserMusicMemo, fetchUserWithRecomandSong, findUserByHandleSim, getRecommendedUsers } from './services';
 
 export const profileLayoutLoader = createLoader(async ({ request, db }) => {
   const user = await getCurrentDBUser(request, db);
@@ -28,9 +23,9 @@ export const profileLoader = createLoader(async ({ db, params }) => {
     throw new Response('User Not Found', { status: 404 });
   }
 
-  const userRankings = await fetchUserWithUserRankings(db)({ userId: userId });
+  const userMusicMemo = await fetchUserMusicMemo(db)({ userId: userId });
 
-  return { user, userRankings };
+  return { user, userMusicMemo };
 });
 
 export const profileRedirectLoader = createLoader(async ({ request }) => {
