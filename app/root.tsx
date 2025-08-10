@@ -76,7 +76,7 @@ export function ErrorBoundary({ error }: { error: Error }) {
       </head>
       <body>
         <h1>Oops! Something went wrong.</h1>
-        <p>{error.message}</p>
+        <p>{error?.message}</p>
         <Scripts />
       </body>
     </html>

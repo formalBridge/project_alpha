@@ -1,9 +1,9 @@
 import { SearchParams, MusicInfo } from 'app/external/music/IMusicSearchAPI';
 
-import { MusicBrainzAPI } from './musicBrainz';
+import { SpotifyAPI } from './SpotifyAPI';
 
 export class SearchMusic {
-  constructor(private musicAPI: MusicBrainzAPI) {}
+  constructor(private musicAPI: SpotifyAPI) {}
 
   public async searchSong(params: SearchParams): Promise<MusicInfo[]> {
     return this.musicAPI.search(params);
@@ -14,4 +14,4 @@ export class SearchMusic {
   }
 }
 
-export const searchMusic = new SearchMusic(new MusicBrainzAPI());
+export const searchMusic = new SearchMusic(new SpotifyAPI());
