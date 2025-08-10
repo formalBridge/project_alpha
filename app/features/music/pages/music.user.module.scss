@@ -12,6 +12,7 @@
 
 .page-container {
   max-width: 900px;
+  width: 100%;
 }
 
 // 유저 정보(작성자) 스타일
@@ -74,6 +75,7 @@
   font-size: 1.1rem;
   line-height: 1.8;
   color: $black-300;
+  white-space: pre-wrap;
   @include mobile {
     font-size: 1rem;
     margin-bottom: 3rem;
