@@ -2,7 +2,6 @@ import { Await, Form } from '@remix-run/react';
 import { Suspense } from 'react';
 
 import type { MusicInfo } from 'app/external/music/IMusicSearchAPI';
-import { searchMusic } from 'app/external/music/SearchMusic';
 import styles from 'app/features/profile/pages/searchSong.module.scss';
 
 const PLACEHOLDER = '/images/features/profile/album_default2.png';
@@ -71,13 +70,4 @@ const SearchedSongList = ({
       </Suspense>
     </ul>
   );
-};
-
-export const searchSongInputLoader = ({ request }: { request: Request }) => {
-  const searchQuery = new URL(request.url).searchParams.get('query');
-  if (!searchQuery) {
-    return undefined;
-  }
-
-  return searchMusic.searchSongWithQuery(searchQuery);
 };

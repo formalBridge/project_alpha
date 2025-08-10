@@ -6,7 +6,7 @@ import { authenticator } from 'app/external/auth/auth.server';
 import { getCurrentDBUser, getCurrentUser } from 'app/external/auth/jwt.server';
 import createLoader from 'app/utils/createLoader';
 
-import { searchSongInputLoader } from './components/SearchSongInput';
+import { searchSongInputLoader } from './components/SearchSongInputloader';
 import {
   fetchUserWithRecomandSong,
   fetchUserWithUserRankings,
