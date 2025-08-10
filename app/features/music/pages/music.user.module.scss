@@ -1,0 +1,94 @@
+@use 'styles/layout' as *;
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  @include mobile {
+    padding: 1rem;
+  }
+}
+
+.page-container {
+  max-width: 900px;
+}
+
+// 유저 정보(작성자) 스타일
+.author-info {
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  font-size: 0.9rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid $grey-200;
+}
+
+.song-header {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  max-width: 720px;
+  margin-bottom: 40px;
+  gap: 24px;
+}
+
+.album-cover {
+  width: 90px;
+  height: 90px;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 6px 20px rgba($black-500, 0.15);
+  flex-shrink: 0;
+  @include mobile {
+    width: 70px;
+    height: 70px;
+    margin-right: 0;
+  }
+}
+
+.song-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: $primary-font;
+  margin: 0;
+  line-height: 1.2;
+  @include mobile {
+    font-size: 1.7rem;
+  }
+}
+
+.artist-name {
+  font-size: 1.1rem;
+  color: $black-500;
+  margin-top: 0.5rem;
+  @include mobile {
+    font-size: 0.95rem;
+  }
+}
+
+// 블로그 포스트 스타일의 본문
+.content {
+  margin-bottom: 4rem;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: $black-300;
+  @include mobile {
+    font-size: 1rem;
+    margin-bottom: 3rem;
+  }
+  p {
+    margin: 0 0 1.5rem;
+  }
+}
+
+.user-name {
+  font-weight: 500;
+  color: $black-400;
+}
+
+.content-date {
+  font-weight: 400;
+  color: $black-500;
+}
