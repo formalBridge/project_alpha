@@ -1,8 +1,8 @@
 import type { Song } from '@prisma/client';
-import { Link, useLoaderData } from '@remix-run/react';
+import { Link, useLoaderData, useRouteLoaderData } from '@remix-run/react';
 
 import SongItem from 'app/features/profile/components/SongItem';
-import { profileLoader } from 'app/features/profile/loader';
+import { profileLayoutLoader, profileLoader } from 'app/features/profile/loader';
 import styles from 'app/features/profile/pages/show.module.scss';
 
 interface TodaySongSectionProps {
@@ -34,8 +34,10 @@ export function TodaySongSection({ song, isCurrentUserProfile }: TodaySongSectio
 
 export default function Show() {
   const { user, userRankings } = useLoaderData<typeof profileLoader>();
+  const profileLayoutData = useRouteLoaderData<typeof profileLayoutLoader>('routes/profile.$userId');
+  const currentUser = profileLayoutData?.user || null;
 
-  const isCurrentUserProfile = true;
+  const isCurrentUserProfile = !!currentUser && user.id === currentUser.id;
 
   return (
     <div>
