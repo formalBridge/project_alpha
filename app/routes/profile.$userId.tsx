@@ -1,5 +1,6 @@
+import { profileLayoutLoader } from 'app/features/profile/loader';
 import ProfilePage from 'app/features/profile/pages/profile';
 
-export { profileLoader as loader } from 'app/features/profile/loader';
+export const loader = profileLayoutLoader;
 
 export default ProfilePage;

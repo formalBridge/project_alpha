@@ -3,7 +3,7 @@ import { json, data } from '@remix-run/node';
 import { redirect } from '@remix-run/react';
 
 import { authenticator } from 'app/external/auth/auth.server';
-import { getCurrentUser } from 'app/external/auth/jwt.server';
+import { getCurrentDBUser, getCurrentUser } from 'app/external/auth/jwt.server';
 import createLoader from 'app/utils/createLoader';
 
 import { searchSongInputLoader } from './components/SearchSongInput';
@@ -13,6 +13,12 @@ import {
   findUserByHandleSim,
   getRecommendedUsers,
 } from './services';
+
+export const profileLayoutLoader = createLoader(async ({ request, db }) => {
+  const user = await getCurrentDBUser(request, db);
+
+  return { user };
+});
 
 export const profileLoader = createLoader(async ({ db, params }) => {
   const userId = Number(params.userId);

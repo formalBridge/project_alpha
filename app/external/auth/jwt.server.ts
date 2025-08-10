@@ -1,3 +1,4 @@
+import { PrismaClient } from '@prisma/client';
 import { parse } from 'cookie';
 import { SignJWT, jwtVerify } from 'jose';
 
@@ -39,4 +40,12 @@ export async function getCurrentUser(request: Request) {
 
   const user = await verifyJwt(jwt);
   return user;
+}
+
+export async function getCurrentDBUser(request: Request, db: PrismaClient) {
+  const user = await getCurrentUser(request);
+  if (!user) return null;
+
+  const dbUser = await db.user.findUnique({ where: { id: user.id } });
+  return dbUser;
 }

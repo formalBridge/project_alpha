@@ -1,16 +1,15 @@
 import { User } from '@prisma/client';
-import { Outlet, useLoaderData } from '@remix-run/react';
+import { Link, Outlet, useLoaderData } from '@remix-run/react';
 import { useEffect, useState } from 'react';
 
 import Logo from 'app/icon/logo';
 import { useIsMobile } from 'app/utils/responsive';
 
 import styles from './profile.module.scss';
-import { profileLoader } from '../loader';
+import { profileLayoutLoader } from '../loader';
 
 export default function ProfilePage() {
-  const data = useLoaderData<typeof profileLoader>() || {};
-  const user: Partial<User> | null = data.user ?? null;
+  const { user } = useLoaderData<typeof profileLayoutLoader>() || {};
 
   const isMobile = useIsMobile();
   return isMobile ? <MobileLayout /> : <DesktopLayout user={user} />;
@@ -43,7 +42,7 @@ export const MobileLayout = () => (
   </div>
 );
 
-export const DesktopLayout = ({ user }: { user: Partial<User> | null }) => (
+export const DesktopLayout = ({ user }: { user: User | null }) => (
   <div className={styles.desktop}>
     <nav className={styles.navigation}>
       <a href="/" className={styles.logo}>
@@ -58,7 +57,11 @@ export const DesktopLayout = ({ user }: { user: Partial<User> | null }) => (
           <NavItem href="search" label="검색" iconSrc="/images/features/profile/search_icon.png" />
         </li>
         <li>
-          <NavItem href="show" label="기록하기" iconSrc="/images/features/profile/editing.png" />
+          <NavItem
+            href={user ? `/profile/${user.id}/show` : '/profile/redirect'}
+            label="기록하기"
+            iconSrc="/images/features/profile/editing.png"
+          />
         </li>
       </ul>
     </nav>
@@ -82,7 +85,7 @@ function useCurrentPath() {
   return path;
 }
 
-function UserNavCard({ user }: { user: Partial<User> | null }) {
+function UserNavCard({ user }: { user: User | null }) {
   const path = useCurrentPath();
   const isActive = /\/settings($|\/)/.test(path);
 
@@ -91,13 +94,16 @@ function UserNavCard({ user }: { user: Partial<User> | null }) {
   const avatar = '/images/features/profile/profile_test.png'; // TODO: 사용자 아바타 이미지로 변경해야 함
 
   return (
-    <a href="settings" className={`${styles.userCard} ${isActive ? styles.active : ''}`}>
+    <Link
+      to={user ? `/profile/${user.id}/settings` : '/profile/redirect'}
+      className={`${styles.userCard} ${isActive ? styles.active : ''}`}
+    >
       <img src={avatar} alt="" className={styles.userAvatar} />
       <div className={styles.userMeta}>
         <div className={styles.userName}>{displayName}</div>
         <div className={styles.userEmail}>{sub}</div>
       </div>
-    </a>
+    </Link>
   );
 }
 
@@ -120,9 +126,9 @@ function NavItem({
   const currentIcon = isActive && activeIconSrc ? activeIconSrc : iconSrc;
 
   return (
-    <a href={href} className={`${styles.item} ${isActive ? styles.active : ''}`}>
+    <Link to={href} className={`${styles.item} ${isActive ? styles.active : ''}`}>
       <img src={currentIcon} alt={iconAlt} className={styles.icon} />
       <span>{label}</span>
-    </a>
+    </Link>
   );
 }
