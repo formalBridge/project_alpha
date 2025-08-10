@@ -22,8 +22,9 @@ model User {
   todayRecommendedSong   Song?         @relation(fields: [todayRecommendedSongId], references: [id])
   rankings               UserRanking[]
 
-  email    String? @unique
-  googleId String? @unique
+  email         String?         @unique
+  googleId      String?         @unique
+  UserMusicMemo UserMusicMemo[]
 }
 
 model Post_mokjak {
@@ -33,13 +34,14 @@ model Post_mokjak {
 }
 
 model Song {
-  id                    Int           @id @default(autoincrement())
+  id                    Int             @id @default(autoincrement())
   title                 String
   artist                String
   thumbnailUrl          String?
   album                 String?
   rankings              UserRanking[]
   usersTodayRecommended User[]
+  UserMusicMemo         UserMusicMemo[]
 
   @@unique([title, artist])
 }
@@ -57,4 +59,17 @@ model UserRanking {
   @@unique([userId, songId])
   @@unique([userId, rank])
   @@map("user_rankings")
+}
+
+model UserMusicMemo {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  songId    Int
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  song      Song     @relation(fields: [songId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, songId])
 }
