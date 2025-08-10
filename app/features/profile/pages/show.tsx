@@ -8,9 +8,10 @@ import styles from 'app/features/profile/pages/show.module.scss';
 interface TodaySongSectionProps {
   song: Partial<Song> | null;
   isCurrentUserProfile: boolean;
+  userId: number;
 }
 
-export function TodaySongSection({ song, isCurrentUserProfile }: TodaySongSectionProps) {
+export function TodaySongSection({ song, isCurrentUserProfile, userId }: TodaySongSectionProps) {
   return (
     <div className={styles.todayRecommendBox}>
       <div className={styles.titleBox}>
@@ -23,7 +24,9 @@ export function TodaySongSection({ song, isCurrentUserProfile }: TodaySongSectio
       </div>
       <div className={styles.songBox}>
         {song && song.title ? (
-          <SongItem song={song as Song} />
+          <Link to={`/music/${song.id}/user/${userId}`}>
+            <SongItem song={song as Song} />
+          </Link>
         ) : (
           <p className={styles.noContentText}>오늘의 추천곡이 아직 없습니다.</p>
         )}
@@ -49,7 +52,11 @@ export default function Show() {
         </div>
       </div>
       <div className={styles.contentBox}>
-        <TodaySongSection song={user.todayRecommendedSong} isCurrentUserProfile={isCurrentUserProfile} />
+        <TodaySongSection
+          song={user.todayRecommendedSong}
+          isCurrentUserProfile={isCurrentUserProfile}
+          userId={user.id}
+        />
         <div className={styles.todayRecommendBox} style={{ marginTop: '2rem' }}>
           <div className={styles.titleBox}>
             <p className={styles.title}>노래 랭킹</p>

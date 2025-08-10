@@ -66,4 +66,8 @@
   gap: 12px;
   background: $grey-100;
   border-radius: 8px;
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 }
