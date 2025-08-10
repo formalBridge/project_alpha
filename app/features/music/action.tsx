@@ -1,3 +1,5 @@
+import { redirect } from '@remix-run/server-runtime';
+
 import createAction from 'app/utils/createAction';
 
 export const createUserMusicMemoAction = createAction(async ({ db, request }) => {
@@ -8,9 +10,7 @@ export const createUserMusicMemoAction = createAction(async ({ db, request }) =>
   const userId = Number(formdata.get('userId'));
   const content = formdata.get('content') as string;
 
-  console.log({ songId, userId, content });
-
-  const memo = await db.userMusicMemo.create({
+  await db.userMusicMemo.create({
     data: {
       songId,
       userId,
@@ -18,5 +18,18 @@ export const createUserMusicMemoAction = createAction(async ({ db, request }) =>
     },
   });
 
-  return memo;
+  return redirect('..');
+});
+
+export const editUserMusicMemoAction = createAction(async ({ db, request }) => {
+  const formdata = await request.formData();
+  const id = Number(formdata.get('userMusicMemoId'));
+  const content = formdata.get('content') as string;
+
+  await db.userMusicMemo.update({
+    where: { id },
+    data: { content },
+  });
+
+  return redirect('..');
 });
