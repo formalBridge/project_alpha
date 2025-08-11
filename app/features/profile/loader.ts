@@ -1,5 +1,4 @@
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json, data } from '@remix-run/node';
+import { data } from '@remix-run/node';
 import { redirect } from '@remix-run/react';
 
 import { authenticator } from 'app/external/auth/auth.server';
@@ -91,11 +90,11 @@ export const editHandleLoader = createLoader(async ({ request }) => {
   return { userId: user.id };
 });
 
-export async function loader(_args: LoaderFunctionArgs) {
-  return json({
+export const settingsLoader = createLoader(async () => {
+  return {
     user: {
       nickname: '',
       avatarUrl: '/images/features/profile/profile_test.png',
     },
-  });
-}
+  };
+});
