@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 import { HandleCharacterSchema, HandleSchema } from '../schema';
 
-export function useHandleValidation() {
-  const [handle, setHandle] = useState('');
+export function useHandleValidation(initialValue = '') {
+  const [handle, setHandle] = useState(initialValue);
   const [clientError, setClientError] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

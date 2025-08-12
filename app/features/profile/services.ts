@@ -91,3 +91,21 @@ export const updateUserHandle = createService<{ userId: string; handle: string }
     });
   }
 );
+
+//TODO: avartarUrl 필드 생성 후 주석 제거
+export interface AccountSettingData {
+  handle: string | null;
+  // avartalUrl: string | null;
+}
+
+export const fetchAccountSettingsData = createService<{ id: number }, AccountSettingData | null>(async (db, { id }) => {
+  const user = await db.user.findUnique({
+    where: { id },
+    select: {
+      handle: true,
+      // avartarUrl: true,
+    },
+  });
+
+  return user;
+});
