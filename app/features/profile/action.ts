@@ -68,8 +68,24 @@ export const editHandleAction = createAction(async ({ request, db }) => {
   }
 });
 
-export const settingsAction = createAction(async ({ request }) => {
-  const fd = await request.formData();
-  const nickname = String(fd.get('nickname') ?? '').trim();
-  return { nickname };
+export const settingsAction = createAction(async ({ request, db }) => {
+  const formData = await request.formData();
+
+  const formPayload = {
+    userId: formData.get('userId'),
+    handle: formData.get('handle'),
+  };
+
+  const result = HandleSchema.safeParse(formPayload);
+
+  if (!result.success) {
+    return data({ error: result.error.issues[0].message }, { status: 400 });
+  }
+
+  try {
+    await updateUserHandle(db)({ userId: result.data.userId, handle: result.data.handle });
+    return redirect(`/profile/${result.data.userId}/show`);
+  } catch (err) {
+    return data({ error: (err as Error).message }, { status: 400 });
+  }
 });

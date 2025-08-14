@@ -21,3 +21,9 @@ $breakpoint-desktop: 1024px;
     @content;
   }
 }
+
+$grey-n00: #ddd;
+$red-n00: #d93025;
+
+$border-color: $grey-n00;
+$error-color: $red-n00;

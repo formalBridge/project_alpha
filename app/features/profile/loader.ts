@@ -6,7 +6,13 @@ import { getCurrentDBUser, getCurrentUser } from 'app/external/auth/jwt.server';
 import createLoader from 'app/utils/createLoader';
 
 import { searchSongInputLoader } from './components/SearchSongInputloader';
-import { fetchUserMusicMemo, fetchUserWithRecomandSong, findUserByHandleSim, getRecommendedUsers } from './services';
+import {
+  fetchAccountSettingsData,
+  fetchUserMusicMemo,
+  fetchUserWithRecomandSong,
+  findUserByHandleSim,
+  getRecommendedUsers,
+} from './services';
 
 export const profileLayoutLoader = createLoader(async ({ request, db }) => {
   const user = await getCurrentDBUser(request, db);
@@ -90,11 +96,21 @@ export const editHandleLoader = createLoader(async ({ request }) => {
   return { userId: user.id };
 });
 
-export const settingsLoader = createLoader(async () => {
+export const settingsLoader = createLoader(async ({ request, db }) => {
+  const user = await getCurrentUser(request);
+  if (!user) {
+    throw redirect('/login/error', { status: 401 });
+  }
+
+  const settingsData = await fetchAccountSettingsData(db)({ id: user.id });
+
+  if (!settingsData) {
+    throw redirect('/login/error', { status: 404 });
+  }
+
   return {
-    user: {
-      nickname: '',
-      avatarUrl: '/images/features/profile/profile_test.png',
-    },
+    userId: user.id,
+    handle: settingsData.handle,
+    avatarUrl: '/images/features/profile/profile_test.png', //TODO: settingsData.avartarUrl으로 추수 수정
   };
 });
