@@ -1,11 +1,13 @@
 import { data, redirect } from '@remix-run/node';
 
+import { requireUserOwnership } from 'app/external/auth/jwt.server';
 import { findUserByHandle, updateUserHandle } from 'app/features/profile/services';
 import createAction from 'app/utils/createAction';
 
 import { HandleSchema } from './schema';
 
 export const addTodaySongAction = createAction(async ({ request, db, params }) => {
+  await requireUserOwnership(request, { userId: params.userId });
   const formData = await request.formData();
 
   const handle = (formData.get('handle') as string | null)?.trim() ?? '';
@@ -46,7 +48,9 @@ export const addTodaySongAction = createAction(async ({ request, db, params }) =
   return redirect('../show');
 });
 
-export const editHandleAction = createAction(async ({ request, db }) => {
+export const editHandleAction = createAction(async ({ request, db, params }) => {
+  await requireUserOwnership(request, { userId: params.userId });
+
   const formData = await request.formData();
 
   const formPayload = {
@@ -68,7 +72,9 @@ export const editHandleAction = createAction(async ({ request, db }) => {
   }
 });
 
-export const settingsAction = createAction(async ({ request, db }) => {
+export const settingsAction = createAction(async ({ request, db, params }) => {
+  await requireUserOwnership(request, { userId: params.userId });
+
   const formData = await request.formData();
 
   const formPayload = {

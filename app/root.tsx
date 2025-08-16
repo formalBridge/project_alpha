@@ -1,5 +1,15 @@
 import type { LinksFunction } from '@remix-run/node';
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, useNavigation } from '@remix-run/react';
+import {
+  isRouteErrorResponse,
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useNavigate,
+  useNavigation,
+  useRouteError,
+} from '@remix-run/react';
 import NProgress from 'nprogress';
 import { useEffect } from 'react';
 
@@ -67,18 +77,19 @@ export default function App() {
   return <Outlet />;
 }
 
-export function ErrorBoundary({ error }: { error: Error }) {
-  console.error(error);
-  return (
-    <html>
-      <head>
-        <title>Error</title>
-      </head>
-      <body>
-        <h1>Oops! Something went wrong.</h1>
-        <p>{error?.message}</p>
-        <Scripts />
-      </body>
-    </html>
-  );
+export function ErrorBoundary() {
+  const error = useRouteError();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isRouteErrorResponse(error)) {
+      alert(error.data);
+      navigate(-1);
+    }
+  }, [error, navigate]);
+
+  if (isRouteErrorResponse(error)) {
+    return null;
+  }
+  return <div>예상치 못한 오류가 발생했습니다.</div>;
 }

@@ -2,7 +2,7 @@ import { data } from '@remix-run/node';
 import { redirect } from '@remix-run/react';
 
 import { authenticator } from 'app/external/auth/auth.server';
-import { getCurrentDBUser, getCurrentUser } from 'app/external/auth/jwt.server';
+import { getCurrentDBUser, getCurrentUser, requireUserOwnership } from 'app/external/auth/jwt.server';
 import createLoader from 'app/utils/createLoader';
 
 import { searchSongInputLoader } from './components/SearchSongInputloader';
@@ -44,7 +44,8 @@ export const profileRedirectLoader = createLoader(async ({ request }) => {
 });
 
 export const addTodaySongLoader = createLoader(async ({ db, params, request }) => {
-  // TODO: 본인 계정만 수정할 수 있도록 변경해야 함
+  await requireUserOwnership(request, { userId: params.userId });
+
   const userId = Number(params.userId);
   if (isNaN(userId)) {
     throw new Response('잘못된 사용자입니다.', { status: 400 });
@@ -87,7 +88,9 @@ export const searchLoader = createLoader(async ({ db, request }) => {
   });
 });
 
-export const editHandleLoader = createLoader(async ({ request }) => {
+export const editHandleLoader = createLoader(async ({ request, params }) => {
+  await requireUserOwnership(request, { userId: params.userId });
+
   const user = await getCurrentUser(request);
   if (!user) {
     throw redirect('/login/error', { status: 401 });
@@ -96,7 +99,9 @@ export const editHandleLoader = createLoader(async ({ request }) => {
   return { userId: user.id };
 });
 
-export const settingsLoader = createLoader(async ({ request, db }) => {
+export const settingsLoader = createLoader(async ({ request, db, params }) => {
+  await requireUserOwnership(request, { userId: params.userId });
+
   const user = await getCurrentUser(request);
   if (!user) {
     throw redirect('/login/error', { status: 401 });
