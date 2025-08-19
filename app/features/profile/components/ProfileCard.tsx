@@ -16,7 +16,6 @@ export function ProfileCard({ user }: { user: UserWithRecommendedSong }) {
           />
           <div className={styles.userInfo}>
             <p className={styles.handle}>@{user.handle}</p>
-            <p className={styles.name}>{user.name}</p>
           </div>
         </div>
         <div className={styles.chevron}>
