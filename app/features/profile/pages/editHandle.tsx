@@ -25,7 +25,7 @@ export default function EditHandlePage() {
             <input
               type="text"
               name="handle"
-              placeholder="핸들을 입력하세요"
+              placeholder="핸들(닉네임)을 입력하세요"
               required
               className={styles.input}
               value={handle}
