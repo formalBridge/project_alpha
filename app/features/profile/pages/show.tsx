@@ -1,14 +1,19 @@
 import type { Song } from '@prisma/client';
-import { Link, useLoaderData, useRouteLoaderData } from '@remix-run/react';
+import { Link, useLoaderData, useRouteLoaderData, useSearchParams } from '@remix-run/react';
 
 import SongItem from 'app/features/profile/components/SongItem';
 import { profileLayoutLoader, profileLoader } from 'app/features/profile/loader';
 import styles from 'app/features/profile/pages/show.module.scss';
 
+import { SortToggle } from '../components/SortToggle';
+
 export default function Show() {
   const { user, userMusicMemo } = useLoaderData<typeof profileLoader>();
   const profileLayoutData = useRouteLoaderData<typeof profileLayoutLoader>('routes/profile.$userId');
   const currentUser = profileLayoutData?.user || null;
+
+  const [searchParams] = useSearchParams();
+  const currentSort = searchParams.get('sort') === 'asc' ? 'asc' : 'desc';
 
   const isCurrentUserProfile = !!currentUser && user.id === currentUser.id;
 
@@ -29,6 +34,7 @@ export default function Show() {
         <div className={styles.todayRecommendBox} style={{ marginTop: '2rem' }}>
           <div className={styles.titleBox}>
             <p className={styles.title}> {isCurrentUserProfile ? '내가' : `${user.name}이(가)`} 쓴 메모들</p>
+            <SortToggle currentSort={currentSort} />
           </div>
           <div className={styles.songBox}>
             {userMusicMemo.length > 0 ? (

@@ -41,11 +41,12 @@
   gap: 8px;
   .title-box {
     display: flex;
+    justify-content: space-between;
     gap: 8px;
     align-items: center;
     .title {
-      font-size: 14px;
-      font-weight: bold;
+      font-size: 1.1rem;
+      font-weight: 600;
       color: $black-300;
     }
     .go-to-edit-link {

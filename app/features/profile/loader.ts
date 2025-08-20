@@ -20,7 +20,7 @@ export const profileLayoutLoader = createLoader(async ({ request, db }) => {
   return { user };
 });
 
-export const profileLoader = createLoader(async ({ db, params }) => {
+export const profileLoader = createLoader(async ({ db, params, request }) => {
   const userId = Number(params.userId);
   const user = await fetchUserWithRecomandSong(db)({ userId: userId });
 
@@ -28,7 +28,11 @@ export const profileLoader = createLoader(async ({ db, params }) => {
     throw new Response('User Not Found', { status: 404 });
   }
 
-  const userMusicMemo = await fetchUserMusicMemo(db)({ userId: userId });
+  const url = new URL(request.url);
+  const sort = url.searchParams.get('sort') || 'desc';
+  const sortOrder = sort === 'asc' ? 'asc' : 'desc';
+
+  const userMusicMemo = await fetchUserMusicMemo(db)({ userId: userId, sortOrder: sortOrder });
 
   return { user, userMusicMemo };
 });
