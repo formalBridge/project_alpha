@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { redirect } from '@remix-run/server-runtime';
 import { parse } from 'cookie';
 import { SignJWT, jwtVerify } from 'jose';
 
@@ -48,4 +49,18 @@ export async function getCurrentDBUser(request: Request, db: PrismaClient) {
 
   const dbUser = await db.user.findUnique({ where: { id: user.id } });
   return dbUser;
+}
+
+export async function requireUserOwnership(request: Request, params: { userId: string | undefined }) {
+  const currentUser = await getCurrentUser(request);
+
+  if (!currentUser) {
+    throw redirect('/login/error');
+  }
+
+  const targetUserId = Number(params.userId);
+  if (currentUser.id !== targetUserId) {
+    throw new Response('접근 권한이 없습니다.', { status: 403 });
+  }
+  return currentUser;
 }
