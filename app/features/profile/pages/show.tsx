@@ -17,7 +17,6 @@ export default function Show() {
       <div className={styles.profileBox}>
         <img className={styles.profileAvatar} src="/images/features/profile/profile_test.png" />
         <div className={styles.profileTextbox}>
-          <p className={styles.profileName}>{user.name}</p>
           <p className={styles.profileHandle}>@{user.handle}</p>
         </div>
       </div>
