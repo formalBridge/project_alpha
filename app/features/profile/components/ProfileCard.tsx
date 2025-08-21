@@ -11,7 +11,7 @@ export function ProfileCard({ user }: { user: UserWithRecommendedSong }) {
         <div className={styles.profileInfo}>
           <img
             src={'https://placehold.co/40x40/ecf0f1/bdc3c7?text=...'} // TODO: avartarUrl 넣기
-            alt={`${user.name}의 프로필 사진`}
+            alt={`${user.handle}의 프로필 사진`}
             className={styles.avatar}
           />
           <div className={styles.userInfo}>

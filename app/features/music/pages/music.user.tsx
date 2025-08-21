@@ -32,7 +32,7 @@ export default function MusicSongUserPage() {
         </header>
 
         <div className={styles.authorInfo}>
-          <p className={styles.userName}>{user.name}</p>
+          <p className={styles.userHandle}>{user.handle}</p>
           {UserMusicMemo && UserMusicMemo.updatedAt && (
             <time dateTime={UserMusicMemo.updatedAt.toISOString()}>
               {dayjs(UserMusicMemo.updatedAt).format('YYYY-MM-DD')}
