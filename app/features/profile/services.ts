@@ -28,13 +28,16 @@ export const fetchUserWithRecomandSong = createService<{ userId: number }, UserW
 );
 
 export const fetchUserMusicMemo = createService<
-  { userId: number },
+  { userId: number; sortOrder?: 'asc' | 'desc' },
   Prisma.UserMusicMemoGetPayload<{ include: { song: true } }>[]
->(async (db, { userId }) => {
+>(async (db, { userId, sortOrder = 'desc' }) => {
   const musicMemos = await db.userMusicMemo.findMany({
     where: { userId },
     include: {
       song: true,
+    },
+    orderBy: {
+      updatedAt: sortOrder,
     },
   });
   return musicMemos;
