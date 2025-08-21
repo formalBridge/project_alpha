@@ -64,9 +64,11 @@ export class SpotifyAPI {
           q: query,
           type: 'track',
           limit: 20,
+          market: 'KR',
         },
         headers: {
           Authorization: `Bearer ${token}`,
+          'Accept-Language': 'ko-KR, ko;q=0.9',
         },
         timeout: 5000,
       });
