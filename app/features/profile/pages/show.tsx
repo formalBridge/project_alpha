@@ -28,7 +28,7 @@ export default function Show() {
         />
         <div className={styles.todayRecommendBox} style={{ marginTop: '2rem' }}>
           <div className={styles.titleBox}>
-            <p className={styles.title}> {isCurrentUserProfile ? '내가' : `${user.name}이(가)`} 쓴 메모들</p>
+            <p className={styles.title}> {isCurrentUserProfile ? '내가' : `${user.handle}이(가)`} 쓴 메모들</p>
           </div>
           <div className={styles.songBox}>
             {userMusicMemo.length > 0 ? (
