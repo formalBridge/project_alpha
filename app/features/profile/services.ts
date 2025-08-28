@@ -65,10 +65,15 @@ export const findUserByHandleSim = createService<{ handle: string }, UserWithRec
 export const getRecommendedUsers = createService<Record<string, never>, UserWithRecommendedSong[]>(
   async (db, _args) => {
     const users = await db.user.findMany({
-      take: 6,
+      where: {
+        id: {
+          gte: 20,
+          lte: 25,
+        },
+      },
       include: { todayRecommendedSong: true },
     });
-    // TODO: avatarUrl 추가 필요(현재는 랜덤)
+    // TODO: avatarUrl 추가 필요
     return users.map((user) => ({
       ...user,
       avatarUrl: `https://i.pravatar.cc/150?u=${user.handle}`,
