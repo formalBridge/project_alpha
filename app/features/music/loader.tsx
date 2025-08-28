@@ -1,6 +1,6 @@
 import { redirect } from '@remix-run/server-runtime';
 
-import { getCurrentUser } from 'app/external/auth/jwt.server';
+import { getCurrentUser, requireUserOwnership } from 'app/external/auth/jwt.server';
 import createLoader from 'app/utils/createLoader';
 
 export const musicUserLoader = createLoader(async ({ db, params, request }) => {
@@ -19,6 +19,8 @@ export const musicUserLoader = createLoader(async ({ db, params, request }) => {
 });
 
 export const musicCreateUserLoader = createLoader(async ({ db, params, request }) => {
+  await requireUserOwnership(request, { userId: params.userId });
+
   const songId = Number(params.songId);
   const userId = Number(params.userId);
 

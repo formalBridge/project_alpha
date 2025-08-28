@@ -1,8 +1,10 @@
 import { redirect } from '@remix-run/server-runtime';
 
+import { requireUserOwnership } from 'app/external/auth/jwt.server';
 import createAction from 'app/utils/createAction';
 
-export const createUserMusicMemoAction = createAction(async ({ db, request }) => {
+export const createUserMusicMemoAction = createAction(async ({ db, request, params }) => {
+  await requireUserOwnership(request, { userId: params.userId });
   console.log('1231241243');
   const formdata = await request.formData();
 
@@ -21,7 +23,9 @@ export const createUserMusicMemoAction = createAction(async ({ db, request }) =>
   return redirect('..');
 });
 
-export const editUserMusicMemoAction = createAction(async ({ db, request }) => {
+export const editUserMusicMemoAction = createAction(async ({ db, request, params }) => {
+  await requireUserOwnership(request, { userId: params.userId });
+
   const formdata = await request.formData();
   const id = Number(formdata.get('userMusicMemoId'));
   const content = formdata.get('content') as string;
