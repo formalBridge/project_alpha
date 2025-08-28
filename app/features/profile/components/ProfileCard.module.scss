@@ -10,6 +10,7 @@
     transform 0.3s ease;
   text-decoration: none;
   color: inherit;
+  overflow: hidden;
 
   &:hover {
     transform: translateY(-5px);
@@ -64,6 +65,7 @@
   align-items: center;
   gap: 0.75rem;
   min-width: 0;
+  box-sizing: border-box;
 }
 
 .songThumbnail {
@@ -75,14 +77,28 @@
 }
 
 .songText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 0;
   min-width: 0;
+  max-width: 100%;
+
+  .song,
+  .artist {
+    margin: 0;
+    display: block;
+    max-width: 100%;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .song {
     font-weight: 600;
     font-size: 0.85rem;
     color: #495057;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
   .artist {
     font-size: 0.75rem;
