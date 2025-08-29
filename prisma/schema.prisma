@@ -62,14 +62,24 @@ model UserRanking {
 }
 
 model UserMusicMemo {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  songId    Int
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  song      Song     @relation(fields: [songId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  id           Int            @id @default(autoincrement())
+  userId       Int
+  songId       Int
+  content      String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  song         Song           @relation(fields: [songId], references: [id])
+  user         User           @relation(fields: [userId], references: [id])
+  MusicMemoTag MusicMemoTag[]
 
   @@unique([userId, songId])
+}
+
+model MusicMemoTag {
+  id      Int           @id @default(autoincrement())
+  memoId  Int
+  memo    UserMusicMemo @relation(fields: [memoId], references: [id])
+  content String
+
+  @@unique([memoId, content])
 }
