@@ -5,11 +5,11 @@ $grey-300: hsl(200, 8%, 85%);
 $grey-400: hsl(200, 6%, 80%);
 $grey-500: hsl(200, 6%, 75%);
 
-$black-100: hsl(0, 0%, 10%);
-$black-200: hsl(0, 0%, 15%);
+$black-100: hsl(0, 0%, 30%);
+$black-200: hsl(0, 0%, 25%);
 $black-300: hsl(0, 0%, 20%);
-$black-400: hsl(0, 0%, 25%);
-$black-500: hsl(0, 0%, 30%);
+$black-400: hsl(0, 0%, 15%);
+$black-500: hsl(0, 0%, 10%);
 
 $primary-100: hsl(25, 90%, 90%);
 $primary-200: hsl(25, 80%, 85%);
@@ -17,5 +17,10 @@ $primary-300: hsl(25, 70%, 80%);
 $primary-400: hsl(25, 60%, 75%);
 $primary-500: hsl(25, 60%, 60%);
 
-$primary-font: $black-100;
+$red-400: hsl(3, 71%, 50%);
+
+$primary-font: $black-500;
 $secondary-font: $primary-300;
+
+$border-color: $grey-300;
+$error-color: $red-400;
