@@ -60,15 +60,30 @@
   }
 }
 
-.song-box {
-  display: flex;
-  flex-direction: column;
-  padding: 12px;
-  gap: 12px;
+.song-item-box {
+  padding: 10px;
   background: $grey-100;
-  border-radius: 8px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   a {
     text-decoration: none;
     color: inherit;
+  }
+}
+
+.memo-items-box {
+  display: grid;
+  padding: 4px;
+  gap: 2px;
+  background: $grey-100;
+  border-radius: 10px;
+  min-width: 0;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    min-width: 0;
   }
 }

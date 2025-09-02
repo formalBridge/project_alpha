@@ -5,6 +5,7 @@ import SongItem from 'app/features/profile/components/SongItem';
 import { profileLayoutLoader, profileLoader } from 'app/features/profile/loader';
 import styles from 'app/features/profile/pages/show.module.scss';
 
+import MemoGridItem from '../components/MemoGridItem';
 import { SortToggle } from '../components/SortToggle';
 
 export default function Show() {
@@ -36,11 +37,11 @@ export default function Show() {
             <p className={styles.title}> {isCurrentUserProfile ? '내가' : `${user.handle}이(가)`} 쓴 메모들</p>
             <SortToggle currentSort={currentSort} />
           </div>
-          <div className={styles.songBox}>
+          <div className={styles.memoItemsBox}>
             {userMusicMemo.length > 0 ? (
               userMusicMemo.map((musicMemo) => (
                 <Link key={musicMemo.song.id} to={`/music/${musicMemo.song.id}/user/${user.id}`}>
-                  <SongItem song={musicMemo.song} />
+                  <MemoGridItem song={musicMemo.song} />
                 </Link>
               ))
             ) : (
@@ -70,7 +71,7 @@ export function TodaySongSection({ song, isCurrentUserProfile, userId }: TodaySo
           </Link>
         )}
       </div>
-      <div className={styles.songBox}>
+      <div className={styles.songItemBox}>
         {song && song.title ? (
           <Link to={`/music/${song.id}/user/${userId}`}>
             <SongItem song={song as Song} />
