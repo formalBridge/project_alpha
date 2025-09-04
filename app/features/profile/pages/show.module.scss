@@ -78,7 +78,7 @@
   background: $grey-100;
   border-radius: 10px;
   min-width: 0;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 
   a {
