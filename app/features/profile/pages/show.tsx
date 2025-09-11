@@ -1,5 +1,5 @@
 import type { Song } from '@prisma/client';
-import { Link, useLoaderData, useRouteLoaderData, useSearchParams } from '@remix-run/react';
+import { Link, useLoaderData, useRouteLoaderData, useSearchParams, Form } from '@remix-run/react';
 
 import SongItem from 'app/features/profile/components/SongItem';
 import { profileLayoutLoader, profileLoader } from 'app/features/profile/loader';
@@ -9,7 +9,7 @@ import MemoGridItem from '../components/MemoGridItem';
 import { SortToggle } from '../components/SortToggle';
 
 export default function Show() {
-  const { user, userMusicMemo } = useLoaderData<typeof profileLoader>();
+  const { user, userMusicMemo, isFollowing } = useLoaderData<typeof profileLoader>();
   const profileLayoutData = useRouteLoaderData<typeof profileLayoutLoader>('routes/profile.$userId');
   const currentUser = profileLayoutData?.user || null;
 
@@ -23,7 +23,20 @@ export default function Show() {
       <div className={styles.profileBox}>
         <img className={styles.profileAvatar} src="/images/features/profile/profile_test.png" />
         <div className={styles.profileTextbox}>
-          <p className={styles.profileHandle}>@{user.handle}</p>
+          <div className={styles.infoTopRow}>
+            <h2 className={styles.profileHandle}>@{user.handle}</h2>
+            {!isCurrentUserProfile && <FollowButton isFollowing={isFollowing} />}
+          </div>
+          <div className={styles.followStats}>
+            <Link to="../followers" className={styles.statItem}>
+              <span>팔로워</span>
+              <strong>{user._count.followers}</strong>
+            </Link>
+            <Link to="../following" className={styles.statItem}>
+              <span>팔로잉</span>
+              <strong>{user._count.following}</strong>
+            </Link>
+          </div>
         </div>
       </div>
       <div className={styles.contentBox}>
@@ -81,5 +94,24 @@ export function TodaySongSection({ song, isCurrentUserProfile, userId }: TodaySo
         )}
       </div>
     </div>
+  );
+}
+
+interface FollowButtonProps {
+  isFollowing: boolean;
+}
+
+export function FollowButton({ isFollowing }: FollowButtonProps) {
+  return (
+    <Form method="post">
+      <button
+        type="submit"
+        name="_action"
+        value={isFollowing ? 'unfollow' : 'follow'}
+        className={`${styles.followBtn} ${isFollowing ? styles.unfollow : ''}`}
+      >
+        {isFollowing ? '언팔로우' : '팔로우'}
+      </button>
+    </Form>
   );
 }

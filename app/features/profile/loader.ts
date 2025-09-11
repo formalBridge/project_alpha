@@ -9,9 +9,10 @@ import { searchSongInputLoader } from './components/SearchSongInputloader';
 import {
   fetchAccountSettingsData,
   fetchUserMusicMemo,
-  fetchUserWithRecomandSong,
+  fetchUserProfile,
   findUserByHandleSim,
   getRecommendedUsers,
+  isUserFollowing,
 } from './services';
 
 export const profileLayoutLoader = createLoader(async ({ request, db }) => {
@@ -21,20 +22,21 @@ export const profileLayoutLoader = createLoader(async ({ request, db }) => {
 });
 
 export const profileLoader = createLoader(async ({ db, params, request }) => {
-  const userId = Number(params.userId);
-  const user = await fetchUserWithRecomandSong(db)({ userId: userId });
-
-  if (!user) {
-    throw new Response('User Not Found', { status: 404 });
-  }
-
+  const profileUserId = Number(params.userId);
   const url = new URL(request.url);
   const sort = url.searchParams.get('sort') || 'desc';
   const sortOrder = sort === 'asc' ? 'asc' : 'desc';
 
-  const userMusicMemo = await fetchUserMusicMemo(db)({ userId: userId, sortOrder: sortOrder });
+  const profileUser = await fetchUserProfile(db)({ userId: profileUserId });
+  const currentUser = await getCurrentDBUser(request, db);
+  if (!profileUser || !currentUser) {
+    throw new Response('User Not Found', { status: 404 });
+  }
 
-  return { user, userMusicMemo };
+  const userMusicMemo = await fetchUserMusicMemo(db)({ userId: profileUserId, sortOrder: sortOrder });
+  const isFollowing = await isUserFollowing(db)({ followerId: currentUser.id, followingId: profileUser.id });
+
+  return { user: profileUser, userMusicMemo, isFollowing };
 });
 
 export const profileRedirectLoader = createLoader(async ({ request }) => {

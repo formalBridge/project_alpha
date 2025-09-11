@@ -10,20 +10,47 @@ export type UserWithRecommendedSong = Prisma.UserGetPayload<{
   include: { todayRecommendedSong: true };
 }>;
 
-export const fetchUserWithRecomandSong = createService<{ userId: number }, UserWithRecommendedSong | null>(
-  async (db, { userId }) => {
-    const user = await db.user.findUnique({
-      where: { id: userId },
-      include: {
-        todayRecommendedSong: true,
+export type UserForProfile = Prisma.UserGetPayload<{
+  include: {
+    todayRecommendedSong: true;
+    _count: {
+      select: {
+        followers: true;
+        following: true;
+      };
+    };
+  };
+}>;
+
+export const fetchUserProfile = createService<{ userId: number }, UserForProfile | null>(async (db, { userId }) => {
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    include: {
+      todayRecommendedSong: true,
+      _count: {
+        select: { followers: true, following: true },
+      },
+    },
+  });
+
+  if (!user) {
+    return null;
+  }
+
+  return user as UserForProfile;
+});
+
+export const isUserFollowing = createService<{ followerId: number; followingId: number }, boolean>(
+  async (db, { followerId, followingId }) => {
+    const follow = await db.follow.findUnique({
+      where: {
+        followerId_followingId: {
+          followerId,
+          followingId,
+        },
       },
     });
-
-    if (!user) {
-      return null;
-    }
-
-    return user as UserWithRecommendedSong;
+    return !!follow;
   }
 );
 

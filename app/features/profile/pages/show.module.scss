@@ -28,6 +28,65 @@
   }
 }
 
+.infoTopRow {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.followBtn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  background-color: $black-300;
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: $black-500;
+  }
+
+  &.unfollow {
+    background-color: $grey-200;
+    color: $black-300;
+
+    &:hover {
+      background-color: $grey-500;
+    }
+  }
+}
+
+.followStats {
+  display: flex;
+  gap: 10px;
+}
+
+.statItem {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.6;
+  }
+
+  strong {
+    font-weight: 700;
+    color: $grey-400;
+  }
+
+  span {
+    font-size: 14px;
+    color: $grey-500;
+  }
+}
+
 .content-box {
   display: flex;
   flex-direction: column;
