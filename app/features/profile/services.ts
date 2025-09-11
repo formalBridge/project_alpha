@@ -117,3 +117,56 @@ export const fetchAccountSettingsData = createService<{ id: number }, AccountSet
 
   return user;
 });
+
+export const validateUserExist = createService<{ followerId: number; followingId: number }, boolean>(
+  async (db, { followerId, followingId }) => {
+    const userIds = [followerId, followingId];
+    const users = await db.user.findMany({
+      where: {
+        id: { in: userIds },
+      },
+      select: { id: true },
+    });
+    return users.length === userIds.length;
+  }
+);
+
+export const followUser = createService<{ followerId: number; followingId: number }, number>(
+  async (db, { followerId, followingId }) => {
+    if (followerId === followingId) {
+      throw new Error('자기 자신은 팔로우할 수 없습니다.');
+    }
+
+    const usersAreValid = await validateUserExist(db)({ followerId, followingId });
+    if (!usersAreValid) {
+      throw new Error('존재하지 않는 사용자입니다.');
+    }
+
+    await db.follow.create({
+      data: {
+        followerId,
+        followingId,
+      },
+    });
+    return followerId;
+  }
+);
+
+export const unfollowUser = createService<{ followerId: number; followingId: number }, number>(
+  async (db, { followerId, followingId }) => {
+    const usersAreValid = await validateUserExist(db)({ followerId, followingId });
+    if (!usersAreValid) {
+      throw new Error('존재하지 않는 사용자입니다.');
+    }
+
+    await db.follow.delete({
+      where: {
+        followerId_followingId: {
+          followerId,
+          followingId,
+        },
+      },
+    });
+    return followerId;
+  }
+);
