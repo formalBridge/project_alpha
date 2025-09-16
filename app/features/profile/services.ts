@@ -237,6 +237,7 @@ export const fetchFollowing = createService<{ userId: number }, UserForFollowLis
   const follows = await db.follow.findMany({
     where: { followerId: userId },
     select: {
+      createdAt: true,
       following: {
         select: followerSelectQuery,
       },

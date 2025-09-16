@@ -161,5 +161,5 @@ export const followsLoader = createLoader(async ({ db, request, params }) => {
     isFollowing: followingIds.has(user.id),
   }));
 
-  return { list: listWithFollowingStatus, tab, profileUserId };
+  return { list: listWithFollowingStatus, tab, currentUserId: currentUser.id };
 });
