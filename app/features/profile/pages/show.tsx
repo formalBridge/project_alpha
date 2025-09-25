@@ -28,11 +28,11 @@ export default function Show() {
             {!isCurrentUserProfile && <FollowButton isFollowing={isFollowing} />}
           </div>
           <div className={styles.followStats}>
-            <Link to="../followers" className={styles.statItem}>
+            <Link to="../follows?tab=followers" className={styles.statItem}>
               <span>팔로워</span>
               <strong>{user._count.followers}</strong>
             </Link>
-            <Link to="../following" className={styles.statItem}>
+            <Link to="../follows?tab=following" className={styles.statItem}>
               <span>팔로잉</span>
               <strong>{user._count.following}</strong>
             </Link>

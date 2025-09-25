@@ -4,7 +4,7 @@ import { getCurrentDBUser, requireUserOwnership } from 'app/external/auth/jwt.se
 import { findUserByHandle, updateUserHandle, followUser, unfollowUser } from 'app/features/profile/services';
 import createAction from 'app/utils/createAction';
 
-import { HandleSchema } from './schema';
+import { HandleSchema, FollowsActionSchema } from './schema';
 
 export const addTodaySongAction = createAction(async ({ request, db, params }) => {
   await requireUserOwnership(request, { userId: params.userId });
@@ -96,7 +96,7 @@ export const settingsAction = createAction(async ({ request, db, params }) => {
   }
 });
 
-export const followAction = createAction(async ({ request, db, params }) => {
+export const showAction = createAction(async ({ request, db, params }) => {
   const currentUser = await getCurrentDBUser(request, db);
   if (!currentUser) {
     return redirect('/login/error', { status: 401 });
@@ -115,4 +115,32 @@ export const followAction = createAction(async ({ request, db, params }) => {
   }
 
   return null;
+});
+
+export const followsAction = createAction(async ({ request, db }) => {
+  const formData = await request.formData();
+  const formPayload = Object.fromEntries(formData);
+
+  const validatedData = FollowsActionSchema.safeParse(formPayload);
+  if (!validatedData.success) {
+    return data({ ok: false, error: validatedData.error.issues[0].message }, { status: 400 });
+  }
+
+  const { intent, targetUserId } = validatedData.data;
+
+  const currentUser = await getCurrentDBUser(request, db);
+  if (!currentUser) {
+    return redirect('/login/error', { status: 401 });
+  }
+
+  try {
+    if (intent === 'follow') {
+      await followUser(db)({ followerId: currentUser.id, followingId: targetUserId });
+    } else {
+      await unfollowUser(db)({ followerId: currentUser.id, followingId: targetUserId });
+    }
+    return data({ ok: true });
+  } catch (error) {
+    return data({ ok: false, error: (error as Error).message }, { status: 400 });
+  }
 });
