@@ -91,6 +91,7 @@ model Follow {
   id          Int      @id @default(autoincrement())
   followerId  Int
   followingId Int
+  
   createdAt    DateTime @default(now())
 
   follower  User @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
