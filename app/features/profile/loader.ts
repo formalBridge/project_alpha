@@ -8,6 +8,8 @@ import createLoader from 'app/utils/createLoader';
 import { searchSongInputLoader } from './components/SearchSongInputloader';
 import {
   fetchAccountSettingsData,
+  fetchFollowers,
+  fetchFollowing,
   fetchUserMusicMemo,
   fetchUserProfile,
   findUserByHandleSim,
@@ -124,4 +126,40 @@ export const settingsLoader = createLoader(async ({ request, db, params }) => {
     handle: settingsData.handle,
     avatarUrl: '/images/features/profile/profile_test.png', //TODO: settingsData.avartarUrl으로 추수 수정
   };
+});
+
+export const followsLoader = createLoader(async ({ db, request, params }) => {
+  const profileUserId = Number(params.userId);
+  if (isNaN(profileUserId)) {
+    throw new Response('Invalid user ID', { status: 400 });
+  }
+
+  const url = new URL(request.url);
+  const tab = url.searchParams.get('tab') === 'following' ? 'following' : 'followers';
+
+  const currentUser = await getCurrentDBUser(request, db);
+  if (!currentUser) {
+    throw new Response('User Not Found', { status: 404 });
+  }
+
+  const list =
+    tab === 'following'
+      ? await fetchFollowing(db)({ userId: profileUserId })
+      : await fetchFollowers(db)({ userId: profileUserId });
+
+  const followingIds = new Set(
+    (
+      await db.follow.findMany({
+        where: { followerId: currentUser.id },
+        select: { followingId: true },
+      })
+    ).map((follow) => follow.followingId)
+  );
+
+  const listWithFollowingStatus = list.map((user) => ({
+    ...user,
+    isFollowing: followingIds.has(user.id),
+  }));
+
+  return { list: listWithFollowingStatus, tab, profileUserId };
 });

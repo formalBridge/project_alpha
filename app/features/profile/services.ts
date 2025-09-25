@@ -197,3 +197,51 @@ export const unfollowUser = createService<{ followerId: number; followingId: num
     return followerId;
   }
 );
+
+const followerSelectQuery = {
+  id: true,
+  handle: true,
+  //avatarUrl: true, // TODO: avatarUrl 필드 생성 후 주석 제거
+  todayRecommendedSong: {
+    select: {
+      id: true,
+      title: true,
+      artist: true,
+      thumbnailUrl: true,
+    },
+  },
+} as const;
+
+export type UserForFollowList = Prisma.UserGetPayload<{
+  select: typeof followerSelectQuery;
+}> & {
+  isFollowing: boolean;
+};
+
+type UserForFollowListFromDB = Omit<UserForFollowList, 'isFollowing'>;
+
+export const fetchFollowers = createService<{ userId: number }, UserForFollowListFromDB[]>(async (db, { userId }) => {
+  const follows = await db.follow.findMany({
+    where: { followingId: userId },
+    select: {
+      follower: {
+        select: followerSelectQuery,
+      },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+  return follows.map((follow) => follow.follower);
+});
+
+export const fetchFollowing = createService<{ userId: number }, UserForFollowListFromDB[]>(async (db, { userId }) => {
+  const follows = await db.follow.findMany({
+    where: { followerId: userId },
+    select: {
+      following: {
+        select: followerSelectQuery,
+      },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+  return follows.map((follow) => follow.following);
+});
