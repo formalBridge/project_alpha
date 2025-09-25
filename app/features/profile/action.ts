@@ -1,7 +1,7 @@
 import { data, redirect } from '@remix-run/node';
 
-import { requireUserOwnership } from 'app/external/auth/jwt.server';
-import { findUserByHandle, updateUserHandle } from 'app/features/profile/services';
+import { getCurrentDBUser, requireUserOwnership } from 'app/external/auth/jwt.server';
+import { findUserByHandle, updateUserHandle, followUser, unfollowUser } from 'app/features/profile/services';
 import createAction from 'app/utils/createAction';
 
 import { HandleSchema } from './schema';
@@ -94,4 +94,25 @@ export const settingsAction = createAction(async ({ request, db, params }) => {
   } catch (err) {
     return data({ error: (err as Error).message }, { status: 400 });
   }
+});
+
+export const followAction = createAction(async ({ request, db, params }) => {
+  const currentUser = await getCurrentDBUser(request, db);
+  if (!currentUser) {
+    return redirect('/login/error', { status: 401 });
+  }
+
+  const formData = await request.formData();
+  const intent = formData.get('_action');
+  const profileUserId = Number(params.userId);
+
+  if (intent === 'follow') {
+    await followUser(db)({ followerId: currentUser.id, followingId: profileUserId });
+  } else if (intent === 'unfollow') {
+    await unfollowUser(db)({ followerId: currentUser.id, followingId: profileUserId });
+  } else {
+    throw new Response('잘못된 요청입니다.', { status: 400 });
+  }
+
+  return null;
 });
