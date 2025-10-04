@@ -42,6 +42,7 @@ model Song {
   artist                String
   thumbnailUrl          String?
   album                 String?
+  spotifyId             String?      
   rankings              UserRanking[]
   usersTodayRecommended User[]
   UserMusicMemo         UserMusicMemo[]
