@@ -83,6 +83,7 @@ export class SpotifyAPI {
         artist: item.artists?.[0]?.name || '',
         album: item.album.name,
         mbid: item.id,
+        spotifyId: item.id,
         albumCover: item.album.images?.[0]?.url || '',
       }));
     } catch (error) {

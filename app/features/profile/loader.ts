@@ -3,6 +3,7 @@ import { redirect } from '@remix-run/react';
 
 import { authenticator } from 'app/external/auth/auth.server';
 import { getCurrentDBUser, getCurrentUser, requireUserOwnership } from 'app/external/auth/jwt.server';
+import { buildSpotifyTrackUrl, getSpotifyEmbed, SpotifyEmbedData } from 'app/external/music/SpotifyOEmbed';
 import createLoader from 'app/utils/createLoader';
 
 import { searchSongInputLoader } from './components/SearchSongInputloader';
@@ -38,7 +39,19 @@ export const profileLoader = createLoader(async ({ db, params, request }) => {
   const userMusicMemo = await fetchUserMusicMemo(db)({ userId: profileUserId, sortOrder: sortOrder });
   const isFollowing = await isUserFollowing(db)({ followerId: currentUser.id, followingId: profileUser.id });
 
-  return { user: profileUser, userMusicMemo, isFollowing };
+  let spotifyEmbed: SpotifyEmbedData | null = null;
+  if (profileUser.todayRecommendedSong?.spotifyId) {
+    try {
+      const spotifyUrl = buildSpotifyTrackUrl(profileUser.todayRecommendedSong.spotifyId);
+      if (spotifyUrl) {
+        spotifyEmbed = await getSpotifyEmbed(spotifyUrl);
+      }
+    } catch (error) {
+      console.error(`Failed to fetch Spotify embed: ${error}`);
+    }
+  }
+
+  return { user: profileUser, userMusicMemo, isFollowing, spotifyEmbed };
 });
 
 export const profileRedirectLoader = createLoader(async ({ request }) => {
@@ -69,6 +82,7 @@ export const addTodaySongLoader = createLoader(async ({ db, params, request }) =
           artist: true,
           album: true,
           thumbnailUrl: true,
+          spotifyId: true,
         },
       },
     },

@@ -9,6 +9,7 @@ export interface MusicInfo {
   artist: string;
   album: string;
   mbid?: string;
+  spotifyId: string;
   albumCover?: Promise<string>;
 }
 
