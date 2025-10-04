@@ -29,6 +29,7 @@ export const addTodaySongAction = createAction(async ({ request, db, params }) =
   const artist = (formData.get('artist') as string | null)?.trim() ?? '';
   const album = (formData.get('album') as string | null)?.trim() || null;
   const thumbnailUrl = (formData.get('thumbnailUrl') as string | null)?.trim() || null;
+  const spotifyId = (formData.get('spotifyId') as string | null)?.trim() || null;
 
   if (!title || !artist) {
     return new Response('제목과 아티스트는 필수입니다.', { status: 400 });
@@ -36,8 +37,12 @@ export const addTodaySongAction = createAction(async ({ request, db, params }) =
 
   const song = await db.song.upsert({
     where: { title_artist: { title, artist } },
-    create: { title, artist, album, thumbnailUrl },
-    update: {},
+    create: { title, artist, album, thumbnailUrl, spotifyId },
+    update: {
+      album,
+      thumbnailUrl,
+      spotifyId,
+    },
   });
 
   await db.user.update({

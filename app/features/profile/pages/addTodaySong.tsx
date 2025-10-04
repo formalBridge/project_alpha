@@ -54,6 +54,7 @@ const useSavePickedSong = () => {
     fd.append('artist', simple.artist);
     fd.append('album', simple.album ?? '');
     fd.append('thumbnailUrl', simple.thumbnailUrl ?? '');
+    fd.append('spotifyId', song.spotifyId ?? '');
     submit(fd, { method: 'post' });
   };
 };
