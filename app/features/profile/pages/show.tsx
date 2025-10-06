@@ -9,7 +9,7 @@ import MemoGridItem from '../components/MemoGridItem';
 import { SortToggle } from '../components/SortToggle';
 
 export default function Show() {
-  const { user, userMusicMemo, isFollowing } = useLoaderData<typeof profileLoader>();
+  const { user, userMusicMemo, isFollowing, spotifyEmbed } = useLoaderData<typeof profileLoader>();
   const profileLayoutData = useRouteLoaderData<typeof profileLayoutLoader>('routes/profile.$userId');
   const currentUser = profileLayoutData?.user || null;
 
@@ -44,6 +44,7 @@ export default function Show() {
           song={user.todayRecommendedSong}
           isCurrentUserProfile={isCurrentUserProfile}
           userId={user.id}
+          spotifyEmbed={spotifyEmbed}
         />
         <div className={styles.todayRecommendBox} style={{ marginTop: '2rem' }}>
           <div className={styles.titleBox}>
@@ -71,9 +72,10 @@ interface TodaySongSectionProps {
   song: Partial<Song> | null;
   isCurrentUserProfile: boolean;
   userId: number;
+  spotifyEmbed: { html: string } | null;
 }
 
-export function TodaySongSection({ song, isCurrentUserProfile, userId }: TodaySongSectionProps) {
+export function TodaySongSection({ song, isCurrentUserProfile, userId, spotifyEmbed }: TodaySongSectionProps) {
   return (
     <div className={styles.todayRecommendBox}>
       <div className={styles.titleBox}>
@@ -84,15 +86,23 @@ export function TodaySongSection({ song, isCurrentUserProfile, userId }: TodaySo
           </Link>
         )}
       </div>
-      <div className={styles.songItemBox}>
-        {song && song.title ? (
-          <Link to={`/music/${song.id}/user/${userId}`}>
-            <SongItem song={song as Song} />
-          </Link>
-        ) : (
+      {song && song.title ? (
+        <>
+          {spotifyEmbed ? (
+            <div className={styles.spotifyPlayer} dangerouslySetInnerHTML={{ __html: spotifyEmbed.html }} />
+          ) : (
+            <div className={styles.songItemBox}>
+              <Link to={`/music/${song.id}/user/${userId}`}>
+                <SongItem song={song as Song} />
+              </Link>
+            </div>
+          )}
+        </>
+      ) : (
+        <div className={styles.songItemBox}>
           <p className={styles.noContentText}>오늘의 추천곡이 아직 없습니다.</p>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
