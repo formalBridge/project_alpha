@@ -1,7 +1,7 @@
 import { data, redirect } from '@remix-run/node';
 
 import { getCurrentDBUser, requireUserOwnership } from 'app/external/auth/jwt.server';
-import { findUserByHandle, updateUserHandle, followUser, unfollowUser } from 'app/features/profile/services';
+import { updateUserHandle, followUser, unfollowUser } from 'app/features/profile/services';
 import createAction from 'app/utils/createAction';
 
 import { HandleSchema, FollowsActionSchema } from './schema';
@@ -9,16 +9,6 @@ import { HandleSchema, FollowsActionSchema } from './schema';
 export const addTodaySongAction = createAction(async ({ request, db, params }) => {
   await requireUserOwnership(request, { userId: params.userId });
   const formData = await request.formData();
-
-  const handle = (formData.get('handle') as string | null)?.trim() ?? '';
-
-  if (handle) {
-    const user = await findUserByHandle(db)({ handle });
-    if (user) {
-      return redirect(`/profile/${user.id}/show`);
-    }
-    return { error: `핸들 "${handle}"을 가진 사용자를 찾을 수 없습니다.` };
-  }
 
   const userId = Number(params.userId);
   if (isNaN(userId)) {
@@ -35,15 +25,18 @@ export const addTodaySongAction = createAction(async ({ request, db, params }) =
     return new Response('제목과 아티스트는 필수입니다.', { status: 400 });
   }
 
-  const song = await db.song.upsert({
-    where: { title_artist: { title, artist } },
-    create: { title, artist, album, thumbnailUrl, spotifyId },
-    update: {
-      album,
-      thumbnailUrl,
-      spotifyId,
-    },
-  });
+  const existingSong =
+    (spotifyId ? await db.song.findFirst({ where: { spotifyId } }) : null) ??
+    (await db.song.findFirst({ where: { title, artist } }));
+
+  const song = existingSong
+    ? await db.song.update({
+        where: { id: existingSong.id },
+        data: { album, thumbnailUrl, spotifyId },
+      })
+    : await db.song.create({
+        data: { title, artist, album, thumbnailUrl, spotifyId },
+      });
 
   await db.user.update({
     where: { id: userId },
