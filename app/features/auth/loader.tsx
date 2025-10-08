@@ -35,3 +35,17 @@ export const authCallbackLoader = createLoader(async ({ request }) => {
     },
   });
 });
+
+export const logoutLoader = createLoader(async () => {
+  const expiredJwtCookie = serialize('jwt', '', {
+    httpOnly: true,
+    path: '/',
+    maxAge: 0,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+  });
+
+  return redirect('/', {
+    headers: { 'Set-Cookie': expiredJwtCookie },
+  });
+});
