@@ -127,10 +127,9 @@ export const updateUserHandle = createService<{ userId: string; handle: string }
   }
 );
 
-//TODO: avartarUrl 필드 생성 후 주석 제거
 export interface AccountSettingData {
   handle: string | null;
-  // avartalUrl: string | null;
+  avatarUrl: string | null;
 }
 
 export const fetchAccountSettingsData = createService<{ id: number }, AccountSettingData | null>(async (db, { id }) => {
@@ -138,7 +137,7 @@ export const fetchAccountSettingsData = createService<{ id: number }, AccountSet
     where: { id },
     select: {
       handle: true,
-      // avartarUrl: true,
+      avatarUrl: true,
     },
   });
 
@@ -246,3 +245,12 @@ export const fetchFollowing = createService<{ userId: number }, UserForFollowLis
   });
   return follows.map((follow) => follow.following);
 });
+
+export const updateUserAvatar = createService<{ userId: number; avatarUrl: string }, User>(
+  async (db, { userId, avatarUrl }) => {
+    return db.user.update({
+      where: { id: userId },
+      data: { avatarUrl },
+    });
+  }
+);

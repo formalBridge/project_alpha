@@ -20,9 +20,23 @@ export default function SettingsPage() {
     <div className={styles.container}>
       <h1 className={styles.title}>계정 설정</h1>
       <section className={styles.card}>
-        <Form method="post" replace className={styles.formGrid}>
-          <img src={loaderData.avatarUrl} alt="프로필 사진" className={styles.avatar} />
+        <Form method="post" encType="multipart/form-data" replace className={styles.formGrid}>
+          <img
+            src={loaderData.avatarUrl || 'public/images/features/profile/profile_test.png'}
+            alt="프로필 사진"
+            className={styles.avatar}
+          />
 
+          <input type="hidden" name="_action" value="update-avatar" />
+          <input type="hidden" name="userId" value={loaderData.userId} />
+          <input type="file" name="avatar" accept="image/*" className={styles.fileInput} required />
+
+          <button type="submit" className={styles.button} disabled={isSubmitting}>
+            {isSubmitting ? '업로드 중…' : '프로필 사진 변경'}
+          </button>
+        </Form>
+
+        <Form method="post" replace className={styles.formGrid}>
           <FormField
             label="핸들"
             id="handle-input"

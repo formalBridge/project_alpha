@@ -18,7 +18,7 @@ export class ImageStorage {
   }
 
   uploadAvatar(userId: number | string, file: File) {
-    return this.upload({ userId, file, kind: 'avatar' });
+    return this.upload({ userId: Number(userId), file, kind: 'avatar' });
   }
 }
 
@@ -27,9 +27,9 @@ export const imageStorage = new ImageStorage(new MinioImageAPI());
 export type UploadKind = 'avatar' | 'post' | 'misc';
 
 export interface UploadParams {
-  userId: number | string;
+  userId: number;
   file: File;
-  kind?: UploadKind;
+  kind?: 'avatar' | 'post' | 'misc';
 }
 
 export interface ImageInfo {

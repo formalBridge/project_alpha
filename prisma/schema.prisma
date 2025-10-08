@@ -28,6 +28,8 @@ model User {
 
   following Follow[] @relation("follower")
   followers Follow[] @relation("following")
+
+  avatarUrl    String?
 }
 
 model Post_mokjak {
