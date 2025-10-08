@@ -11,7 +11,7 @@ export function ProfileCard({ user }: { user: UserWithRecommendedSong }) {
         <div className={styles.profileInfo}>
           <img
             className={styles.avatar}
-            src={user.avatarUrl || '/images/features/profile/profile_test.png'}
+            src={user.avatarUrl || '/images/features/profile/profile_default.png'}
             alt={`${user.handle}의 프로필 이미지`}
           />
           <div className={styles.userInfo}>
