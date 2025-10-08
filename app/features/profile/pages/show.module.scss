@@ -130,6 +130,14 @@
   }
 }
 
+.spotify-player {
+  :global(iframe) {
+    width: 100%;
+    border-radius: 12px;
+    border: none;
+  }
+}
+
 .memo-items-box {
   display: grid;
   padding: 4px;
