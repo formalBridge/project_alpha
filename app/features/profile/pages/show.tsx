@@ -1,7 +1,6 @@
 import type { Song } from '@prisma/client';
 import { Link, useLoaderData, useRouteLoaderData, useSearchParams, Form } from '@remix-run/react';
 
-import SongItem from 'app/features/profile/components/SongItem';
 import { profileLayoutLoader, profileLoader } from 'app/features/profile/loader';
 import styles from 'app/features/profile/pages/show.module.scss';
 
@@ -20,6 +19,7 @@ export default function Show() {
 
   return (
     <div>
+      <TodaySongSection song={user.todayRecommendedSong} isCurrentUserProfile={isCurrentUserProfile} userId={user.id} />
       <div className={styles.profileBox}>
         <img
           className={styles.profileAvatar}
@@ -28,30 +28,25 @@ export default function Show() {
         />
         <div className={styles.profileTextbox}>
           <div className={styles.infoTopRow}>
-            <h2 className={styles.profileHandle}>@{user.handle}</h2>
+            <h2 className={styles.profileHandle}>{user.handle}</h2>
             {!isCurrentUserProfile && <FollowButton isFollowing={isFollowing} />}
           </div>
           <div className={styles.followStats}>
             <Link to="../follows?tab=followers" className={styles.statItem}>
               <span>팔로워</span>
-              <strong>{user._count.followers}</strong>
+              <div className={styles.follownum}>{user._count.followers}</div>
             </Link>
             <Link to="../follows?tab=following" className={styles.statItem}>
               <span>팔로잉</span>
-              <strong>{user._count.following}</strong>
+              <div className={styles.follownum}>{user._count.following}</div>
             </Link>
           </div>
         </div>
       </div>
       <div className={styles.contentBox}>
-        <TodaySongSection
-          song={user.todayRecommendedSong}
-          isCurrentUserProfile={isCurrentUserProfile}
-          userId={user.id}
-        />
         <div className={styles.todayRecommendBox} style={{ marginTop: '2rem' }}>
           <div className={styles.titleBox}>
-            <p className={styles.title}> {isCurrentUserProfile ? '내가' : `${user.handle}이(가)`} 쓴 메모들</p>
+            <p className={styles.title}>HISTORY</p>
             <SortToggle currentSort={currentSort} />
           </div>
           <div className={styles.memoItemsBox}>
@@ -78,24 +73,37 @@ interface TodaySongSectionProps {
 }
 
 export function TodaySongSection({ song, isCurrentUserProfile, userId }: TodaySongSectionProps) {
-  return (
-    <div className={styles.todayRecommendBox}>
-      <div className={styles.titleBox}>
-        <p className={styles.title}>오늘의 추천곡</p>
+  if (!song || !song.title) {
+    return (
+      <div className={styles.todayRecommendBoxEmpty}>
+        <p className={styles.noContentText}>오늘의 추천곡이 아직 없습니다.</p>
         {isCurrentUserProfile && (
           <Link className={styles.goToEditLink} to="../addTodaySong">
             수정하기
           </Link>
         )}
       </div>
-      <div className={styles.songItemBox}>
-        {song && song.title ? (
-          <Link to={`/music/${song.id}/user/${userId}`}>
-            <SongItem song={song as Song} />
+    );
+  }
+
+  return (
+    <div
+      className={styles.todaySongBackground}
+      style={{
+        backgroundImage: `url(${song.thumbnailUrl || '/images/default-bg.jpg'})`,
+      }}
+    >
+      <div className={styles.overlay}>
+        <div className={styles.songInfo}>
+          <h3 className={styles.songTitle}>{song.title}</h3>
+          <p className={styles.songArtist}>{song.artist}</p>
+        </div>
+        {isCurrentUserProfile && (
+          <Link className={styles.goToEditLink} to="../addTodaySong">
+            편집
           </Link>
-        ) : (
-          <p className={styles.noContentText}>오늘의 추천곡이 아직 없습니다.</p>
         )}
+        <Link to={`/music/${song.id}/user/${userId}`} className={styles.songLink}></Link>
       </div>
     </div>
   );

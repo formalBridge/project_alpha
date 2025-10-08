@@ -2,7 +2,6 @@ import { User } from '@prisma/client';
 import { Link, Outlet, useLoaderData } from '@remix-run/react';
 import { useEffect, useState } from 'react';
 
-import Logo from 'app/icon/logo';
 import { useIsMobile } from 'app/utils/responsive';
 
 import styles from './profile.module.scss';
@@ -46,7 +45,6 @@ export const DesktopLayout = ({ user }: { user: User | null }) => (
   <div className={styles.desktop}>
     <nav className={styles.navigation}>
       <a href="/" className={styles.logo}>
-        <Logo className={styles.logoIcon} />
         <span>두둠 음악</span>
         <Link to="/logout">로그아웃</Link>
       </a>
