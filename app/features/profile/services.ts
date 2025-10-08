@@ -37,7 +37,15 @@ export const fetchUserProfile = createService<{ userId: number }, UserForProfile
     return null;
   }
 
-  return user as UserForProfile;
+  const safeUser: UserForProfile = {
+    ...user,
+    _count: {
+      followers: (user as UserForProfile)._count?.followers ?? 0,
+      following: (user as UserForProfile)._count?.following ?? 0,
+    },
+  } as UserForProfile;
+
+  return safeUser;
 });
 
 export const isUserFollowing = createService<{ followerId: number; followingId: number }, boolean>(
