@@ -19,7 +19,7 @@ export const MobileLayout = () => (
     <div className={styles.outlet}>
       <Outlet />
     </div>
-    <nav className={styles.navigation}>
+    <nav className={styles.navigationMobile}>
       <ul className={styles.list}>
         <li>
           <a href="/" className={styles.item}>
