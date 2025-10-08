@@ -1,6 +1,7 @@
 import { redirect } from '@remix-run/server-runtime';
 
 import { getCurrentUser, requireUserOwnership } from 'app/external/auth/jwt.server';
+import { buildSpotifyTrackUrl, getSpotifyEmbed } from 'app/external/music/SpotifyOEmbed';
 import createLoader from 'app/utils/createLoader';
 
 export const musicUserLoader = createLoader(async ({ db, params, request }) => {
@@ -15,7 +16,9 @@ export const musicUserLoader = createLoader(async ({ db, params, request }) => {
 
   const UserMusicMemo = await db.userMusicMemo.findFirst({ where: { userId, songId } });
 
-  return { song, user, UserMusicMemo, isCurrentUserProfile };
+  const spotifyEmbed = song?.spotifyId ? await getSpotifyEmbed(buildSpotifyTrackUrl(song.spotifyId)) : null;
+
+  return { song, user, UserMusicMemo, isCurrentUserProfile, spotifyEmbed };
 });
 
 export const musicCreateUserLoader = createLoader(async ({ db, params, request }) => {
