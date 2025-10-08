@@ -1,0 +1,57 @@
+# ------------------- Service ------------------- #
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio-service
+spec:
+  selector:
+    app: minio
+  ports:
+    - name: s3
+      port: 9000
+      targetPort: 9000
+    - name: console
+      port: 9001
+      targetPort: 9001
+  type: ClusterIP   # 내부 접근용 (Ingress 붙이기 전)
+
+---
+# ----------------- StatefulSet ----------------- #
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: minio-statefulset
+spec:
+  serviceName: "minio-service"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+        - name: minio
+          image: minio/minio
+          args: ["server", "/data", "--console-address", ":9001"]
+          ports:
+            - containerPort: 9000   # CLI Console
+            - containerPort: 9001   # Web Console
+          envFrom:
+            - secretRef:
+                name: minio-secret
+          volumeMounts:
+            - name: minio-storage
+              mountPath: /data
+              subPath: minio-data
+  volumeClaimTemplates:
+    - metadata:
+        name: minio-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: nhn-block-storage
+        resources:
+          requests:
+            storage: 10Gi
