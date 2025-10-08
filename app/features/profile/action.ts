@@ -26,9 +26,7 @@ export const addTodaySongAction = createAction(async ({ request, db, params }) =
   }
 
   const existingSong =
-    (spotifyId
-      ? await db.song.findFirst({ where: { spotifyId } })
-      : null) ||
+    (spotifyId ? await db.song.findFirst({ where: { spotifyId } }) : null) ||
     (await db.song.findFirst({ where: { title, artist } }));
 
   const song = existingSong
@@ -47,7 +45,6 @@ export const addTodaySongAction = createAction(async ({ request, db, params }) =
 
   return redirect('../show');
 });
-
 
 export const editHandleAction = createAction(async ({ request, db, params }) => {
   await requireUserOwnership(request, { userId: params.userId });
