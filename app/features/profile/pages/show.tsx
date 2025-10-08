@@ -23,7 +23,7 @@ export default function Show() {
       <div className={styles.profileBox}>
         <img
           className={styles.profileAvatar}
-          src={user.avatarUrl || '/images/features/profile/profile_test.png'}
+          src={user.avatarUrl || '/images/features/profile/profile_default.png'}
           alt={`${user.handle}의 프로필 이미지`}
         />
         <div className={styles.profileTextbox}>

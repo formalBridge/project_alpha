@@ -89,7 +89,7 @@ function UserNavCard({ user }: { user: User | null }) {
   const isActive = /\/settings($|\/)/.test(path);
 
   const sub = (user?.handle ? `@${user.handle}` : user?.email) ?? '계정 설정';
-  const avatar = '/images/features/profile/profile_test.png'; // TODO: 사용자 아바타 이미지로 변경해야 함
+  const avatar = '/images/features/profile/profile_default.png';
 
   return (
     <Link

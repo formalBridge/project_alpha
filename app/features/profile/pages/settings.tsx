@@ -23,7 +23,7 @@ export default function SettingsPage() {
       <section className={styles.card}>
         <Form method="post" encType="multipart/form-data" replace className={styles.formGrid}>
           <img
-            src={loaderData.avatarUrl || 'public/images/features/profile/profile_test.png'}
+            src={loaderData.avatarUrl || '/images/features/profile/profile_default.png'}
             alt="프로필 사진"
             className={styles.avatar}
           />
