@@ -70,9 +70,6 @@ export class MinioImageAPI {
       .map((part) => encodeURIComponent(part))
       .join('/');
 
-    const defaultPort = useSSL ? 443 : 80;
-    const portPart = port === defaultPort ? '' : `:${port}`;
-
-    return `${protocol}://${publicHost}${portPart}/${BUCKET}/${safeKey}`;
+    return `${protocol}://${publicHost}/${BUCKET}/${safeKey}`;
   }
 }
