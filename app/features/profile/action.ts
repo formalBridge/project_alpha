@@ -10,16 +10,6 @@ export const addTodaySongAction = createAction(async ({ request, db, params }) =
   await requireUserOwnership(request, { userId: params.userId });
   const formData = await request.formData();
 
-  const handle = (formData.get('handle') as string | null)?.trim() ?? '';
-
-  if (handle) {
-    const user = await findUserByHandle(db)({ handle });
-    if (user) {
-      return redirect(`/profile/${user.id}/show`);
-    }
-    return { error: `핸들 "${handle}"을 가진 사용자를 찾을 수 없습니다.` };
-  }
-
   const userId = Number(params.userId);
   if (isNaN(userId)) {
     return new Response(JSON.stringify('잘못된 사용자입니다.'), { status: 400 });
@@ -35,15 +25,30 @@ export const addTodaySongAction = createAction(async ({ request, db, params }) =
     return new Response('제목과 아티스트는 필수입니다.', { status: 400 });
   }
 
-  const song = await db.song.upsert({
-    where: { title_artist: { title, artist } },
-    create: { title, artist, album, thumbnailUrl, spotifyId },
-    update: {
-      album,
-      thumbnailUrl,
-      spotifyId,
-    },
-  });
+  let existingSong = null;
+  if (spotifyId) {
+    existingSong = await db.song.findFirst({
+      where: { spotifyId },
+    });
+  }
+
+  if (!existingSong) {
+    existingSong = await db.song.findFirst({
+      where: { title, artist },
+    });
+  }
+
+  let song;
+  if (existingSong) {
+    song = await db.song.update({
+      where: { id: existingSong.id },
+      data: { album, thumbnailUrl, spotifyId },
+    });
+  } else {
+    song = await db.song.create({
+      data: { title, artist, album, thumbnailUrl, spotifyId },
+    });
+  }
 
   await db.user.update({
     where: { id: userId },
@@ -52,6 +57,7 @@ export const addTodaySongAction = createAction(async ({ request, db, params }) =
 
   return redirect('../show');
 });
+
 
 export const editHandleAction = createAction(async ({ request, db, params }) => {
   await requireUserOwnership(request, { userId: params.userId });
