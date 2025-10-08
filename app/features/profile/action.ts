@@ -75,13 +75,13 @@ export const settingsAction = createAction(async ({ request, db, params }) => {
   await requireUserOwnership(request, { userId: params.userId });
 
   const formData = await request.formData();
-  const intent = formData.get('_action');
+  const intent = formData.get('intent');
 
   if (intent === 'update-avatar') {
     const fileField = formData.get('avatar');
 
     if (!fileField || typeof fileField === 'string') {
-      return new Response('파일이 없습니다.', { status: 400 });
+      return data('파일이 없습니다.', { status: 400 });
     }
 
     const blob = fileField as Blob;
@@ -124,7 +124,7 @@ export const showAction = createAction(async ({ request, db, params }) => {
   }
 
   const formData = await request.formData();
-  const intent = formData.get('_action');
+  const intent = formData.get('intent');
   const profileUserId = Number(params.userId);
 
   if (intent === 'follow') {

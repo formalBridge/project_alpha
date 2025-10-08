@@ -14,7 +14,8 @@ export default function SettingsPage() {
 
   const { handle, clientError, handleInputChange, handleInputBlur } = useHandleValidation(loaderData.handle || '');
 
-  const errorMessage = actionData?.error || clientError;
+  const errorMessage =
+    typeof actionData === 'object' && actionData !== null && 'error' in actionData ? actionData.error : clientError;
 
   return (
     <div className={styles.container}>
@@ -27,7 +28,7 @@ export default function SettingsPage() {
             className={styles.avatar}
           />
 
-          <input type="hidden" name="_action" value="update-avatar" />
+          <input type="hidden" name="intent" value="update-avatar" />
           <input type="hidden" name="userId" value={loaderData.userId} />
           <input type="file" name="avatar" accept="image/*" className={styles.fileInput} required />
 

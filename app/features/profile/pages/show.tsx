@@ -110,7 +110,7 @@ export function FollowButton({ isFollowing }: FollowButtonProps) {
     <Form method="post">
       <button
         type="submit"
-        name="_action"
+        name="intent"
         value={isFollowing ? 'unfollow' : 'follow'}
         className={`${styles.followBtn} ${isFollowing ? styles.unfollow : ''}`}
       >
