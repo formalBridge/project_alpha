@@ -12,8 +12,6 @@ const accessKey = process.env.MINIO_ACCESS_KEY || '';
 const secretKey = process.env.MINIO_SECRET_KEY || '';
 const BUCKET = process.env.MINIO_BUCKET || 'avatars';
 
-console.log('MinIO Config:', { endPoint, port, useSSL, accessKey, secretKey, BUCKET });
-
 export class MinioImageAPI {
   private client = new Client({ endPoint, port, useSSL, accessKey, secretKey });
 
@@ -31,7 +29,6 @@ export class MinioImageAPI {
     const dir = kind === 'avatar' ? '' : kind === 'post' ? 'posts' : 'misc';
     const key = dir ? `${dir}/${userId}/${now}.${ext}` : `${userId}/${now}.${ext}`;
 
-    // Web ReadableStream -> Node Readable
     const webStream = file.stream() as unknown as WebReadableStream<Uint8Array>;
     const stream = Readable.fromWeb(webStream);
 
@@ -40,7 +37,6 @@ export class MinioImageAPI {
       'Cache-Control': 'public, max-age=31536000, immutable',
     };
 
-    // putObject(bucket, objectName, stream, size?, metaData?)
     await this.client.putObject(BUCKET, key, stream, file.size, meta);
 
     return { key, contentType: meta['Content-Type'], size: file.size ?? 0 };
@@ -56,6 +52,11 @@ export class MinioImageAPI {
 
   getPublicUrl(key: string) {
     const protocol = useSSL ? 'https' : 'http';
-    return `${protocol}://${endPoint}:${port}/${BUCKET}/${key}`;
+    const safeKey = encodeURIComponent(key);
+
+    const defaultPort = useSSL ? 443 : 80;
+    const portPart = port === defaultPort ? '' : `:${port}`;
+
+    return `${protocol}://${endPoint}${portPart}/${BUCKET}/${safeKey}`;
   }
 }
