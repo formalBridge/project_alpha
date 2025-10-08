@@ -1,7 +1,7 @@
 import { data, redirect } from '@remix-run/node';
 
 import { getCurrentDBUser, requireUserOwnership } from 'app/external/auth/jwt.server';
-import { findUserByHandle, updateUserHandle, followUser, unfollowUser } from 'app/features/profile/services';
+import { updateUserHandle, followUser, unfollowUser } from 'app/features/profile/services';
 import createAction from 'app/utils/createAction';
 
 import { HandleSchema, FollowsActionSchema } from './schema';
