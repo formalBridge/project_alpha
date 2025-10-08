@@ -165,3 +165,60 @@ export const followsAction = createAction(async ({ request, db }) => {
     return data({ ok: false, error: (error as Error).message }, { status: 400 });
   }
 });
+
+export const MemoLikeAction = createAction(async ({ request, db, params }) => {
+  const currentUser = await getCurrentDBUser(request, db);
+  if (!currentUser) {
+    return data({ ok: false, error: '로그인이 필요합니다.' }, { status: 401 });
+  }
+
+  const formData = await request.formData();
+  const memoId = await db.userMusicMemo
+    .findFirst({
+      where: {
+        userId: Number(params.userId),
+        songId: Number(params.songId),
+      },
+    })
+    .then((memo) => memo?.id);
+  const intent = formData.get('intent');
+
+  if (!intent || !memoId) {
+    return data({ ok: false, error: '잘못된 요청입니다.' }, { status: 400 });
+  }
+
+  if (intent === 'like') {
+    await db.memoLikesUser.upsert({
+      where: {
+        userId_memoId: {
+          userId: currentUser.id,
+          memoId: memoId,
+        },
+      },
+      create: {
+        userId: currentUser.id,
+        memoId: memoId,
+      },
+      update: {},
+    });
+    await db.userMusicMemo.update({
+      where: { id: memoId },
+      data: { likes: { increment: 1 } },
+    });
+  } else if (intent === 'unlike') {
+    await db.userMusicMemo.update({
+      where: { id: memoId },
+      data: { likes: { decrement: 1 } },
+    });
+    await db.memoLikesUser.delete({
+      where: {
+        userId_memoId: {
+          userId: currentUser.id,
+          memoId: memoId,
+        },
+      },
+    });
+  }
+
+  return data({ ok: true, like: intent === 'like' });
+});

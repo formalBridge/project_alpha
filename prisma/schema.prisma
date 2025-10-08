@@ -26,10 +26,10 @@ model User {
   googleId      String?         @unique
   UserMusicMemo UserMusicMemo[]
 
-  following Follow[] @relation("follower")
-  followers Follow[] @relation("following")
-
-  avatarUrl    String?
+  following     Follow[]        @relation("follower")
+  followers     Follow[]        @relation("following")
+  avatarUrl     String?
+  MemoLikesUser MemoLikesUser[]
 }
 
 model Post_mokjak {
@@ -68,16 +68,17 @@ model UserRanking {
 }
 
 model UserMusicMemo {
-  id           Int            @id @default(autoincrement())
-  userId       Int
-  songId       Int
-  content      String
-  likes        Int            @default(0)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  song         Song           @relation(fields: [songId], references: [id])
-  user         User           @relation(fields: [userId], references: [id])
-  MusicMemoTag MusicMemoTag[]
+  id            Int             @id @default(autoincrement())
+  userId        Int
+  songId        Int
+  content       String
+  likes         Int             @default(0)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  song          Song            @relation(fields: [songId], references: [id])
+  user          User            @relation(fields: [userId], references: [id])
+  MusicMemoTag  MusicMemoTag[]
+  MemoLikesUser MemoLikesUser[]
 
   @@unique([userId, songId])
 }
@@ -104,4 +105,15 @@ model Follow {
   @@unique([followerId, followingId])
   @@index([followingId])
   @@index([followerId])
+}
+
+model MemoLikesUser {
+  id        Int           @id @default(autoincrement())
+  userId    Int
+  memoId    Int
+  user      User          @relation(fields: [userId], references: [id])
+  memo      UserMusicMemo @relation(fields: [memoId], references: [id])
+  createdAt DateTime      @default(now())
+
+  @@unique([userId, memoId])
 }
