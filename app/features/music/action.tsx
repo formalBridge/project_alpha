@@ -5,7 +5,6 @@ import createAction from 'app/utils/createAction';
 
 export const createUserMusicMemoAction = createAction(async ({ db, request, params }) => {
   await requireUserOwnership(request, { userId: params.userId });
-  console.log('1231241243');
   const formdata = await request.formData();
 
   const songId = Number(formdata.get('songId'));

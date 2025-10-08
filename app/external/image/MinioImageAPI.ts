@@ -35,12 +35,7 @@ export class MinioImageAPI {
     if (existing?.avatarUrl) {
       const parts = existing.avatarUrl.split('/');
       const oldKey = parts.slice(-2).join('/');
-      try {
-        await this.client.removeObject(BUCKET, oldKey);
-        console.log(`🗑️ 기존 이미지 삭제 완료: ${oldKey}`);
-      } catch (err) {
-        console.warn('⚠️ 기존 이미지 삭제 실패(무시 가능):', err);
-      }
+      await this.client.removeObject(BUCKET, oldKey);
     }
 
     const key = `${kind}/${randomUUID()}.${ext}`;
@@ -56,7 +51,6 @@ export class MinioImageAPI {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     await this.client.putObject(BUCKET, key, buffer, buffer.length, meta);
-    console.log(`✅ 새 이미지 업로드 완료: ${key}`);
 
     return { key, contentType: meta['Content-Type'], size: 0 };
   }
