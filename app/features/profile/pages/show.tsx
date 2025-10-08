@@ -1,7 +1,6 @@
 import type { Song } from '@prisma/client';
 import { Link, useLoaderData, useRouteLoaderData, useSearchParams, Form } from '@remix-run/react';
 
-import SongItem from 'app/features/profile/components/SongItem';
 import { profileLayoutLoader, profileLoader } from 'app/features/profile/loader';
 import styles from 'app/features/profile/pages/show.module.scss';
 

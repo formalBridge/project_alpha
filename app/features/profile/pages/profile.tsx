@@ -2,7 +2,6 @@ import { User } from '@prisma/client';
 import { Link, Outlet, useLoaderData } from '@remix-run/react';
 import { useEffect, useState } from 'react';
 
-import Logo from 'app/icon/logo';
 import { useIsMobile } from 'app/utils/responsive';
 
 import styles from './profile.module.scss';
