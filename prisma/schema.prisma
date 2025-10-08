@@ -42,7 +42,7 @@ model Song {
   artist                String
   thumbnailUrl          String?
   album                 String?
-  spotifyId             String?      
+  spotifyId             String?
   rankings              UserRanking[]
   usersTodayRecommended User[]
   UserMusicMemo         UserMusicMemo[]
@@ -70,6 +70,7 @@ model UserMusicMemo {
   userId       Int
   songId       Int
   content      String
+  likes        Int            @default(0)
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   song         Song           @relation(fields: [songId], references: [id])
@@ -89,11 +90,11 @@ model MusicMemoTag {
 }
 
 model Follow {
-  id          Int      @id @default(autoincrement())
+  id          Int @id @default(autoincrement())
   followerId  Int
   followingId Int
 
-  createdAt    DateTime @default(now())
+  createdAt DateTime @default(now())
 
   follower  User @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
   following User @relation("following", fields: [followingId], references: [id], onDelete: Cascade)

@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 
 import { musicUserLoader } from '../loader';
 import styles from './music.user.module.scss';
+import LikeButton from '../components/likeButton';
 
 export default function MusicSongUserPage() {
   const { song, user, UserMusicMemo, isCurrentUserProfile, spotifyEmbed } = useLoaderData<typeof musicUserLoader>();
@@ -44,6 +45,7 @@ export default function MusicSongUserPage() {
               {dayjs(UserMusicMemo.updatedAt).format('YYYY-MM-DD')}
             </time>
           )}
+          {UserMusicMemo && <LikeButton likes={UserMusicMemo.likes} />}
           {isCurrentUserProfile && (
             <Link className={styles.goToEditLink} to="edit">
               수정하기
