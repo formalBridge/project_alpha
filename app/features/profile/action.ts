@@ -58,7 +58,6 @@ export const addTodaySongAction = createAction(async ({ request, db, params }) =
   return redirect('../show');
 });
 
-
 export const editHandleAction = createAction(async ({ request, db, params }) => {
   await requireUserOwnership(request, { userId: params.userId });
 
