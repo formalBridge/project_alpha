@@ -89,7 +89,8 @@ function UserNavCard({ user }: { user: User | null }) {
   const isActive = /\/settings($|\/)/.test(path);
 
   const sub = (user?.handle ? `@${user.handle}` : user?.email) ?? '계정 설정';
-  const avatar = '/images/features/profile/profile_default.png';
+  const avatar =
+    user?.avatarUrl && user.avatarUrl.trim() !== '' ? user.avatarUrl : '/images/features/profile/profile_default.png';
 
   return (
     <Link
