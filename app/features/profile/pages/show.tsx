@@ -21,7 +21,11 @@ export default function Show() {
   return (
     <div>
       <div className={styles.profileBox}>
-        <img className={styles.profileAvatar} src="/images/features/profile/profile_test.png" />
+        <img
+          className={styles.profileAvatar}
+          src={user.avatarUrl || '/images/features/profile/profile_test.png'}
+          alt={`${user.handle}의 프로필 이미지`}
+        />
         <div className={styles.profileTextbox}>
           <div className={styles.infoTopRow}>
             <h2 className={styles.profileHandle}>@{user.handle}</h2>
@@ -106,7 +110,7 @@ export function FollowButton({ isFollowing }: FollowButtonProps) {
     <Form method="post">
       <button
         type="submit"
-        name="_action"
+        name="intent"
         value={isFollowing ? 'unfollow' : 'follow'}
         className={`${styles.followBtn} ${isFollowing ? styles.unfollow : ''}`}
       >

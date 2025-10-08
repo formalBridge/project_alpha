@@ -133,7 +133,7 @@ export const settingsLoader = createLoader(async ({ request, db, params }) => {
   return {
     userId: user.id,
     handle: settingsData.handle,
-    avatarUrl: '/images/features/profile/profile_test.png', //TODO: settingsData.avartarUrl으로 추수 수정
+    avatarUrl: settingsData.avatarUrl,
   };
 });
 

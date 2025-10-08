@@ -1,11 +1,13 @@
-import { Readable } from 'node:stream';
-import { ReadableStream as WebReadableStream } from 'node:stream/web';
+import { randomUUID } from 'node:crypto';
 
 import { Client } from 'minio';
+
+import { prisma } from 'app/utils/getPrisma';
 
 import { ImageInfo, UploadParams } from './ImageStorage';
 
 const endPoint = process.env.MINIO_ENDPOINT || 'localhost';
+const publicHost = process.env.MINIO_PUBLIC_ENDPOINT || endPoint;
 const port = Number(process.env.MINIO_PORT) || 9000;
 const useSSL = (process.env.MINIO_USE_SSL ?? 'true') !== 'false';
 const accessKey = process.env.MINIO_ACCESS_KEY || '';
@@ -23,23 +25,34 @@ export class MinioImageAPI {
   async upload({ userId, file, kind = 'misc' }: UploadParams): Promise<ImageInfo> {
     await this.ensureBucket();
 
-    const now = Date.now();
-    const ext = (file.name?.split('.').pop() || file.type.split('/')[1] || 'bin').toLowerCase().replace('jpeg', 'jpg');
+    const ext = file.name.split('.').pop()?.toLowerCase().replace('jpeg', 'jpg') || 'png';
 
-    const dir = kind === 'avatar' ? '' : kind === 'post' ? 'posts' : 'misc';
-    const key = dir ? `${dir}/${userId}/${now}.${ext}` : `${userId}/${now}.${ext}`;
+    const existing = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { avatarUrl: true },
+    });
 
-    const webStream = file.stream() as unknown as WebReadableStream<Uint8Array>;
-    const stream = Readable.fromWeb(webStream);
+    if (existing?.avatarUrl) {
+      const parts = existing.avatarUrl.split('/');
+      const oldKey = parts.slice(-2).join('/');
+      await this.client.removeObject(BUCKET, oldKey);
+    }
+
+    const key = `${kind}/${randomUUID()}.${ext}`;
+
+    const mimeType =
+      ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg' : ext === 'png' ? 'image/png' : 'application/octet-stream';
 
     const meta = {
-      'Content-Type': file.type || 'application/octet-stream',
+      'Content-Type': mimeType,
       'Cache-Control': 'public, max-age=31536000, immutable',
     };
 
-    await this.client.putObject(BUCKET, key, stream, file.size, meta);
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    await this.client.putObject(BUCKET, key, buffer, buffer.length, meta);
 
-    return { key, contentType: meta['Content-Type'], size: file.size ?? 0 };
+    return { key, contentType: meta['Content-Type'], size: 0 };
   }
 
   async signedGetUrl(key: string, expiresSec = 300) {
@@ -52,11 +65,14 @@ export class MinioImageAPI {
 
   getPublicUrl(key: string) {
     const protocol = useSSL ? 'https' : 'http';
-    const safeKey = encodeURIComponent(key);
+    const safeKey = key
+      .split('/')
+      .map((part) => encodeURIComponent(part))
+      .join('/');
 
     const defaultPort = useSSL ? 443 : 80;
     const portPart = port === defaultPort ? '' : `:${port}`;
 
-    return `${protocol}://${endPoint}${portPart}/${BUCKET}/${safeKey}`;
+    return `${protocol}://${publicHost}${portPart}/${BUCKET}/${safeKey}`;
   }
 }

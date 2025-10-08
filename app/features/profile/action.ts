@@ -1,7 +1,8 @@
 import { data, redirect } from '@remix-run/node';
 
 import { getCurrentDBUser, requireUserOwnership } from 'app/external/auth/jwt.server';
-import { updateUserHandle, followUser, unfollowUser } from 'app/features/profile/services';
+import { MinioImageAPI } from 'app/external/image/MinioImageAPI';
+import { updateUserHandle, followUser, unfollowUser, updateUserAvatar } from 'app/features/profile/services';
 import createAction from 'app/utils/createAction';
 
 import { HandleSchema, FollowsActionSchema } from './schema';
@@ -74,6 +75,28 @@ export const settingsAction = createAction(async ({ request, db, params }) => {
   await requireUserOwnership(request, { userId: params.userId });
 
   const formData = await request.formData();
+  const intent = formData.get('intent');
+
+  if (intent === 'update-avatar') {
+    const fileField = formData.get('avatar');
+
+    if (!fileField || typeof fileField === 'string') {
+      return data('파일이 없습니다.', { status: 400 });
+    }
+
+    const blob = fileField as Blob;
+    const file = new File([blob], 'avatar.png', { type: blob.type || 'image/png' });
+
+    const userId = Number(params.userId);
+    const minio = new MinioImageAPI();
+
+    const uploaded = await minio.upload({ userId, file, kind: 'avatar' });
+    const publicUrl = minio.getPublicUrl(uploaded.key);
+
+    await updateUserAvatar(db)({ userId, avatarUrl: publicUrl });
+
+    return redirect(`/profile/${userId}/show`);
+  }
 
   const formPayload = {
     userId: formData.get('userId'),
@@ -101,7 +124,7 @@ export const showAction = createAction(async ({ request, db, params }) => {
   }
 
   const formData = await request.formData();
-  const intent = formData.get('_action');
+  const intent = formData.get('intent');
   const profileUserId = Number(params.userId);
 
   if (intent === 'follow') {
