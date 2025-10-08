@@ -25,30 +25,20 @@ export const addTodaySongAction = createAction(async ({ request, db, params }) =
     return new Response('제목과 아티스트는 필수입니다.', { status: 400 });
   }
 
-  let existingSong = null;
-  if (spotifyId) {
-    existingSong = await db.song.findFirst({
-      where: { spotifyId },
-    });
-  }
+  const existingSong =
+    (spotifyId
+      ? await db.song.findFirst({ where: { spotifyId } })
+      : null) ||
+    (await db.song.findFirst({ where: { title, artist } }));
 
-  if (!existingSong) {
-    existingSong = await db.song.findFirst({
-      where: { title, artist },
-    });
-  }
-
-  let song;
-  if (existingSong) {
-    song = await db.song.update({
-      where: { id: existingSong.id },
-      data: { album, thumbnailUrl, spotifyId },
-    });
-  } else {
-    song = await db.song.create({
-      data: { title, artist, album, thumbnailUrl, spotifyId },
-    });
-  }
+  const song = existingSong
+    ? await db.song.update({
+        where: { id: existingSong.id },
+        data: { album, thumbnailUrl, spotifyId },
+      })
+    : await db.song.create({
+        data: { title, artist, album, thumbnailUrl, spotifyId },
+      });
 
   await db.user.update({
     where: { id: userId },
@@ -57,6 +47,7 @@ export const addTodaySongAction = createAction(async ({ request, db, params }) =
 
   return redirect('../show');
 });
+
 
 export const editHandleAction = createAction(async ({ request, db, params }) => {
   await requireUserOwnership(request, { userId: params.userId });
