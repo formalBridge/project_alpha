@@ -5,8 +5,7 @@
   align-items: center;
   gap: 12px;
   .item-image {
-    width: 60px;
-    height: 60px;
+    height: 100px;
     border-radius: 8px;
   }
   .item-text-box {
@@ -14,11 +13,13 @@
     flex-direction: column;
     gap: 4px;
     .item-title {
-      font-size: 14px;
+      font-size: 1rem;
+      font-weight: 600;
       color: $black-300;
     }
     .item-artist {
-      font-size: 12px;
+      font-size: 0.875rem;
+      font-weight: 400;
       color: $grey-500;
     }
   }
