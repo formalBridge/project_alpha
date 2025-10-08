@@ -103,10 +103,9 @@ export const getRecommendedUsers = createService<Record<string, never>, UserWith
       },
       include: { todayRecommendedSong: true },
     });
-    // TODO: avatarUrl 추가 필요
     return users.map((user) => ({
       ...user,
-      avatarUrl: `https://i.pravatar.cc/150?u=${user.handle}`,
+      avatarUrl: user.avatarUrl || '/images/features/profile/profile_default.png',
     }));
   }
 );
@@ -200,7 +199,7 @@ export const unfollowUser = createService<{ followerId: number; followingId: num
 const followerSelectQuery = {
   id: true,
   handle: true,
-  //avatarUrl: true, // TODO: avatarUrl 필드 생성 후 주석 제거
+  avatarUrl: true,
   todayRecommendedSong: {
     select: {
       id: true,
