@@ -45,7 +45,7 @@ export const DesktopLayout = ({ user }: { user: User | null }) => (
   <div className={styles.desktop}>
     <nav className={styles.navigation}>
       <a href="/" className={styles.logo}>
-        <span>두둠 음악</span>
+        <span>Sonnets</span>
         <Link to="/logout">로그아웃</Link>
       </a>
 
