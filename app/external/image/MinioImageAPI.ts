@@ -12,7 +12,7 @@ const port = Number(process.env.MINIO_PORT) || 9000;
 const useSSL = (process.env.MINIO_USE_SSL ?? 'true') !== 'false';
 const accessKey = process.env.MINIO_ACCESS_KEY || '';
 const secretKey = process.env.MINIO_SECRET_KEY || '';
-const BUCKET = process.env.MINIO_BUCKET || 'avatars';
+const BUCKET = process.env.MINIO_BUCKET || 'public';
 
 export class MinioImageAPI {
   private client = new Client({ endPoint, port, useSSL, accessKey, secretKey });
