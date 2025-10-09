@@ -36,7 +36,7 @@ export const links: LinksFunction = () => [
 ];
 
 export const meta = () => [
-  { title: '두둠 음악' },
+  { title: 'Sonnets' },
   { name: 'description', content: '스쳐 가는 멜로디, 머무는 감정들. 음악을 쉽게 기록해 보세요.' },
 ];
 
