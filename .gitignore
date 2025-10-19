@@ -11,3 +11,5 @@ k8s/*secret.yaml
 .wrangler
 
 .DS_Store
+
+dist/

@@ -16,7 +16,7 @@
     "docker:logs": "docker-compose logs -f",
     "studio:dev": "npx prisma studio",
     "studio:prod": "kubectl port-forward service/prisma-studio-service 5555:5555",
-    "db:reset": "docker-compose down -v && docker-compose up -d postgres && npx prisma migrate dev --name reset"
+    "build:scripts": "tsup \"scripts/**/*.ts\" \"app/external/music/**/*.ts\" --format esm --out-dir dist --minify --clean --splitting=false --platform=node --target=node20 --treeshake --external @prisma/client,pg,pg-native,pg-query-stream"
   },
   "dependencies": {
     "@blocknote/core": "^0.35.0",
@@ -36,6 +36,7 @@
     "compression": "^1.8.0",
     "cookie": "^1.0.2",
     "dayjs": "^1.11.13",
+    "dotenv": "^17.2.3",
     "es-toolkit": "^1.34.1",
     "express": "^5.1.0",
     "github-markdown-css": "^5.8.1",
@@ -62,6 +63,7 @@
     "@remix-run/dev": "^2.15.2",
     "@types/axios": "^0.14.4",
     "@types/cookie": "^1.0.0",
+    "@types/node": "^24.7.2",
     "@types/nprogress": "^0.2.3",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
@@ -76,6 +78,8 @@
     "prettier": "^3.4.2",
     "prisma": "^6.2.1",
     "sass": "^1.83.4",
+    "tsup": "^8.5.0",
+    "tsx": "^4.20.6",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.20.0",
     "vite": "^6.0.7",

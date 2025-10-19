@@ -15,7 +15,7 @@ export async function getSpotifyEmbed(trackUrl: string): Promise<SpotifyEmbedDat
       throw new Error(`Spotify oEmbed API 요청 실패: ${response.status} ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as SpotifyEmbedData;
     return {
       html: data.html,
       width: data.width,

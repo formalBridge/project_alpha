@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ${JOB_RESOURCE_NAME}
+  namespace: ${NAMESPACE}
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      restartPolicy: Never
+      imagePullSecrets:
+        - name: ${IMAGE_PULL_SECRET}
+      containers:
+        - name: backfill
+          image: ${IMAGE_URI}
+          imagePullPolicy: Always
+          command: ["node","/app/dist/scripts/job-runner.js"]
+          env:
+            - name: JOB_NAME
+              value: "${JOB_NAME_FILE}"
+            - name: DRY_RUN
+              value: "${DRY_RUN}"
+            - name: LIMIT
+              value: "${LIMIT}"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ${DB_SECRET_NAME}
+                  key: ${DB_SECRET_KEY}
+            - name: SPOTIFY_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: ${SPOTIFY_SECRET_NAME}
+                  key: SPOTIFY_CLIENT_ID
+            - name: SPOTIFY_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: ${SPOTIFY_SECRET_NAME}
+                  key: SPOTIFY_CLIENT_SECRET
+          resources:
+            requests: { cpu: "100m", memory: "256Mi" }
+            limits:   { cpu: "500m", memory: "512Mi" }
