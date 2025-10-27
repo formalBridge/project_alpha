@@ -1,6 +1,7 @@
 import type { Song } from '@prisma/client';
 import { Link, useLoaderData, useRouteLoaderData, useSearchParams, Form } from '@remix-run/react';
 
+import { SearchBar } from 'app/components/SearchBar';
 import { profileLayoutLoader, profileLoader } from 'app/features/profile/loader';
 import styles from 'app/features/profile/pages/show.module.scss';
 
@@ -19,6 +20,7 @@ export default function Show() {
 
   return (
     <div>
+      <SearchBar />
       <TodaySongSection song={user.todayRecommendedSong} isCurrentUserProfile={isCurrentUserProfile} userId={user.id} />
       <div className={styles.profileBox}>
         <img
