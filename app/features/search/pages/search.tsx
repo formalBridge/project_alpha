@@ -12,7 +12,7 @@ export default function SearchPage() {
 
   return (
     <div className={styles.wrapper}>
-      <h1>User Search</h1>
+      <h1>Search</h1>
 
       <Form method="get" action="/profile/search" className={styles.searchContainer}>
         <div className={styles.searchInputWrapper}>

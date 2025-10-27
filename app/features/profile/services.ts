@@ -6,10 +6,6 @@ export const fetchUser = createService<{ id: number }, User | null>(async (db, {
   return await db.user.findFirst({ where: { id: id } });
 });
 
-export type UserWithRecommendedSong = Prisma.UserGetPayload<{
-  include: { todayRecommendedSong: true };
-}>;
-
 export type UserForProfile = Prisma.UserGetPayload<{
   include: {
     todayRecommendedSong: true;
@@ -78,37 +74,6 @@ export const findUserByHandle = createService<{ handle: string }, User | null>(a
   });
   return user;
 });
-
-export const findUserByHandleSim = createService<{ handle: string }, UserWithRecommendedSong[]>(async (db, args) => {
-  const users = await db.user.findMany({
-    where: {
-      handle: {
-        contains: args.handle,
-        mode: 'insensitive',
-      },
-    },
-    include: { todayRecommendedSong: true },
-  });
-  return users;
-});
-
-export const getRecommendedUsers = createService<Record<string, never>, UserWithRecommendedSong[]>(
-  async (db, _args) => {
-    const users = await db.user.findMany({
-      where: {
-        id: {
-          gte: 20,
-          lte: 25,
-        },
-      },
-      include: { todayRecommendedSong: true },
-    });
-    return users.map((user) => ({
-      ...user,
-      avatarUrl: user.avatarUrl || '/images/features/profile/profile_default.png',
-    }));
-  }
-);
 
 export const updateUserHandle = createService<{ userId: string; handle: string }, User>(
   async (db, { userId, handle }) => {

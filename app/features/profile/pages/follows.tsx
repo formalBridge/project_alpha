@@ -3,7 +3,7 @@ import { Link, useLoaderData, useSearchParams, useFetcher } from '@remix-run/rea
 import type { followsLoader } from 'app/features/profile/loader';
 
 import styles from './follows.module.scss';
-import { MusicNoteIcon } from '../components/Icons';
+import { MusicNoteIcon } from '../../search/components/Icons';
 import { UserForFollowList } from '../services';
 
 export default function FollowsPage() {
