@@ -67,7 +67,15 @@ const MemoHeader = ({ spotifyEmbed, UserMusicMemo, song }: MemoHeaderProps) => {
   );
 };
 
-const LikeButton = ({likes, memoId: _memoId, isChecked: isMemoLiked }: { likes: number; memoId: number; isChecked: boolean; }) => {
+const LikeButton = ({
+  likes,
+  memoId: _memoId,
+  isChecked: isMemoLiked,
+}: {
+  likes: number;
+  memoId: number;
+  isChecked: boolean;
+}) => {
   const fetcher = useFetcher();
   const submitting = fetcher.state !== 'idle';
   const intentInFlight = fetcher.formData?.get('intent') as 'like' | 'unlike' | undefined;
