@@ -1,5 +1,5 @@
 import { useLoaderData, useActionData, useNavigation, Form } from '@remix-run/react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { settingsAction } from '../action';
 import { settingsLoader } from '../loader';
@@ -21,9 +21,19 @@ export default function SettingsPage() {
     typeof actionData === 'object' && actionData !== null && 'error' in actionData ? actionData.error : clientError;
 
   const [avatarPreview, setAvatarPreview] = useState<string>(loaderData.avatarUrl || DEFAULT_AVATAR);
+  const lastObjectUrlRef = useRef<string | null>(null);
   useEffect(() => {
     setAvatarPreview(loaderData.avatarUrl || DEFAULT_AVATAR);
   }, [loaderData.avatarUrl]);
+
+  useEffect(() => {
+    return () => {
+      if (lastObjectUrlRef.current && lastObjectUrlRef.current.startsWith('blob:')) {
+        URL.revokeObjectURL(lastObjectUrlRef.current);
+        lastObjectUrlRef.current = null;
+      }
+    };
+  }, []);
 
   const isDirty = useMemo(() => handle !== (loaderData.handle || ''), [handle, loaderData.handle]);
 
