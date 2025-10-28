@@ -46,7 +46,6 @@ export const DesktopLayout = ({ user }: { user: User | null }) => (
     <nav className={styles.navigation}>
       <a href="/" className={styles.logo}>
         <span>Sonnets</span>
-        <Link to="/logout">로그아웃</Link>
       </a>
 
       <UserNavCard user={user} />
@@ -60,6 +59,14 @@ export const DesktopLayout = ({ user }: { user: User | null }) => (
             href={user ? `/profile/${user.id}/show` : '/profile/redirect'}
             label="기록하기"
             iconSrc="/images/features/profile/editing.png"
+          />
+        </li>
+        <li>
+          <NavItem
+            href={user ? `/profile/${user.id}/settings` : '/profile/redirect'}
+            label="설정"
+            iconSrc="/images/features/profile/settings.png"
+            iconAlt="설정"
           />
         </li>
       </ul>
