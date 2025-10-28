@@ -1,6 +1,5 @@
 import { User } from '@prisma/client';
-import { Link, Outlet, useLoaderData } from '@remix-run/react';
-import { useEffect, useState } from 'react';
+import { Link, NavLink, Outlet, useLoaderData } from '@remix-run/react';
 
 import { useIsMobile } from 'app/utils/responsive';
 
@@ -22,10 +21,10 @@ export const MobileLayout = () => (
     <nav className={styles.navigationMobile}>
       <ul className={styles.list}>
         <li>
-          <a href="/" className={styles.item}>
+          <Link to="/" className={styles.item}>
             <img src="/images/features/profile/home.png" alt="" className={styles.icon} />
             <span>홈</span>
-          </a>
+          </Link>
         </li>
         <li>
           <NavItem href="show" label="기록하기" iconSrc="/images/features/profile/editing.png" />
@@ -44,9 +43,9 @@ export const MobileLayout = () => (
 export const DesktopLayout = ({ user }: { user: User | null }) => (
   <div className={styles.desktop}>
     <nav className={styles.navigation}>
-      <a href="/" className={styles.logo}>
+      <Link to="/" className={styles.logo}>
         <span>Sonnets</span>
-      </a>
+      </Link>
 
       <UserNavCard user={user} />
 
@@ -80,35 +79,19 @@ export const DesktopLayout = ({ user }: { user: User | null }) => (
   </div>
 );
 
-function useCurrentPath() {
-  const [path, setPath] = useState<string>('');
-  useEffect(() => {
-    const update = () => setPath(window.location.pathname);
-    update();
-    window.addEventListener('popstate', update);
-    return () => window.removeEventListener('popstate', update);
-  }, []);
-  return path;
-}
-
 function UserNavCard({ user }: { user: User | null }) {
-  const path = useCurrentPath();
-  const isActive = /\/settings($|\/)/.test(path);
-
+  const to = user ? `/profile/${user.id}/settings` : '/profile/redirect';
   const sub = (user?.handle ? `@${user.handle}` : user?.email) ?? '계정 설정';
   const avatar =
     user?.avatarUrl && user.avatarUrl.trim() !== '' ? user.avatarUrl : '/images/features/profile/profile_default.png';
 
   return (
-    <Link
-      to={user ? `/profile/${user.id}/settings` : '/profile/redirect'}
-      className={`${styles.userCard} ${isActive ? styles.active : ''}`}
-    >
+    <NavLink to={to} className={({ isActive }) => `${styles.userCard} ${isActive ? styles.active : ''}`}>
       <img src={avatar} alt="" className={styles.userAvatar} />
       <div className={styles.userMeta}>
         <div className={styles.userEmail}>{sub}</div>
       </div>
-    </Link>
+    </NavLink>
   );
 }
 
@@ -118,22 +101,23 @@ function NavItem({
   iconSrc,
   activeIconSrc,
   iconAlt = '',
+  end,
 }: {
   href: string;
   label: string;
   iconSrc: string;
   activeIconSrc?: string;
   iconAlt?: string;
+  end?: boolean;
 }) {
-  const path = useCurrentPath();
-  const seg = href.replace(/^\/+/, '');
-  const isActive = new RegExp(`/${seg}($|/)`).test(path);
-  const currentIcon = isActive && activeIconSrc ? activeIconSrc : iconSrc;
-
   return (
-    <Link to={href} className={`${styles.item} ${isActive ? styles.active : ''}`}>
-      <img src={currentIcon} alt={iconAlt} className={styles.icon} />
-      <span>{label}</span>
-    </Link>
+    <NavLink to={href} end={end} className={({ isActive }) => `${styles.item} ${isActive ? styles.active : ''}`}>
+      {({ isActive }) => (
+        <>
+          <img src={isActive && activeIconSrc ? activeIconSrc : iconSrc} alt={iconAlt} className={styles.icon} />
+          <span>{label}</span>
+        </>
+      )}
+    </NavLink>
   );
 }
