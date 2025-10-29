@@ -53,6 +53,22 @@ services:
       timeout: 5s
       retries: 5
 
+  # Feed Worker
+  feed-worker:
+    build:
+      context: ./workers/feed
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/project_alpha?schema=public
+      - RABBITMQ_URL=amqp://admin:admin@rabbitmq:5672
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
   # 개발 서버 (Prisma Studio 포함)
   dev:
     build:
