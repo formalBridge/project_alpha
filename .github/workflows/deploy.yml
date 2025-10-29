@@ -132,8 +132,11 @@ jobs:
         # Wait for migration to complete
         kubectl wait --for=condition=complete --timeout=300s job/prisma-migrate-job -n default
         
-        # Deploy application
+        # Deploy microservices
         kubectl apply -f k8s/app-deployment.yaml -n default
+        kubectl apply -f k8s/music-deployment.yaml -n default
+        kubectl apply -f k8s/profile-deployment.yaml -n default
+        kubectl apply -f k8s/auth-deployment.yaml -n default
         kubectl apply -f k8s/prisma-studio-deployment.yaml -n default
         
         # Deploy worker
@@ -142,10 +145,18 @@ jobs:
         # Apply ingress
         kubectl apply -f k8s/ingress.yaml -n default
         
-        # Restart deployments to use new images
+        # Restart all deployments to use new images
         kubectl rollout restart deployment/project-alpha -n default
+        kubectl rollout restart deployment/music-service -n default
+        kubectl rollout restart deployment/profile-service -n default
+        kubectl rollout restart deployment/auth-service -n default
         kubectl rollout restart deployment/feed-worker -n default
+        
+        # Wait for all deployments to be ready
         kubectl rollout status deployment/project-alpha -n default --timeout=300s
+        kubectl rollout status deployment/music-service -n default --timeout=300s
+        kubectl rollout status deployment/profile-service -n default --timeout=300s
+        kubectl rollout status deployment/auth-service -n default --timeout=300s
         kubectl rollout status deployment/feed-worker -n default --timeout=300s
 
     - name: Verify deployment

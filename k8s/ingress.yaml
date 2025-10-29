@@ -11,6 +11,59 @@ spec:
   - host: music.formabridge.cc
     http:
       paths:
+      # Music Service - /music/* routes
+      - path: /music
+        pathType: Prefix
+        backend:
+          service:
+            name: music-service
+            port:
+              number: 80
+      # Profile Service - /profile/* routes
+      - path: /profile.redirect
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 80
+      - path: /profile.search
+        pathType: Prefix
+        backend:
+          service:
+            name: profile-service
+            port:
+              number: 80
+      - path: /profile
+        pathType: Prefix
+        backend:
+          service:
+            name: profile-service
+            port:
+              number: 80
+      # Auth Service - auth, login, logout routes
+      - path: /auth
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 80
+      - path: /login.error
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 80
+      - path: /logout
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 80
+      # Home Service - default route (must be last)
       - path: /
         pathType: Prefix
         backend:
@@ -38,3 +91,4 @@ spec:
             name: minio-service
             port:
               number: 9001
+
