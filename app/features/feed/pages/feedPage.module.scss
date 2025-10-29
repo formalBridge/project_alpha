@@ -1,0 +1,124 @@
+@use 'styles/layout' as *;
+
+.feed {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+  @include mobile {
+    padding: 16px;
+  }
+}
+
+.list {
+  width: 100%;
+  max-width: 760px;
+  display: grid;
+  gap: 20px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+}
+
+.cover-link {
+  display: block;
+  text-decoration: none;
+}
+.cover-box {
+  position: relative;
+  background: #f6f7f9;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+.cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.body {
+  padding: 16px;
+}
+
+.memo {
+  // 기존 유지
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  // 표준(실험적) 추가
+  line-clamp: 1;
+  // 폴백
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; // 폴백용(사파리 외 엔진에서 한 줄 처리)
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #111827;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.handle {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* Like button (이전에 쓰던 스타일과 톤 맞춤) */
+.like-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #6b7280;
+  cursor: pointer;
+  transition:
+    transform 120ms ease,
+    background 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    background: #f3f4f6;
+    border-color: #d1d5db;
+  }
+}
+
+.liked {
+  background: #fee2e2;
+  color: #ef4444;
+  border-color: #fecaca;
+}
+.heart {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+}
+.like-count {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+}
