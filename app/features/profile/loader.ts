@@ -56,7 +56,7 @@ export const profileRedirectLoader = createLoader(async ({ request }) => {
     return authenticator.authenticate('google', request);
   }
 
-  return redirect(`/profile/${user.id}/show`);
+  return redirect(`/profile/${user.id}/feed`);
 });
 
 export const addTodaySongLoader = createLoader(async ({ db, params, request }) => {
