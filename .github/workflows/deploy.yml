@@ -142,6 +142,12 @@ jobs:
         # Deploy worker
         kubectl apply -f k8s/worker-deployment.yaml -n default
         
+        # Apply HPA (Horizontal Pod Autoscaler)
+        kubectl apply -f k8s/hpa-auth.yaml -n default
+        kubectl apply -f k8s/hpa-profile.yaml -n default
+        kubectl apply -f k8s/hpa-music.yaml -n default
+        kubectl apply -f k8s/hpa-home.yaml -n default
+        
         # Apply ingress
         kubectl apply -f k8s/ingress.yaml -n default
         
@@ -164,3 +170,4 @@ jobs:
         kubectl get pods -n default
         kubectl get services -n default
         kubectl get ingress -n default
+        kubectl get hpa -n default
