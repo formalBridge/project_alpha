@@ -7,6 +7,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: formalbridge/project_alpha
+  WORKER_IMAGE_NAME: formalbridge/project_alpha-feed-worker
 
 jobs:
   build-and-deploy:
@@ -66,11 +67,33 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 
+    - name: Extract metadata for Worker
+      id: worker-meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.WORKER_IMAGE_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=sha,prefix=sha-
+          type=raw,value=latest,enable={{is_default_branch}}
+
+    - name: Build and push Worker Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./workers/feed
+        push: true
+        tags: ${{ steps.worker-meta.outputs.tags }}
+        labels: ${{ steps.worker-meta.outputs.labels }}
+
     - name: Deploy to Kubernetes
       run: |
         
         # Apply PostgreSQL deployment
         kubectl apply -f k8s/postgres-deployment.yaml -n default
+        
+        # Apply RabbitMQ deployment
+        kubectl apply -f k8s/rabbitmq-deployment.yaml -n default
         
         # Run database migration
         kubectl delete job prisma-migrate-job -n default --ignore-not-found=true
@@ -83,12 +106,17 @@ jobs:
         kubectl apply -f k8s/app-deployment.yaml -n default
         kubectl apply -f k8s/prisma-studio-deployment.yaml -n default
         
+        # Deploy worker
+        kubectl apply -f k8s/worker-deployment.yaml -n default
+        
         # Apply ingress
         kubectl apply -f k8s/ingress.yaml -n default
         
-        # Restart deployment to use new image
+        # Restart deployments to use new images
         kubectl rollout restart deployment/project-alpha -n default
+        kubectl rollout restart deployment/feed-worker -n default
         kubectl rollout status deployment/project-alpha -n default --timeout=300s
+        kubectl rollout status deployment/feed-worker -n default --timeout=300s
 
     - name: Verify deployment
       run: |
