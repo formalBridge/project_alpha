@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: project-alpha
 spec:
-  replicas: 4
+  replicas: 1
   selector:
     matchLabels:
       app: project-alpha
@@ -40,8 +40,8 @@ spec:
             name: env-secret
         resources:
           requests:
-            cpu: "100m"
-            memory: "256Mi"
+            cpu: "50m"
+            memory: "128Mi"
           limits:
             cpu: "500m"
             memory: "512Mi"
