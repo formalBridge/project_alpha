@@ -7,46 +7,6 @@ import createAction from 'app/utils/createAction';
 
 import { HandleSchema, FollowsActionSchema } from './schema';
 
-export const addTodaySongAction = createAction(async ({ request, db, params }) => {
-  await requireUserOwnership(request, { userId: params.userId });
-  const formData = await request.formData();
-
-  const userId = Number(params.userId);
-  if (isNaN(userId)) {
-    return new Response(JSON.stringify('잘못된 사용자입니다.'), { status: 400 });
-  }
-
-  const title = (formData.get('title') as string | null)?.trim() ?? '';
-  const artist = (formData.get('artist') as string | null)?.trim() ?? '';
-  const album = (formData.get('album') as string | null)?.trim() || null;
-  const thumbnailUrl = (formData.get('thumbnailUrl') as string | null)?.trim() || null;
-  const spotifyId = (formData.get('spotifyId') as string | null)?.trim() || null;
-
-  if (!title || !artist) {
-    return new Response('제목과 아티스트는 필수입니다.', { status: 400 });
-  }
-
-  const existingSong =
-    (spotifyId ? await db.song.findFirst({ where: { spotifyId } }) : null) ??
-    (await db.song.findFirst({ where: { title, artist } }));
-
-  const song = existingSong
-    ? await db.song.update({
-        where: { id: existingSong.id },
-        data: { album, thumbnailUrl, spotifyId },
-      })
-    : await db.song.create({
-        data: { title, artist, album, thumbnailUrl, spotifyId },
-      });
-
-  await db.user.update({
-    where: { id: userId },
-    data: { todayRecommendedSongId: song.id },
-  });
-
-  return redirect('../show');
-});
-
 export const editHandleAction = createAction(async ({ request, db, params }) => {
   await requireUserOwnership(request, { userId: params.userId });
 
