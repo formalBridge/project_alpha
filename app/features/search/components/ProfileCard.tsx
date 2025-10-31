@@ -1,7 +1,7 @@
 import { Link } from '@remix-run/react';
 
-import { ChevronRightIcon, MusicNoteIcon } from './Icons';
 import styles from './ProfileCard.module.scss';
+import { ChevronRightIcon, MusicNoteIcon } from '../../search/components/Icons';
 import { UserWithRecommendedSong } from '../services';
 
 export function ProfileCard({ user }: { user: UserWithRecommendedSong }) {

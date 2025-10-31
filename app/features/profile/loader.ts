@@ -1,4 +1,3 @@
-import { data } from '@remix-run/node';
 import { redirect } from '@remix-run/react';
 
 import { authenticator } from 'app/external/auth/auth.server';
@@ -13,8 +12,6 @@ import {
   fetchFollowing,
   fetchUserMusicMemo,
   fetchUserProfile,
-  findUserByHandleSim,
-  getRecommendedUsers,
   isUserFollowing,
 } from './services';
 
@@ -90,19 +87,6 @@ export const addTodaySongLoader = createLoader(async ({ db, params, request }) =
   const songs = searchSongInputLoader({ request });
 
   return { initialSong: user.todayRecommendedSong, songs };
-});
-
-export const searchLoader = createLoader(async ({ db, request }) => {
-  const url = new URL(request.url);
-  const handle = url.searchParams.get('handle');
-  const recommendedUsersPromise = getRecommendedUsers(db)();
-  const searchResultsPromise = handle ? findUserByHandleSim(db)({ handle }) : Promise.resolve(null);
-  const [recommendedUsers, searchResults] = await Promise.all([recommendedUsersPromise, searchResultsPromise]);
-  return data({
-    recommendedUsers,
-    searchResults,
-    query: handle,
-  });
 });
 
 export const editHandleLoader = createLoader(async ({ request, params }) => {
