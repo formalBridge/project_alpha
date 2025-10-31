@@ -58,6 +58,16 @@
   white-space: nowrap; // 폴백용(사파리 외 엔진에서 한 줄 처리)
 }
 
+.memoLink {
+  color: inherit; /* 부모의 글자색을 그대로 상속 */
+  text-decoration: none; /* 밑줄 제거 */
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: #111; /* 살짝 진한 색상으로 hover 효과 */
+  }
+}
+
 .meta {
   display: flex;
   align-items: center;
@@ -83,7 +93,6 @@
   font-size: 14px;
 }
 
-/* Like button (이전에 쓰던 스타일과 톤 맞춤) */
 .like-button {
   display: inline-flex;
   align-items: center;
@@ -105,20 +114,4 @@
     background: #f3f4f6;
     border-color: #d1d5db;
   }
-}
-
-.liked {
-  background: #fee2e2;
-  color: #ef4444;
-  border-color: #fecaca;
-}
-.heart {
-  width: 18px;
-  height: 18px;
-  flex: 0 0 18px;
-}
-.like-count {
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 1;
 }
