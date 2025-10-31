@@ -1,11 +1,22 @@
 @use 'styles/layout' as *;
 
+.searchBarContainer {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 0 24px;
+
+  @include mobile {
+    padding: 0;
+  }
+}
 .feed {
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  padding: 24px;
+  padding: 0 24px;
   @include mobile {
-    padding: 16px;
+    padding: 0 16px;
   }
 }
 
@@ -15,6 +26,7 @@
   display: grid;
   gap: 20px;
   padding: 0;
+  margin: 0;
 }
 
 .card {
@@ -22,7 +34,6 @@
   border: 1px solid #eee;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
 }
 
 .cover-link {
