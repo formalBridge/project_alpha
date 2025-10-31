@@ -55,39 +55,6 @@ export const profileRedirectLoader = createLoader(async ({ request }) => {
   return redirect(`/profile/${user.id}/feed`);
 });
 
-export const addTodaySongLoader = createLoader(async ({ db, params, request }) => {
-  await requireUserOwnership(request, { userId: params.userId });
-
-  const userId = Number(params.userId);
-  if (isNaN(userId)) {
-    throw new Response('잘못된 사용자입니다.', { status: 400 });
-  }
-
-  const user = await db.user.findUnique({
-    where: { id: userId },
-    select: {
-      todayRecommendedSong: {
-        select: {
-          id: true,
-          title: true,
-          artist: true,
-          album: true,
-          thumbnailUrl: true,
-          spotifyId: true,
-        },
-      },
-    },
-  });
-
-  if (!user) {
-    throw new Response('유저가 존재하지 않습니다.', { status: 404 });
-  }
-
-  const songs = searchSongInputLoader({ request });
-
-  return { initialSong: user.todayRecommendedSong, songs };
-});
-
 export const editHandleLoader = createLoader(async ({ request, params }) => {
   await requireUserOwnership(request, { userId: params.userId });
 

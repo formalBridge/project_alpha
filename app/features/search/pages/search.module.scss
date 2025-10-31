@@ -14,10 +14,12 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 14px 10px;
 
   position: sticky;
   align-self: flex-start;
+
+  top: 15px;
+  height: fit-content;
 
   @include tablet {
     display: none;

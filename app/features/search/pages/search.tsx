@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 
 import { SearchBar } from 'app/components/SearchBar';
 import { MusicInfo } from 'app/external/music/IMusicSearchAPI';
-import SongItem, { type SimpleSong } from 'app/features/search/components/SongItem';
+import SongItem, { SimpleSong } from 'app/features/search/components/SongItem';
 
 import styles from './search.module.scss';
 import { searchLoader } from '../loader';
@@ -43,11 +43,12 @@ const SearchedSongList = ({ songs }: { songs: Promise<MusicInfo[]> | undefined }
                     <Await resolve={song.albumCover}>
                       {(albumCover) => {
                         const simple: SimpleSong = {
-                          id: idx,
+                          id: 0,
                           title: song.title,
                           artist: song.artist,
                           thumbnailUrl: albumCover ?? null,
                           album: song.album ?? null,
+                          spotifyId: song.spotifyId ?? null,
                         };
                         return <SongItem song={simple} />;
                       }}
