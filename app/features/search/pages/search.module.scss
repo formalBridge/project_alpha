@@ -30,10 +30,23 @@
 }
 
 .content {
-  display: flex;
-  flex-direction: column;
+  box-sizing: border-box;
   width: 100%;
   max-width: 800px;
+  padding: 0 16px;
+  position: relative;
+}
+
+.searchHeader {
+  position: sticky;
+  top: 0;
+  padding: 12px 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-sizing: border-box;
+  background: white;
 }
 
 .backButton {
@@ -61,32 +74,17 @@
   margin-right: auto;
 }
 
-.profileGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  max-width: 900px;
-  margin: 0 auto;
-
-  @include tablet {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  @include mobile {
-    grid-template-columns: 1fr;
-  }
-}
-
 .formRow {
   display: flex;
   gap: 8px;
 }
 
-.songList {
-  margin: 10px 16px;
+.listContainer {
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding: 0;
+  margin: 0;
 }
 
 .empty {
@@ -134,4 +132,78 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.tabs {
+  display: flex;
+  gap: 24px;
+  margin: 0 16px;
+  align-items: center;
+  border-bottom: 1px solid #e6edf3;
+  padding-bottom: 6px;
+}
+
+.content form[role='search'],
+.searchHeader > form[role='search'] {
+  width: 100%;
+  box-sizing: border-box;
+  background: transparent;
+  padding: 0;
+}
+
+.tab {
+  background: transparent;
+  border: 0;
+  padding: 10px 0;
+  margin: 0;
+  font-weight: 600;
+  color: #6b7280;
+  font-size: 0.95rem;
+  cursor: pointer;
+  position: relative;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 140ms ease;
+}
+
+.tab:hover,
+.tab:focus {
+  color: #111827;
+  outline: none;
+}
+
+.tab::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -7px;
+  height: 3px;
+  background: transparent;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition:
+    transform 160ms ease,
+    background 160ms ease;
+  border-radius: 3px;
+}
+
+.active {
+  color: $primary-500;
+}
+
+.active::after {
+  background: $primary-500;
+  transform: scaleX(1);
+}
+
+.profileGrid {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  grid-auto-rows: 1fr;
+  /* reset ul default inset so items align with content */
+  padding: 0;
+  list-style: none;
 }
