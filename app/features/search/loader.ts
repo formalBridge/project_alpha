@@ -2,17 +2,16 @@ import { data } from '@remix-run/node';
 
 import createLoader from 'app/utils/createLoader';
 
-import { findUserByHandleSim, getRecommendedUsers } from './services';
+import { searchSongInputLoader } from './components/SearchSongInputloader';
 
-export const searchLoader = createLoader(async ({ db, request }) => {
+export const searchLoader = createLoader(async ({ request }) => {
   const url = new URL(request.url);
-  const handle = url.searchParams.get('handle');
-  const recommendedUsersPromise = getRecommendedUsers(db)();
-  const searchResultsPromise = handle ? findUserByHandleSim(db)({ handle }) : Promise.resolve(null);
-  const [recommendedUsers, searchResults] = await Promise.all([recommendedUsersPromise, searchResultsPromise]);
+  const query = url.searchParams.get('search') ?? '';
+
+  const songs = searchSongInputLoader({ searchQuery: query });
+
   return data({
-    recommendedUsers,
-    searchResults,
-    query: handle,
+    query,
+    songs,
   });
 });

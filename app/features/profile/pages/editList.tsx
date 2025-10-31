@@ -17,7 +17,7 @@ import { Link } from '@remix-run/react';
 import { useState } from 'react';
 
 import styles from './editList.module.scss';
-import SongItem from '../components/SongItem';
+import SongItem from '../../search/components/SongItem';
 import { SortableItem } from '../components/SortableItem'; // 새로 추가된 컴포넌트
 
 export default function EditList() {

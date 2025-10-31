@@ -5,7 +5,6 @@ import { getCurrentDBUser, getCurrentUser, requireUserOwnership } from 'app/exte
 import { buildSpotifyTrackUrl, getSpotifyEmbed } from 'app/external/music/SpotifyOEmbed';
 import createLoader from 'app/utils/createLoader';
 
-import { searchSongInputLoader } from './components/SearchSongInputloader';
 import {
   fetchAccountSettingsData,
   fetchFollowers,
