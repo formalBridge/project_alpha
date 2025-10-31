@@ -19,7 +19,7 @@ export default function Show() {
   const isCurrentUserProfile = !!currentUser && user.id === currentUser.id;
 
   return (
-    <div>
+    <div className={styles.root}>
       <SearchBar />
       <TodaySongSection song={user.todayRecommendedSong} isCurrentUserProfile={isCurrentUserProfile} userId={user.id} />
       <div className={styles.profileBox}>
