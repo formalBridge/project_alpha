@@ -2,9 +2,17 @@ import { Form } from '@remix-run/react';
 
 import styles from './SearchBar.module.scss';
 
-export const SearchBar = ({ defaultQuery = '' }: { defaultQuery?: string }) => {
+export const SearchBar = ({
+  defaultQuery = '',
+  actionUrl = '/search',
+  tab,
+}: {
+  defaultQuery?: string;
+  actionUrl?: string;
+  tab?: string;
+}) => {
   return (
-    <Form method="get" action="/search" role="search" className={styles.root}>
+    <Form method="get" action={actionUrl} role="search" className={styles.root}>
       <div className={styles.inner}>
         <a href="/" className={styles.logo}>
           Sonnets
@@ -17,6 +25,7 @@ export const SearchBar = ({ defaultQuery = '' }: { defaultQuery?: string }) => {
           defaultValue={defaultQuery}
           autoComplete="on"
         />
+        {tab && <input type="hidden" name="tab" value={tab} />}
       </div>
     </Form>
   );

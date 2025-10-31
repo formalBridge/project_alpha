@@ -100,11 +100,7 @@ export function TodaySongSection({ song, isCurrentUserProfile, userId }: TodaySo
           <h3 className={styles.songTitle}>{song.title}</h3>
           <p className={styles.songArtist}>{song.artist}</p>
         </div>
-        {isCurrentUserProfile && (
-          <Link className={styles.goToEditLink} to="../addTodaySong">
-            편집
-          </Link>
-        )}
+        {isCurrentUserProfile && <p className={styles.goToEditLink}>메모하기</p>}
         <Link to={`/music/${song.id}/user/${userId}`} className={styles.songLink}></Link>
       </div>
     </div>

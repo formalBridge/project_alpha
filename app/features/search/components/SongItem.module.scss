@@ -70,15 +70,14 @@
     padding: 6px 10px;
     font-size: 13px;
     border-radius: 8px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    border: 1px solid #7b7b7b;
     background: white;
     cursor: pointer;
     white-space: inherit;
   }
 
   .addTodayButton {
-    background: $primary-500;
-    color: white;
-    border-color: transparent;
+    border-color: $primary-500;
+    color: $primary-500;
   }
 }
