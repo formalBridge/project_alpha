@@ -201,15 +201,7 @@ export const MemoLikeAction = createAction(async ({ request, db, params }) => {
       },
       update: {},
     });
-    await db.userMusicMemo.update({
-      where: { id: memoId },
-      data: { likes: { increment: 1 } },
-    });
   } else if (intent === 'unlike') {
-    await db.userMusicMemo.update({
-      where: { id: memoId },
-      data: { likes: { decrement: 1 } },
-    });
     await db.memoLikesUser.delete({
       where: {
         userId_memoId: {

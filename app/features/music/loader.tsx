@@ -17,11 +17,21 @@ export const musicUserLoader = createLoader(async ({ db, params, request }) => {
   const UserMusicMemo = await db.userMusicMemo.findFirst({ where: { userId, songId } });
 
   const spotifyEmbed = song?.spotifyId ? await getSpotifyEmbed(buildSpotifyTrackUrl(song.spotifyId)) : null;
+  const likes = await db.memoLikesUser.count({
+    where: { memoId: UserMusicMemo?.id },
+  });
   const isMemoLiked = !!(await db.memoLikesUser.findFirst({
     where: { memoId: UserMusicMemo?.id, userId: currentUser?.id },
   }));
 
-  return { song, user, UserMusicMemo, isCurrentUserProfile, spotifyEmbed, isMemoLiked };
+  return {
+    song,
+    user,
+    UserMusicMemo: UserMusicMemo ? { ...UserMusicMemo, likes } : null,
+    isCurrentUserProfile,
+    spotifyEmbed,
+    isMemoLiked,
+  };
 });
 
 export const musicCreateUserLoader = createLoader(async ({ db, params, request }) => {
