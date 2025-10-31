@@ -14,7 +14,7 @@ export default function feedPage() {
       <ul className={styles.list}>
         {feedList.map((item) => (
           <li key={item.id} className={styles.card}>
-            <Link to={`/music/${item.memoId}/user/${item.memo.songId}`} className={styles['cover-link']}>
+            <Link to={`/music/${item.memo.songId}/user/${item.memo.userId}`} className={styles['cover-link']}>
               <div className={styles['cover-box']}>
                 <img
                   className={styles.cover}
@@ -25,7 +25,7 @@ export default function feedPage() {
             </Link>
             <div className={styles.body}>
               <p className={styles.memo}>
-                <Link to={`/music/${item.memoId}/user/${item.memo.songId}`} className={styles.memoLink}>
+                <Link to={`/music/${item.memo.songId}/user/${item.memo.userId}`} className={styles.memoLink}>
                   {trimFirstLine(item.memo.content)}
                 </Link>
               </p>
