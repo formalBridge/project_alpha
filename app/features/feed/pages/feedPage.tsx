@@ -1,5 +1,7 @@
 import { Link, useLoaderData } from '@remix-run/react';
 
+import { SearchBar } from 'app/components/SearchBar';
+
 import styles from './feedPage.module.scss';
 import { feedLoader } from '../loader';
 
@@ -10,40 +12,45 @@ export default function feedPage() {
   const { feedList } = useLoaderData<typeof feedLoader>();
 
   return (
-    <div className={styles.feed}>
-      <ul className={styles.list}>
-        {feedList.map((item) => (
-          <li key={item.id} className={styles.card}>
-            <Link to={`/music/${item.memo.songId}/user/${item.memo.userId}`} className={styles['cover-link']}>
-              <div className={styles['cover-box']}>
-                <img
-                  className={styles.cover}
-                  src={item.memo.song.thumbnailUrl || DEFAULT_COVER}
-                  alt={`${item.memo.song.title} 앨범 커버`}
-                />
-              </div>
-            </Link>
-            <div className={styles.body}>
-              <p className={styles.memo}>
-                <Link to={`/music/${item.memo.songId}/user/${item.memo.userId}`} className={styles.memoLink}>
-                  {trimFirstLine(item.memo.content)}
-                </Link>
-              </p>
-              <div className={styles.meta}>
-                <Link to={`/profile/${item.memo.userId}/show`} className={styles.chip}>
+    <>
+      <div className={styles.searchBarContainer}>
+        <SearchBar />
+      </div>
+      <div className={styles.feed}>
+        <ul className={styles.list}>
+          {feedList.map((item) => (
+            <li key={item.id} className={styles.card}>
+              <Link to={`/music/${item.memo.songId}/user/${item.memo.userId}`} className={styles['cover-link']}>
+                <div className={styles['cover-box']}>
                   <img
-                    className={styles.avatar}
-                    src={(item.memo.user.avatarUrl ?? '').trim() || DEFAULT_AVATAR}
-                    alt=""
+                    className={styles.cover}
+                    src={item.memo.song.thumbnailUrl || DEFAULT_COVER}
+                    alt={`${item.memo.song.title} 앨범 커버`}
                   />
-                  <span className={styles.handle}>@{item.memo.user.handle}</span>
-                </Link>
+                </div>
+              </Link>
+              <div className={styles.body}>
+                <p className={styles.memo}>
+                  <Link to={`/music/${item.memo.songId}/user/${item.memo.userId}`} className={styles.memoLink}>
+                    {trimFirstLine(item.memo.content)}
+                  </Link>
+                </p>
+                <div className={styles.meta}>
+                  <Link to={`/profile/${item.memo.userId}/show`} className={styles.chip}>
+                    <img
+                      className={styles.avatar}
+                      src={(item.memo.user.avatarUrl ?? '').trim() || DEFAULT_AVATAR}
+                      alt=""
+                    />
+                    <span className={styles.handle}>@{item.memo.user.handle}</span>
+                  </Link>
+                </div>
               </div>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
   );
 }
 
