@@ -1,4 +1,4 @@
-import { useLoaderData } from '@remix-run/react';
+import { Link, useLoaderData } from '@remix-run/react';
 
 import styles from './feedPage.module.scss';
 import { feedLoader } from '../loader';
@@ -14,8 +14,7 @@ export default function feedPage() {
       <ul className={styles.list}>
         {feedList.map((item) => (
           <li key={item.id} className={styles.card}>
-            {/* 앨범 커버 */}
-            <a className={styles['cover-link']} href="#" onClick={(e) => e.preventDefault()}>
+            <Link to={`/music/${item.memo.songId}/user/${item.memo.userId}`} className={styles['cover-link']}>
               <div className={styles['cover-box']}>
                 <img
                   className={styles.cover}
@@ -23,22 +22,22 @@ export default function feedPage() {
                   alt={`${item.memo.song.title} 앨범 커버`}
                 />
               </div>
-            </a>
-
-            {/* 본문 */}
+            </Link>
             <div className={styles.body}>
-              {/* 메모 첫 줄 */}
-              <p className={styles.memo}>{trimFirstLine(item.memo.content)}</p>
-
+              <p className={styles.memo}>
+                <Link to={`/music/${item.memo.songId}/user/${item.memo.userId}`} className={styles.memoLink}>
+                  {trimFirstLine(item.memo.content)}
+                </Link>
+              </p>
               <div className={styles.meta}>
-                <a className={styles.chip} href="#" onClick={(e) => e.preventDefault()}>
+                <Link to={`/profile/${item.memo.userId}/show`} className={styles.chip}>
                   <img
                     className={styles.avatar}
                     src={(item.memo.user.avatarUrl ?? '').trim() || DEFAULT_AVATAR}
                     alt=""
                   />
                   <span className={styles.handle}>@{item.memo.user.handle}</span>
-                </a>
+                </Link>
               </div>
             </div>
           </li>
