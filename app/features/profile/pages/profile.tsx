@@ -27,7 +27,7 @@ export const MobileLayout = () => (
           </Link>
         </li>
         <li>
-          <NavItem href="feed" label="피드" iconSrc="/images/features/profile/editing.png" />
+          <NavItem href="feed" label="피드" iconSrc="/images/features/profile/feed.png" />
         </li>
         <li>
           <NavItem href="show" label="기록하기" iconSrc="/images/features/profile/editing.png" />
@@ -54,7 +54,7 @@ export const DesktopLayout = ({ user }: { user: User | null }) => (
 
       <ul className={styles.list}>
         <li>
-          <NavItem href="feed" label="피드" iconSrc="/images/features/profile/editing.png" />
+          <NavItem href="feed" label="피드" iconSrc="/images/features/profile/feed.png" />
         </li>
         <li>
           <NavItem href="search" label="검색" iconSrc="/images/features/profile/search_icon.png" />
