@@ -46,16 +46,23 @@
 }
 
 .memo {
-  // 기존 유지
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
-  // 표준(실험적) 추가
   line-clamp: 1;
-  // 폴백
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap; // 폴백용(사파리 외 엔진에서 한 줄 처리)
+  white-space: nowrap;
+}
+
+.memoLink {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: #111;
+  }
 }
 
 .meta {
@@ -81,44 +88,4 @@
 .handle {
   font-weight: 700;
   font-size: 14px;
-}
-
-/* Like button (이전에 쓰던 스타일과 톤 맞춤) */
-.like-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 999px;
-  border: 1px solid #e5e7eb;
-  background: #f9fafb;
-  color: #6b7280;
-  cursor: pointer;
-  transition:
-    transform 120ms ease,
-    background 160ms ease,
-    color 160ms ease,
-    border-color 160ms ease;
-
-  &:hover {
-    transform: translateY(-1px);
-    background: #f3f4f6;
-    border-color: #d1d5db;
-  }
-}
-
-.liked {
-  background: #fee2e2;
-  color: #ef4444;
-  border-color: #fecaca;
-}
-.heart {
-  width: 18px;
-  height: 18px;
-  flex: 0 0 18px;
-}
-.like-count {
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 1;
 }
