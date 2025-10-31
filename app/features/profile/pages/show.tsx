@@ -1,6 +1,7 @@
 import type { Song } from '@prisma/client';
 import { Link, useLoaderData, useRouteLoaderData, useSearchParams, Form } from '@remix-run/react';
 
+import { SearchBar } from 'app/components/SearchBar';
 import { profileLayoutLoader, profileLoader } from 'app/features/profile/loader';
 import styles from 'app/features/profile/pages/show.module.scss';
 
@@ -18,7 +19,8 @@ export default function Show() {
   const isCurrentUserProfile = !!currentUser && user.id === currentUser.id;
 
   return (
-    <div>
+    <div className={styles.root}>
+      <SearchBar />
       <TodaySongSection song={user.todayRecommendedSong} isCurrentUserProfile={isCurrentUserProfile} userId={user.id} />
       <div className={styles.profileBox}>
         <img
@@ -98,11 +100,7 @@ export function TodaySongSection({ song, isCurrentUserProfile, userId }: TodaySo
           <h3 className={styles.songTitle}>{song.title}</h3>
           <p className={styles.songArtist}>{song.artist}</p>
         </div>
-        {isCurrentUserProfile && (
-          <Link className={styles.goToEditLink} to="../addTodaySong">
-            편집
-          </Link>
-        )}
+        {isCurrentUserProfile && <p className={styles.goToEditLink}>메모하기</p>}
         <Link to={`/music/${song.id}/user/${userId}`} className={styles.songLink}></Link>
       </div>
     </div>

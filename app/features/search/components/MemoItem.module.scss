@@ -1,0 +1,162 @@
+@use 'styles/layout' as *;
+
+.memoLink {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.memoItem {
+  background: #fff;
+  border: 1px solid #eef0f3;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.media {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  background: #f6f7f9;
+
+  @include mobile {
+    height: 140px;
+  }
+}
+
+.cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  align-items: center;
+}
+
+.overlay {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 12px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  pointer-events: none;
+}
+
+.userRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 18px 6px 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  object-fit: cover;
+  background: #f3f4f6;
+  flex: 0 0 40px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+
+  @include mobile {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.handle {
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 15px;
+}
+
+.timeShort {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.timeTop {
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  color: #6b7280;
+  font-size: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 6px 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(2, 6, 23, 0.04);
+}
+
+.body {
+  padding: 12px 14px 16px;
+}
+
+.songMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.titleBlock {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.timeInBody {
+  color: #6b7280;
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  margin-left: 8px;
+  flex: 0 0 auto;
+}
+
+.songTitle {
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @include mobile {
+    font-size: 15px;
+  }
+}
+
+.artist {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.content {
+  margin-top: 10px;
+  color: #374151;
+  font-size: 14px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+
+  @include mobile {
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+}

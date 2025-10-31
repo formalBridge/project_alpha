@@ -1,5 +1,6 @@
 import { Link, Outlet, useFetcher, useLoaderData } from '@remix-run/react';
 import dayjs from 'dayjs';
+import { useMemo } from 'react';
 
 import { musicUserLoader } from '../loader';
 import styles from './music.user.module.scss';
@@ -66,14 +67,58 @@ const MemoHeader = ({ spotifyEmbed, UserMusicMemo, song }: MemoHeaderProps) => {
   );
 };
 
-const LikeButton = ({ likes, isChecked: isMemoLiked }: { likes: number; memoId: number; isChecked: boolean }) => {
+const LikeButton = ({
+  likes,
+  memoId: _memoId,
+  isChecked: isMemoLiked,
+}: {
+  likes: number;
+  memoId: number;
+  isChecked: boolean;
+}) => {
   const fetcher = useFetcher();
-  const like = fetcher.formData ? fetcher.formData.get('like') === 'true' : isMemoLiked;
+  const submitting = fetcher.state !== 'idle';
+  const intentInFlight = fetcher.formData?.get('intent') as 'like' | 'unlike' | undefined;
+
+  const optimisticLiked = useMemo(() => {
+    if (!intentInFlight) return isMemoLiked;
+    return intentInFlight === 'like';
+  }, [intentInFlight, isMemoLiked]);
+
+  const optimisticLikes = useMemo(() => {
+    if (!intentInFlight) return likes;
+    return intentInFlight === 'like' ? likes + 1 : likes - 1;
+  }, [intentInFlight, likes]);
+
+  const nextIntent = optimisticLiked ? 'unlike' : 'like';
 
   return (
-    <fetcher.Form method="post">
-      <button style={{ background: like ? 'red' : 'gray' }} name="intent" value={like ? 'unlike' : 'like'}>
-        Like - {likes}
+    <fetcher.Form method="post" className={styles.likeForm}>
+      <button
+        type="submit"
+        name="intent"
+        value={nextIntent}
+        className={[styles.likeButton, optimisticLiked ? styles.liked : '', submitting ? styles.loading : ''].join(' ')}
+        aria-pressed={optimisticLiked}
+        aria-label={optimisticLiked ? '좋아요 취소' : '좋아요'}
+        disabled={submitting}
+      >
+        <svg
+          className={styles.heart}
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M20.8 4.6c-1.7-1.7-4.4-1.7-6.1 0L12 7.3l-2.7-2.7c-1.7-1.7-4.4-1.7-6.1 0s-1.7 4.4 0 6.1l8.8 8.8 8.8-8.8c1.7-1.7 1.7-4.4 0-6.1z" />
+        </svg>
+
+        <span className={styles.likeCount} aria-live="polite">
+          {optimisticLikes}
+        </span>
       </button>
     </fetcher.Form>
   );

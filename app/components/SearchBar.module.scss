@@ -1,0 +1,49 @@
+@use 'styles/layout' as *;
+
+.root {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 12px;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  width: auto;
+  gap: 15px;
+}
+
+.inner {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo {
+  font-size: 35px;
+  text-decoration: none;
+  color: black;
+
+  @include mobile {
+    font-size: 25px;
+  }
+}
+
+.input {
+  flex: 1 1 auto;
+  max-width: 800px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.04);
+  height: 40px;
+
+  @include mobile {
+    height: 36px;
+  }
+}
+
+.input::placeholder {
+  color: rgba(0, 0, 0, 0.45);
+}

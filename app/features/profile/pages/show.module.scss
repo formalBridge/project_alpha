@@ -1,5 +1,12 @@
 @use 'styles/layout' as *;
 
+.root {
+  padding: 0 24px 24px;
+
+  @include mobile {
+    padding: 0 0 16px;
+  }
+}
 .profile-box {
   display: flex;
   height: 100px;

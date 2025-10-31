@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feed-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: feed-worker
+  template:
+    metadata:
+      labels:
+        app: feed-worker
+    spec:
+      # Add image pull secret for GHCR
+      imagePullSecrets:
+        - name: ghcr-credentials
+  template:
+    metadata:
+      labels:
+        app: feed-worker
+    spec:
+      containers:
+      - name: feed-worker
+        image: ghcr.io/formalbridge/project_alpha-feed-worker:latest
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-url-secret
+              key: URL
+        envFrom:
+        - secretRef:
+            name: env-secret
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        livenessProbe:
+          exec:
+            command:
+            - node
+            - -e
+            - "process.exit(0)"
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+            - node
+            - -e
+            - "process.exit(0)"
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+      imagePullSecrets:
+      - name: ghcr-secret
+      restartPolicy: Always

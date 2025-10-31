@@ -1,0 +1,83 @@
+@use 'styles/layout' as *;
+
+.songItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding-right: 8px;
+  position: relative;
+
+  @include mobile {
+    height: 100px;
+  }
+
+  .itemImage {
+    height: 85px;
+    width: 85px;
+    object-fit: cover;
+    border-radius: 5px;
+
+    @include mobile {
+      height: 100%;
+    }
+  }
+
+  .itemTextBox {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+
+    @include mobile {
+      padding-bottom: 35px;
+    }
+
+    .itemTitle {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #7b7b7b;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .itemArtist {
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: inherit;
+    }
+  }
+  .actions {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    margin-left: auto;
+    margin-right: 0;
+
+    @include mobile {
+      position: absolute;
+      right: 8px;
+      bottom: 8px;
+      margin-left: 0;
+      gap: 6px;
+    }
+  }
+
+  .memoButton,
+  .addTodayButton {
+    padding: 6px 10px;
+    font-size: 13px;
+    border-radius: 8px;
+    border: 1px solid #7b7b7b;
+    background: white;
+    cursor: pointer;
+    white-space: inherit;
+  }
+
+  .addTodayButton {
+    border-color: $primary-500;
+    color: $primary-500;
+  }
+}
