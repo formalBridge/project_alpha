@@ -56,7 +56,6 @@ jobs:
 
     env:
       IMAGE_REPO: ghcr.io/formalbridge/project_alpha/batch
-      IMAGE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.image_tag != '' && inputs.image_tag || format('sha-{0}', github.event.workflow_run.head_sha) }}
       NAMESPACE: ${{ inputs.namespace || 'default' }}
       JOB_NAME_FILE: ${{ inputs.job_name || '/app/dist/scripts/spotify-backfill.js' }}
       DRY_RUN: ${{ inputs.dry_run || 'true' }}
@@ -79,15 +78,33 @@ jobs:
         env:
           KUBECONFIG_DATA: ${{ secrets.KUBECONFIG }}
         run: |
+          set -euo pipefail
+          if [ -z "${KUBECONFIG_DATA:-}" ]; then
+            echo "ERROR: secrets.KUBECONFIG is missing or empty"; exit 1
+          fi
           mkdir -p ~/.kube
-          echo "$KUBECONFIG_DATA" | base64 --decode > ~/.kube/config
+          # 원본 YAML인지 확인 후, 아니면 base64 디코드
+          if echo "$KUBECONFIG_DATA" | head -n1 | grep -q '^apiVersion:'; then
+            printf '%s' "$KUBECONFIG_DATA" > ~/.kube/config
+          else
+            echo "$KUBECONFIG_DATA" | base64 -d > ~/.kube/config
+          fi
           chmod 600 ~/.kube/config
+
+      - name: Derive IMAGE_TAG
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+            echo "IMAGE_TAG=sha-${{ github.event.workflow_run.head_sha }}" >> "$GITHUB_ENV"
+          elif [ -n "${{ inputs.image_tag }}" ]; then
+            echo "IMAGE_TAG=${{ inputs.image_tag }}" >> "$GITHUB_ENV"
+          else
+            echo "IMAGE_TAG=sha-${{ github.sha }}" >> "$GITHUB_ENV"
+          fi
 
       - name: Render Job manifest with inputs
         run: |
           mkdir -p .out
-          # Compose IMAGE_URI from repo + tag (cannot reference env.* within env block)
-          export IMAGE_URI="${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG }}"
+          export IMAGE_URI="${{ env.IMAGE_REPO }}:${IMAGE_TAG}"
 
           # Bring through env from job-level
           export NAMESPACE="${{ env.NAMESPACE }}"
