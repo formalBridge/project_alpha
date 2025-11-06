@@ -10,10 +10,10 @@ export default function ProfilePage() {
   const { user } = useLoaderData<typeof profileLayoutLoader>() || {};
 
   const isMobile = useIsMobile();
-  return isMobile ? <MobileLayout /> : <DesktopLayout user={user} />;
+  return isMobile ? <MobileLayout user={user} /> : <DesktopLayout user={user} />;
 }
 
-export const MobileLayout = () => (
+export const MobileLayout = ({ user }: { user: User | null }) => (
   <div className={styles.mobile}>
     <div className={styles.outlet}>
       <Outlet />
@@ -30,10 +30,18 @@ export const MobileLayout = () => (
           <NavItem href="feed" label="피드" iconSrc="/images/features/profile/feed.png" />
         </li>
         <li>
-          <NavItem href="show" label="기록하기" iconSrc="/images/features/profile/editing.png" />
+          <NavItem
+            href={user ? `/profile/${user.id}/show` : '/profile/redirect'}
+            label="기록하기"
+            iconSrc="/images/features/profile/editing.png"
+          />
         </li>
         <li>
-          <NavItem href="settings" label="설정" iconSrc="/images/features/profile/settings.png" />
+          <NavItem
+            href={user ? `/profile/${user.id}/settings` : '/profile/redirect'}
+            label="설정"
+            iconSrc="/images/features/profile/settings.png"
+          />
         </li>
       </ul>
     </nav>
