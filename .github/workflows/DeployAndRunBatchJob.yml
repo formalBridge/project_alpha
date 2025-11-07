@@ -140,10 +140,56 @@ jobs:
           kubectl -n "$NAMESPACE" apply -f .out/job.yaml
           kubectl -n "$NAMESPACE" get jobs,pods -o wide
 
-      - name: Wait for Job completion
+      - name: Wait for Job completion (robust)
         run: |
-          kubectl -n "$NAMESPACE" wait --for=condition=complete --timeout=1800s job/"$JOB_RESOURCE_NAME"
+          set -euo pipefail
+          TIMEOUT_SECONDS=1800   # 30 minutes
+          INTERVAL=10
+          START_TIME=$(date +%s)
+          END_TIME=$((START_TIME + TIMEOUT_SECONDS))
 
-      - name: Stream Job logs
+          echo "Waiting up to ${TIMEOUT_SECONDS}s for job/${JOB_RESOURCE_NAME} in namespace ${NAMESPACE}"
+
+          while [ "$(date +%s)" -lt "$END_TIME" ]; do
+            # read job status fields (empty -> treat as 0)
+            succeeded=$(kubectl -n "$NAMESPACE" get job "$JOB_RESOURCE_NAME" -o jsonpath='{.status.succeeded}' 2>/dev/null || echo 0)
+            failed=$(kubectl -n "$NAMESPACE" get job "$JOB_RESOURCE_NAME" -o jsonpath='{.status.failed}' 2>/dev/null || echo 0)
+            active=$(kubectl -n "$NAMESPACE" get job "$JOB_RESOURCE_NAME" -o jsonpath='{.status.active}' 2>/dev/null || echo 0)
+
+            echo "$(date -u +"%Y-%m-%dT%H:%M:%SZ") status: succeeded=${succeeded:-0} failed=${failed:-0} active=${active:-0}"
+
+            if [ -n "$succeeded" ] && [ "$succeeded" != "0" ]; then
+              echo "Job succeeded (succeeded=${succeeded})"
+              exit 0
+            fi
+
+            if [ -n "$failed" ] && [ "$failed" != "0" ]; then
+              echo "Job failed (failed=${failed}) - dumping describe and logs"
+              kubectl -n "$NAMESPACE" describe job "$JOB_RESOURCE_NAME" || true
+              echo "--- Pod list ---"
+              kubectl -n "$NAMESPACE" get pods -l job-name="$JOB_RESOURCE_NAME" -o wide || true
+              echo "--- Pod logs (last 200 lines) ---"
+              kubectl -n "$NAMESPACE" get pods -l job-name="$JOB_RESOURCE_NAME" -o name | xargs -r -n1 kubectl -n "$NAMESPACE" logs --all-containers=true --tail=200 || true
+              exit 1
+            fi
+
+            sleep "$INTERVAL"
+          done
+
+          echo "Timed out waiting for job/${JOB_RESOURCE_NAME} after ${TIMEOUT_SECONDS}s - dumping describe and logs"
+          kubectl -n "$NAMESPACE" describe job "$JOB_RESOURCE_NAME" || true
+          kubectl -n "$NAMESPACE" get pods -l job-name="$JOB_RESOURCE_NAME" -o wide || true
+          kubectl -n "$NAMESPACE" get pods -l job-name="$JOB_RESOURCE_NAME" -o name | xargs -r -n1 kubectl -n "$NAMESPACE" logs --all-containers=true --tail=400 || true
+          exit 1
+
+      - name: Stream Job logs (final tail)
+        if: always()
         run: |
-          kubectl -n "$NAMESPACE" logs -f job/"$JOB_RESOURCE_NAME" --all-containers=true --tail=1000
+          set -euo pipefail
+          echo "Streaming recent logs for pods of job/${JOB_RESOURCE_NAME}"
+          kubectl -n "$NAMESPACE" get pods -l job-name="$JOB_RESOURCE_NAME" -o name | while read -r pod; do
+            echo "=== Logs for $pod ==="
+            kubectl -n "$NAMESPACE" logs --all-containers=true --tail=500 "$pod" || true
+            echo "=== Describe $pod ==="
+            kubectl -n "$NAMESPACE" describe "$pod" || true
+          done
