@@ -133,6 +133,33 @@ jobs:
           envsubst < k8s/jobs/batch-job-template.yml > .out/job.yaml
           echo "--- Rendered manifest ---"
           cat .out/job.yaml
+          
+      - name: Wait for image to appear in registry (poll, short)
+        run: |
+          set -euo pipefail
+          IMAGE="${IMAGE_URI}"
+          echo "Checking image availability: $IMAGE"
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+          MAX_ATTEMPTS=36    # 36 * 5s = 180s (3 minutes)
+          ATTEMPT=0
+          SLEEP=5
+
+          while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+            if docker manifest inspect "$IMAGE" >/dev/null 2>&1; then
+              echo "Image found: $IMAGE"
+              docker logout ghcr.io || true
+              exit 0
+            fi
+            ATTEMPT=$((ATTEMPT+1))
+            echo "Image not found yet (attempt $ATTEMPT/$MAX_ATTEMPTS). sleeping ${SLEEP}s..."
+            sleep $SLEEP
+          done
+
+          docker logout ghcr.io || true
+          echo "ERROR: image $IMAGE not found after $((MAX_ATTEMPTS * SLEEP))s"
+          exit 1
+
 
       - name: Apply Job
         run: |
