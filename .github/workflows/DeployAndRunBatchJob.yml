@@ -140,6 +140,27 @@ jobs:
           kubectl -n "$NAMESPACE" apply -f .out/job.yaml
           kubectl -n "$NAMESPACE" get jobs,pods -o wide
 
+      - name: Initial pod diagnostics (immediate)
+        run: |
+          set -euo pipefail
+          echo "Immediate diagnostics for job/${JOB_RESOURCE_NAME} in ${NAMESPACE}"
+          sleep 3
+          PODS=$(kubectl -n "$NAMESPACE" get pods -l job-name="$JOB_RESOURCE_NAME" -o name || true)
+          if [ -z "$PODS" ]; then
+            echo "No pods found yet."
+            kubectl -n "$NAMESPACE" get jobs -o wide || true
+            exit 0
+          fi
+          for p in $PODS; do
+            podname="${p##*/}"
+            echo "=== Describe $podname ==="
+            kubectl -n "$NAMESPACE" describe pod "$podname" || true
+            echo "=== Recent logs for $podname (tail 200) ==="
+            kubectl -n "$NAMESPACE" logs --all-containers=true --tail=200 "$podname" || true
+            echo "=== Previous logs for $podname ==="
+            kubectl -n "$NAMESPACE" logs --all-containers=true --previous "$podname" || true
+          done
+
       - name: Wait for Job completion (robust)
         run: |
           set -euo pipefail
